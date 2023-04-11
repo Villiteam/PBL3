@@ -1,0 +1,94 @@
+﻿@model IEnumerable<PBL3.Models.ProductImage>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutEmty.cshtml";
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+
+    @ViewBag.Id
+    <div class="col-md-12">
+        <input type="button" class="btn btn-primary" id="iTaiAnh" onclick="BrowseServer();" value="Tải ảnh" />
+    </div>
+    <table class="table">
+        <tr>
+            <th>
+                Hình ảnh
+            </th>
+            <th>
+                Mặc định
+            </th>
+
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr id="trow_@item.ImageID">
+                <td><img src="@item.Image" width="60" /></td>
+                <td>
+                    <input type="radio" name="isDefault" value="@item.isDefault" @(item.isDefault ? "checked" : "")>
+                </td>
+                <td><a href="#" data-id="@item.ImageID" class="btn btn-sm btn-danger btnDelete">Xóa</a></td>
+            </tr>
+        }
+
+    </table>
+</body>
+</html>
+
+@section DoanJs{
+    <script>
+        /*CkFinder*/
+        function BrowseServer(field) {
+            var finder = new CKFinder();
+            finder.selectActionFunction = function (fileUrl) {
+                AddImage(@ViewBag.ProductID, fileUrl);
+            };
+            finder.popup();
+        }
+
+        function AddImage(id, url) {
+            $.ajax({
+                url: "/ProductImage/AddImage",
+                type: 'POST',
+                data: { productID: id , url : url},
+                success: function (rs) {
+                    if (rs.success) {
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('body').on('click', '.btnDelete', function () {
+                var id = $(this).data('id');
+                var conf = confirm("Bạn có muốn xóa ảnh này không?");
+                if (conf === true) {
+                    $.ajax({
+                        url: "/ProductImage/Delete",
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (rs) {
+                            if (rs.success) {
+                                $('#trow_' + id).remove();
+                            }
+                        }
+                    });
+                };
+
+            });
+        });
+    </script>
+}
+
+

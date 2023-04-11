@@ -1,0 +1,289 @@
+﻿@model PBL3.Models.Product
+
+@{
+    ViewBag.Title = "Cập nhật sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content">
+    <div class="card">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card-header p-2">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Thông tin chung</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Hình ảnh</a></li>
+                    </ul>
+                </div><!-- /.card-header -->
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div class="active tab-pane" id="activity">
+                            @using (Html.BeginForm())
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(model => model.ProductID)
+                                <div class="form-horizontal">
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <div class="form-group">
+                                        <p class="text-danger">  @TempData["error"]</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <lable class="control-label text-bold">Tên sản phẩm</lable>
+                                        @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <lable class="control-label text-bold">Mô tả</lable>
+                                    <div class="col-md-10">
+                                        <textarea class="form-control" name="Description" id="idMoTa">@Model.Description</textarea>
+                                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <lable class="control-label text-bold">Danh mục</lable>
+                                    <div class="col-md-10">
+                                        @Html.DropDownListFor(model => model.CatID, ViewBag.Category as SelectList, "Chọn danh mục", new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.CatID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <lable class="control-label text-bold">Số lượng</lable>
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <lable class="control-label text-bold">Giá</lable>
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <lable class="control-label text-bold">Giá khuyến mãi</lable>
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.PromotionPrice, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.PromotionPrice, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <lable class="control-label text-bold">Hiển thị</lable>
+                                            <div class="col-md-10">
+                                                <div class="checkbox">
+                                                    @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @checked = "checked" } })
+                                                    @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <lable class="control-label text-bold">Nổi bật</lable>
+                                            <div class="col-md-10">
+                                                <div class="checkbox">
+                                                    @Html.EditorFor(model => model.isHot)
+                                                    @Html.ValidationMessageFor(model => model.isHot, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <lable class="control-label text-bold">Khuyến mãi</lable>
+                                            <div class="col-md-10">
+                                                <div class="checkbox">
+                                                    @Html.EditorFor(model => model.isSale)
+                                                    @Html.ValidationMessageFor(model => model.isSale, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                @*<div class="form-group">
+                                        @Html.LabelFor(model => model.ListImages, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.ListImages, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.ListImages, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Video, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.Video, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Video, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>*@
+
+
+
+
+
+
+                                @*<div class="form-group">
+                                        @Html.LabelFor(model => model.ViewCount, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.ViewCount, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.ViewCount, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>*@
+
+
+
+                                @*<div class="form-group">
+                                        @Html.LabelFor(model => model.Size, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.Size, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Size, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Color, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.Color, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Color, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>*@
+
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-12">
+                                        <button class="btn btn-primary" type="submit">
+                                            Create
+                                        </button>
+                                    </div>
+                                </div>
+
+                            }
+
+                            <div>
+                                @Html.ActionLink("Back to List", "Index")
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="timeline">
+                            <!-- The timeline -->
+                            <div class="timeline timeline-inverse">
+                                <!-- timeline time label -->
+                                <div class="time-label">
+                                    <span class="bg-danger">
+                                        10 Feb. 2014
+                                    </span>
+                                </div>
+                                <!-- /.timeline-label -->
+                                <!-- timeline item -->
+                                <div>
+                                    <i class="fas fa-envelope bg-primary"></i>
+
+                                    <div class="timeline-item">
+                                        <span class="time"><i class="far fa-clock"></i> 12:05</span>
+
+                                        <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
+
+                                        <div class="timeline-body">
+                                            Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
+                                            weebly ning heekya handango imeem plugg dopplr jibjab, movity
+                                            jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
+                                            quora plaxo ideeli hulu weebly balihoo...
+                                        </div>
+                                        <div class="timeline-footer">
+                                            <a href="#" class="btn btn-primary btn-sm">Read more</a>
+                                            <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END timeline item -->
+                                <!-- timeline item -->
+                                <div>
+                                    <i class="fas fa-user bg-info"></i>
+
+                                    <div class="timeline-item">
+                                        <span class="time"><i class="far fa-clock"></i> 5 mins ago</span>
+
+                                        <h3 class="timeline-header border-0">
+                                            <a href="#">Sarah Young</a> accepted your friend request
+                                        </h3>
+                                    </div>
+                                </div>
+                                <!-- END timeline item -->
+                                <!-- timeline item -->
+                                <div>
+                                    <i class="fas fa-comments bg-warning"></i>
+
+                                    <div class="timeline-item">
+                                        <span class="time"><i class="far fa-clock"></i> 27 mins ago</span>
+
+                                        <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>
+
+                                        <div class="timeline-body">
+                                            Take me to your leader!
+                                            Switzerland is small and neutral!
+                                            We are more like Germany, ambitious and misunderstood!
+                                        </div>
+                                        <div class="timeline-footer">
+                                            <a href="#" class="btn btn-warning btn-flat btn-sm">View comment</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END timeline item -->
+                                <!-- timeline time label -->
+                                <div class="time-label">
+                                    <span class="bg-success">
+                                        3 Jan. 2014
+                                    </span>
+                                </div>
+                                <!-- /.timeline-label -->
+                                <!-- timeline item -->
+                                <div>
+                                    <i class="fas fa-camera bg-purple"></i>
+
+                                    <div class="timeline-item">
+                                        <span class="time"><i class="far fa-clock"></i> 2 days ago</span>
+
+                                        <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>
+
+                                        <div class="timeline-body">
+                                            <img src="https://placehold.it/150x100" alt="...">
+                                            <img src="https://placehold.it/150x100" alt="...">
+                                            <img src="https://placehold.it/150x100" alt="...">
+                                            <img src="https://placehold.it/150x100" alt="...">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END timeline item -->
+                                <div>
+                                    <i class="far fa-clock bg-gray"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.card-body -->
+                </div>
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+</section>
+
+
+@section DoanJs{
+    <script>
+        CKEDITOR.replace('idMoTa')
+    </script>
+
+}
