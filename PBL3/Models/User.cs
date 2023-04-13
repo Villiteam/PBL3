@@ -32,6 +32,7 @@ namespace PBL3.Models
         public bool Status { get; set; }
         public int Role { get; set; }
         public string CreditCard { get; set; }
+        public string Avatar { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }

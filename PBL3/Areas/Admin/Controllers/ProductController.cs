@@ -90,6 +90,7 @@ namespace PBL3.Areas.Admin.Controllers
                 return View(model);
             }
         }
+
         public ActionResult Edit(int id)
         {
             var model = db.Products.Find(id);
@@ -109,6 +110,7 @@ namespace PBL3.Areas.Admin.Controllers
             update.Price = model.Price;
             update.PromotionPrice = model.PromotionPrice;
             update.Status = model.Status;
+            update.isHome = model.isHome;
             update.isHot = model.isHot;
             update.isSale = model.isSale;
             update.CreateDate = DateTime.Now;
