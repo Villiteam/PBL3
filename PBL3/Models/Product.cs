@@ -41,6 +41,7 @@ namespace PBL3.Models
         public System.DateTime CreateDate { get; set; }
         public string Size { get; set; }
         public string Color { get; set; }
+        public bool isHome { get; set; }
     
         public virtual Category Category { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

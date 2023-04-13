@@ -29,6 +29,9 @@
         <AssociationConnector Association="pbl3Model.FK_ProductImage_Products1" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_Warehouse_Products" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_Users_Roles" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="pbl3Model.Product1" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="pbl3Model.sysdiagram" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="pbl3Model.UserAccount" Width="1.5" PointX="5.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -71,18 +71,18 @@
                                     </div>
 
                                     @*<div class="form-group">
-                                <label for="exampleInputFile">Ảnh đại diện</label>
-                                <div class="col-md-10">
-                                    <div class="input-group">
-                                        <div class="custom-file">
-                                            @Html.TextBoxFor(model => model.ListImages, new { @id = "txtImage", @class = "form-control" })
-                                        </div>
-                                        <div class="input-group-append">
-                                            <input type="button" value="Tải ảnh" onclick="BrowseServer('txtImage');" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>*@
+            <label for="exampleInputFile">Ảnh đại diện</label>
+            <div class="col-md-10">
+                <div class="input-group">
+                    <div class="custom-file">
+                        @Html.TextBoxFor(model => model.ListImages, new { @id = "txtImage", @class = "form-control" })
+                    </div>
+                    <div class="input-group-append">
+                        <input type="button" value="Tải ảnh" onclick="BrowseServer('txtImage');" />
+                    </div>
+                </div>
+            </div>
+        </div>*@
 
                                     <div class="form-group">
                                         <lable class="control-label col-md-2 text-bold">Danh mục</lable>
@@ -127,7 +127,7 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <div class="form-group">
                                                 <lable class="control-label text-bold">Hiển thị</lable>
                                                 <div class="col-md-10">
@@ -138,7 +138,18 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <lable class="control-label text-bold">Trang chủ</lable>
+                                                <div class="col-md-10">
+                                                    <div class="checkbox">
+                                                        @Html.EditorFor(model => model.isHome)
+                                                        @Html.ValidationMessageFor(model => model.isHome, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
                                             <div class="form-group">
                                                 <lable class="control-label text-bold">Nổi bật</lable>
                                                 <div class="col-md-10">
@@ -150,7 +161,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <div class="form-group">
                                                 <lable class="control-label text-bold">Khuyến mãi</lable>
                                                 <div class="col-md-10">
