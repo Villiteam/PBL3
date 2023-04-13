@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<PBL3.Models.ProductImage>
 @{
     ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_LayoutEmty.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutEmty.cshtml";
 }
 
 
@@ -58,7 +58,7 @@
 
         function AddImage(id, url) {
             $.ajax({
-                url: "/ProductImage/AddImage",
+                url: "/Admin/ProductImage/AddImage",
                 type: 'POST',
                 data: { productID: id , url : url},
                 success: function (rs) {
@@ -75,7 +75,7 @@
                 var conf = confirm("Bạn có muốn xóa ảnh này không?");
                 if (conf === true) {
                     $.ajax({
-                        url: "/ProductImage/Delete",
+                        url: "/Admin/ProductImage/Delete",
                         type: 'POST',
                         data: { id: id },
                         success: function (rs) {

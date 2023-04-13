@@ -6,11 +6,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace PBL3.Controllers
+namespace PBL3.Areas.Admin.Controllers
 {
     public class ProductController : Controller
     {
-        // GET: Product
+        // GET: Admin/Product
         private pbl3Entities db = new pbl3Entities();
         public ActionResult Index(int? page)
         {
@@ -32,6 +32,12 @@ namespace PBL3.Controllers
         [ValidateInput(false)]
         public ActionResult Add(Product model, List<string> Images, List<int> rDefault)
         {
+            var item = db.Products.SingleOrDefault(m => m.ProductName == model.ProductName);
+            if (item != null)
+            {
+                TempData["error"] = "Tên sản phẩm đã tồn tại!";
+                return View();
+            }
             if (Images != null && Images.Count > 0)
             {
                 for (int i = 0; i < Images.Count; i++)
@@ -86,7 +92,6 @@ namespace PBL3.Controllers
         }
         public ActionResult Edit(int id)
         {
-            ViewBag.Category = new SelectList(db.Categories.ToList(), "CatID", "CatName");
             var model = db.Products.Find(id);
             return View(model);
         }
@@ -94,6 +99,7 @@ namespace PBL3.Controllers
         [ValidateInput(false)]
         public ActionResult Edit(Product model)
         {
+           
             var update = db.Products.Find(model.ProductID);
             update.ProductName = model.ProductName;
             update.Title = model.Title;
@@ -105,6 +111,7 @@ namespace PBL3.Controllers
             update.Status = model.Status;
             update.isHot = model.isHot;
             update.isSale = model.isSale;
+            update.CreateDate = DateTime.Now;
             db.SaveChanges();
             return RedirectToAction("Index");
         }

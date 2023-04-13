@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using PBL3.EF;
+﻿using PBL3.EF;
 using PBL3.Models;
 using System;
 using System.Collections.Generic;
@@ -8,13 +7,12 @@ using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Security;
-using System.Web.UI.WebControls;
 
-namespace PBL3.Controllers
+namespace PBL3.Areas.Admin.Controllers
 {
     public class AccountController : Controller
     {
-        // GET: Account
+        // GET: Admin/Account
         private pbl3Entities db = new pbl3Entities();
         public ActionResult Register()
         {
@@ -66,7 +64,8 @@ namespace PBL3.Controllers
                 {
                     // tao session
                     Session["user"] = account;
-                    return RedirectToAction("Index", "Home");
+                    return Redirect("~/Home");
+                    //return RedirectToAction("Index", "Home");
                 }
                 else
                 {

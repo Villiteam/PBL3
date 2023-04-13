@@ -5,11 +5,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace PBL3.Controllers
+namespace PBL3.Areas.Admin.Controllers
 {
     public class CategoryController : Controller
     {
-        // GET: Category
+        // GET: Admin/Category
         private pbl3Entities db = new pbl3Entities();
         public ActionResult Index()
         {
@@ -24,6 +24,12 @@ namespace PBL3.Controllers
         [HttpPost]
         public ActionResult Add(Category model)
         {
+            var item = db.Categories.SingleOrDefault(m => m.CatName == model.CatName);
+            if (item != null)
+            {
+                TempData["error"] = "Tên danh mục đã tồn tại!";
+                return View();
+            }
             try
             {
                 if (ModelState.IsValid)
@@ -52,6 +58,7 @@ namespace PBL3.Controllers
         [HttpPost]
         public ActionResult Edit(Category model)
         {
+           
             var up = db.Categories.Find(model.CatID);
             up.CatName = model.CatName;
             up.Status = model.Status;
@@ -67,6 +74,5 @@ namespace PBL3.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
     }
 }

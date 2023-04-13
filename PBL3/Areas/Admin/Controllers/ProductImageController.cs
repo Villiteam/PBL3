@@ -5,11 +5,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace PBL3.Controllers
+namespace PBL3.Areas.Admin.Controllers
 {
-       public class ProductImageController : Controller
+    public class ProductImageController : Controller
     {
-        // GET: ProductImage
+        // GET: Admin/ProductImage
         private pbl3Entities db = new pbl3Entities();
         public ActionResult Index(int? id)
         {
@@ -18,7 +18,7 @@ namespace PBL3.Controllers
             return View(ds);
         }
         [HttpPost]
-        public ActionResult AddImage(int productID,string url)
+        public ActionResult AddImage(int productID, string url)
         {
             db.ProductImages.Add(new ProductImage
             {
@@ -29,16 +29,13 @@ namespace PBL3.Controllers
             db.SaveChanges();
             return Json(new { success = true });
         }
-
-
-
         [HttpPost]
         public ActionResult Delete(int id)
         {
             var del = db.ProductImages.Find(id);
             db.ProductImages.Remove(del);
             db.SaveChanges();
-            return Json(new { success = true});
+            return Json(new { success = true });
         }
     }
 }

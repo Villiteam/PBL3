@@ -7,12 +7,12 @@ using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
 
-namespace PBL3.Controllers
+namespace PBL3.Areas.Admin.Controllers
 {
     public class UserController : Controller
     {
+        // GET: Admin/User
         private pbl3Entities db = new pbl3Entities();
-        // GET: User
         //  [AdminAuthorize(Role = new string[] { "Manager" })]
         public ActionResult Index(int? page)
         {
@@ -34,13 +34,19 @@ namespace PBL3.Controllers
         [HttpPost]
         public ActionResult Add(User model)
         {
+            var account = db.Users.SingleOrDefault(m => m.UserName == model.UserName || m.Email == model.Email);
+            if (account != null)
+            {
+                TempData["error"] = "Tài khoản hoặc Email đã tồn tại!";
+                return View();
+            }
             try
             {
                 if (ModelState.IsValid)
                 {
                     model.CreatedDate = DateTime.Now;
                     var passwrHash = Crypto.HashPassword(model.Password);
-                    model.Password= passwrHash;
+                    model.Password = passwrHash;
                     //add vao csdl
                     db.Users.Add(model);
                     // luu lai thay doi
@@ -67,6 +73,7 @@ namespace PBL3.Controllers
         [HttpPost]
         public ActionResult Edit(User model)
         {
+         
             var update = db.Users.Find(model.UserID);
             update.UserName = model.UserName;
             if (update.Password == model.Password)
