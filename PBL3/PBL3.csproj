@@ -3364,8 +3364,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\LayoutUser.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_PartialSideBar.cshtml" />
@@ -3376,6 +3374,7 @@
     <Content Include="Views\Product\Index.cshtml" />
     <Content Include="Views\Menu\_MenuLeft.cshtml" />
     <Content Include="Views\Product\ProductCategory.cshtml" />
+    <Content Include="Views\Product\Detail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,4 +1,5 @@
-﻿using PBL3.Models;
+﻿using Antlr.Runtime.Tree;
+using PBL3.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,11 @@ namespace PBL3.Controllers
         {
             var ds = db.Products.ToList();
             return View(ds);
+        }
+        public ActionResult Detail(int? id)
+        {
+            var item = db.Products.Find(id);
+            return View(item);
         }
 
         public ActionResult ProductCategory(int id)
