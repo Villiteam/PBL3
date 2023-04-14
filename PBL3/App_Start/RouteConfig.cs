@@ -14,10 +14,18 @@ namespace PBL3
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+               name: "Category",
+               url: "danh-muc-san-pham/{id}",
+               defaults: new { controller = "Product", action = "ProductCategory", id = UrlParameter.Optional },
+               namespaces: new[] { "PBL3.Controllers" }
+           );
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                namespaces: new []{"PBL3.Controllers"}
             );
+           
         }
     }
 }
