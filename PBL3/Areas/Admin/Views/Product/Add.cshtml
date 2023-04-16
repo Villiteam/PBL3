@@ -94,18 +94,18 @@
                                     </div>
 
                                     @*<div class="form-group">
-                    <label for="exampleInputFile">Ảnh đại diện</label>
-                    <div class="col-md-10">
-                        <div class="input-group">
-                            <div class="custom-file">
-                                @Html.TextBoxFor(model => model.ListImages, new { @id = "txtImage", @class = "form-control" })
-                            </div>
-                            <div class="input-group-append">
-                                <input type="button" value="Tải ảnh" onclick="BrowseServer('txtImage');" />
-                            </div>
-                        </div>
-                    </div>
-                </div>*@
+                                            <label for="exampleInputFile">Ảnh đại diện</label>
+                                            <div class="col-md-10">
+                                                <div class="input-group">
+                                                    <div class="custom-file">
+                                                        @Html.TextBoxFor(model => model.ListImages, new { @id = "txtImage", @class = "form-control" })
+                                                    </div>
+                                                    <div class="input-group-append">
+                                                        <input type="button" value="Tải ảnh" onclick="BrowseServer('txtImage');" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>*@
 
                                     <div class="form-group">
                                         <lable class="control-label col-md-2 text-bold">Danh mục</lable>
@@ -142,7 +142,7 @@
                                             <div class="form-group">
                                                 <lable class="control-label text-bold">Giá khuyến mãi</lable>
                                                 <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.PromotionPrice, new { htmlAttributes = new { @class = "form-control", type = "number", @Value = "100000" } })
+                                                    @Html.EditorFor(model => model.PromotionPrice, new { htmlAttributes = new { @class = "form-control", type = "number", @Value = "0" } })
                                                     @Html.ValidationMessageFor(model => model.PromotionPrice, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -223,6 +223,7 @@
 </section>
 
 @section DoanJs{
+   
     <script>
         CKEDITOR.replace('idMoTa');
         $(document).ready(function () {
@@ -259,18 +260,18 @@
 
             if (currentID == 1) {
                 str += `<tr id = "trow_${currentID}">
-                                                                <td>${currentID}</td>
-                                                                <td><img width="80" src="${url}" /><input type = "hidden" value = "${url}" name = "Images"/></td>
-                                                                <td><input type="radio" value = "${currentID}" name="rDefault" checked ="checked" /></td>
-                                                                <td><a href="#" data-id = "${currentID}" class="btn btn-sm btn-danger btnXoaAnh">Xóa</a></td>
-                                                        </tr>`;
+                                                                    <td>${currentID}</td>
+                                                                    <td><img width="80" src="${url}" /><input type = "hidden" value = "${url}" name = "Images"/></td>
+                                                                    <td><input type="radio" value = "${currentID}" name="rDefault" checked ="checked" /></td>
+                                                                    <td><a href="#" data-id = "${currentID}" class="btn btn-sm btn-danger btnXoaAnh">Xóa</a></td>
+                                                            </tr>`;
             } else {
                 str += `<tr id = "trow_${currentID}">
-                                                                <td>${currentID}</td>
-                                                                <td><img width="80" src="${url}" /><input type = "hidden" value = "${url}" name = "Images"/></td>
-                                                                <td><input type="radio" value = "${currentID}" name="rDefault" /></td>
-                                                                <td><a href="#" data-id = "${currentID}" class="btn btn-sm btn-danger btnXoaAnh">Xóa</a></td>
-                                                        </tr>`;
+                                                                    <td>${currentID}</td>
+                                                                    <td><img width="80" src="${url}" /><input type = "hidden" value = "${url}" name = "Images"/></td>
+                                                                    <td><input type="radio" value = "${currentID}" name="rDefault" /></td>
+                                                                    <td><a href="#" data-id = "${currentID}" class="btn btn-sm btn-danger btnXoaAnh">Xóa</a></td>
+                                                            </tr>`;
             }
 
 

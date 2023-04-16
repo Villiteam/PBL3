@@ -29,6 +29,8 @@ namespace PBL3.Models
         public bool IsPay { get; set; }
         public string PayType { get; set; }
         public Nullable<int> VoucherID { get; set; }
+        public string OrderAddress { get; set; }
+        public string OrderPhone { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

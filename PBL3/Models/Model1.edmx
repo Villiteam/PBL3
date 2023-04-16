@@ -51,6 +51,8 @@
           <Property Name="OrderID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="OrderDate" Type="datetime" Nullable="false" />
           <Property Name="Status" Type="bit" />
+          <Property Name="OrderAddress" Type="nvarchar" MaxLength="250" />
+          <Property Name="OrderPhone" Type="nvarchar" MaxLength="12" />
           <Property Name="Delivered" Type="bit" />
           <Property Name="DeliveryDate" Type="datetime" Nullable="false" />
           <Property Name="UserID" Type="int" Nullable="false" />
@@ -453,6 +455,8 @@
           <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetails_Orders" FromRole="Orders" ToRole="OrderDetails" />
           <NavigationProperty Name="User" Relationship="Self.FK_Orders_Users1" FromRole="Orders" ToRole="Users" />
           <NavigationProperty Name="Voucher" Relationship="Self.FK_Orders_Voucher" FromRole="Orders" ToRole="Voucher" />
+          <Property Name="OrderAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="OrderPhone" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ProductImage">
           <Key>
@@ -847,6 +851,8 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="pbl3Model.Order">
               <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="OrderPhone" ColumnName="OrderPhone" />
+                <ScalarProperty Name="OrderAddress" ColumnName="OrderAddress" />
                 <ScalarProperty Name="OrderID" ColumnName="OrderID" />
                 <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
                 <ScalarProperty Name="Status" ColumnName="Status" />

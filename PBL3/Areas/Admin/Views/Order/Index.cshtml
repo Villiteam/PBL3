@@ -1,0 +1,110 @@
+﻿@model PagedList.PagedList<PBL3.Models.Order>
+@using PagedList.Mvc;
+@using PagedList;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section naviheader{
+    <!-- Left navbar links -->
+    <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">Quản lý đơn hàng</a>
+    </li>
+
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Quản lý đơn hàng</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Quản lý đơn hàng</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Danh sách đơn hàng</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Người đặt hàng</th>
+                        <th>Địa chỉ nhận hàng</th>
+                        <th>Số điện thoại</th>
+                        <th>Thành tiền</th>
+                        <th>Ngày tạo</th>
+                        <th>Trạng thái</th>
+                        <th>#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        var i = ViewBag.Page;
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@i</td>
+                                @{
+                                    PBL3.Models.pbl3Entities db = new PBL3.Models.pbl3Entities();
+                                    var User = db.Users.Find(item.UserID);
+                                    var order = db.OrderDetails.Where(m => m.OrderID == item.OrderID).ToList();
+                                    var sum = 0.0;
+                                    foreach (var a in order)
+                                    {
+                                        sum += (a.Quantity * a.Price);
+                                    }
+                                }
+                                <td>@User.UserName</td>
+                                <td>@item.OrderAddress</td>
+                                <td>@item.OrderPhone</td>
+                                <td>@sum.ToString("N0")</td>
+                                <td>@item.OrderDate </td>
+                                <td>@item.Status</td>
+                                <td>
+                                    @Html.ActionLink("Chi tiết", "Detail", new { id = item.OrderID }, new { @class = "btn btn-sm btn-success" })
+                                    @Html.ActionLink("Hủy đơn", "Delete", new { id = item.OrderID }, new { @class = "btn btn-sm btn-danger delete-link", onclick = "return confirm('Bạn có chắc muốn xóa?');" })
+                                </td>
+                            </tr>
+                            i++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">Không có bản ghi nào</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6 " style="text-align: center">  @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))</div>
+                <div class="col-md-3"></div>
+            </div>
+
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+
+        </div>
+        <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+
+</section>
+<!-- /.content -->

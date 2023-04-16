@@ -1,0 +1,76 @@
+﻿@model IEnumerable<PBL3.Models.Order>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/LayoutUser.cshtml";
+}
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/single_styles.css">
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/single_responsive.css">
+
+
+<div class="container single_product_container">
+    <div class="row">
+        <div class="col-lg-12">
+            <section>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Danh sách đơn hàng</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Địa chỉ nhận hàng</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Thành tiền</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Trạng thái</th>
+                                    <th>#</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Any())
+                                {
+                                    var i = 1;
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@i</td>
+                                            @{
+                                                PBL3.Models.pbl3Entities db = new PBL3.Models.pbl3Entities();
+                                                var order = db.OrderDetails.Where(m => m.OrderID == item.OrderID).ToList();
+                                                var sum = 0.0;
+                                                foreach (var a in order)
+                                                {
+                                                    sum += (a.Quantity * a.Price);
+                                                }
+                                            }
+                                            <td>@item.OrderAddress</td>
+                                            <td>@item.OrderPhone</td>
+                                            <td>@sum.ToString("N0")</td>
+                                            <td>@item.OrderDate </td>
+                                            <td>@item.Status</td>
+                                            <td>
+                                                @Html.ActionLink("Chi tiết", "Detail", new { id = item.OrderID }, new { @class = "btn btn-sm btn-success" })
+                                                @Html.ActionLink("Hủy đơn", "Delete", new { id = item.OrderID }, new { @class = "btn btn-sm btn-danger delete-link", onclick = "return confirm('Bạn có chắc muốn xóa?');" })
+                                            </td>
+                                        </tr>
+                                        i++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4">Không có bản ghi nào</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+

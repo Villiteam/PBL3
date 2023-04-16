@@ -148,17 +148,15 @@
                                                     <h6 class="product_name"><a href="~/Product/Detail?id=@item.ProductID">@item.Title</a></h6>
                                                     @if (item.PromotionPrice > 0)
                                                     {
-                                                        <div class="product_price">@item.Price<span>@item.PromotionPrice</span></div>
-                                                        @*<div style="display: none;" class="in_product_price">@item.PromotionPrice</div>*@
+                                                        <div class="product_price">@item.Price.ToString("N0")<span>@item.PromotionPrice.Value.ToString("N0")</span></div>
                                                     }
                                                     else
                                                     {
-                                                        <div class="product_price">@item.Price</div>
-                                                        @*<div style="display: none;" class="in_product_price">@item.Price</div>*@
+                                                        <div class="product_price">@item.Price.ToString("N0")</div>
                                                     }
                                                 </div>
                                             </div>
-                                            <div class="red_button add_to_cart_button"><a href="#">add to cart</a></div>
+                                            <div class="red_button add_to_cart_button"><a href="/them-gio-hang?id=@item.ProductID&quantity=1">add to cart</a></div>
                                         </div>
                                     }
                                 }

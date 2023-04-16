@@ -16,8 +16,8 @@
                 <div class="breadcrumbs d-flex flex-row align-items-center">
                     <ul>
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="categories.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Men's</a></li>
-                        <li class="active"><a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i>Single Product</a></li>
+                        <li><a href="categories.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Single Product</a></li>
+                        @*<li class="active"><a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i></a></li>*@
                     </ul>
                 </div>
 
@@ -37,9 +37,6 @@
                                         {
                                             <li><img src="@item.Image" alt="" data-image="@item.Image"></li>
                                         }
-                                        @*<li><img src="images/single_1_thumb.jpg" alt="" data-image="images/single_1.jpg"></li>
-                                        <li class="active"><img src="images/single_2_thumb.jpg" alt="" data-image="images/single_2.jpg"></li>
-                                        <li><img src="images/single_3_thumb.jpg" alt="" data-image="images/single_3.jpg"></li>*@
                                     </ul>
                                 </div>
                             </div>
@@ -64,12 +61,12 @@
                     </div>
                     @if (Model.PromotionPrice > 0)
                     {
-                        <div class="original_price">@Model.Price đ</div>
-                        <div class="product_price">@Model.PromotionPrice đ </div>
+                        <div class="original_price">@Model.Price.ToString("N0") đ</div>
+                        <div class="product_price">@Model.PromotionPrice.Value.ToString("N0") đ </div>
                     }
                     else
                     {
-                        <div class="product_price">@Model.Price đ </div>
+                        <div class="product_price">@Model.Price.ToString("N0") đ </div>
                     }
 
                     <ul class="star_rating">
@@ -94,7 +91,7 @@
                             <span id="quantity_value">1</span>
                             <span class="plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
                         </div>
-                        <div class="red_button add_to_cart_button"><a href="#">add to cart</a></div>
+                        <div class="red_button add_to_cart_button"><a href="#" onclick="addToCart(@Model.ProductID)">add to cart</a></div>
                         <div class="product_favorite d-flex flex-column align-items-center justify-content-center"></div>
                     </div>
                 </div>
@@ -131,7 +128,7 @@
                                     <h4>Description</h4>
                                 </div>
                                 <div class="tab_text_block">
-                                   @Html.Raw(Model.Description)
+                                    @Html.Raw(Model.Description)
                                 </div>
 
                             </div>
@@ -254,4 +251,11 @@
 
 @section DoanJS{
     <script src="~/Content/assets/js/single_custom.js"></script>
+    <script>
+        function addToCart(productId) {
+            var quantity = document.getElementById("quantity_value").innerText;
+            var url = "/them-gio-hang?id=" + productId + "&quantity=" + quantity;
+            window.location.href = url;
+        }
+    </script>
 }
