@@ -52,7 +52,7 @@
                         <th>Danh mục</th>
                         <th>Số lượng</th>
                         <th>Giá</th>
-                        <th>Ngày tạo</th>
+                        @*<th>Ngày tạo</th>*@
                         <th>Trang chủ</th>
                         <th>Khuyến mãi</th>
                         <th>Hiển thị</th>
@@ -66,6 +66,8 @@
                         foreach (var item in Model)
                         {
                             var strCheck = item.Status ? "<i class='fa fa-check text-success'></i>" : " <i class='fas fa-times text-danger'></i>";
+                            var strCheckHome = item.isHome ? "<i class='fa fa-check text-success'></i>" : " <i class='fas fa-times text-danger'></i>";
+                            var strCheckSale = item.isSale ? "<i class='fa fa-check text-success'></i>" : " <i class='fas fa-times text-danger'></i>";
                             <tr>
                                 <td>@i</td>
                                 <td>
@@ -76,15 +78,24 @@
                                 </td>
                                 <td>@item.ProductName</td>
                                 <td>@item.Title</td>
-                                <td>@item.Category.CatName</td>
+
+                                @if (item.Category != null)
+                                {
+                                    <td> @item.Category.CatName</td>
+                                }
+                                else
+                                {
+                                    <td> Trống</td>
+                                }
+
                                 <td>@item.Quantity</td>
                                 <td>@item.Price.ToString("N0")</td>
-                                <td>@item.CreateDate</td>
+                                @*<td>@item.CreateDate</td>*@
                                 <td>
-                                    <a href="#" data-id="@item.ProductID" data-status="@item.isHome" class="btnHome"> @Html.Raw(strCheck)</a>
+                                    <a href="#" data-id="@item.ProductID" data-status="@item.isHome" class="btnHome"> @Html.Raw(strCheckHome)</a>
                                 </td>
                                 <td>
-                                    <a href="#" data-id="@item.ProductID" data-status="@item.isSale" class="btnSale"> @Html.Raw(strCheck)</a>
+                                    <a href="#" data-id="@item.ProductID" data-status="@item.isSale" class="btnSale"> @Html.Raw(strCheckSale)</a>
                                 </td>
                                 <td>
                                     <a href="#" data-id="@item.ProductID" data-status="@item.Status" class="btnStatus"> @Html.Raw(strCheck)</a>

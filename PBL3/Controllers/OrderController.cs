@@ -35,20 +35,9 @@ namespace PBL3.Controllers
             return View(list);
         }
 
-
-        //public ActionResult Index()
-        //{
-        //    User nvSession = (User)Session["user"];
-        //    if (nvSession != null)
-        //    {
-        //        var list = db.Orders.Where(m => m.UserID == nvSession.UserID).OrderByDescending(m => m.OrderID).ToList();
-        //        return View(list);
-        //    }
-        //    return View();
-        //}
         public ActionResult Detail(int id)
         {
-            var order = db.OrderDetails.Where(m => m.OrderID == id).ToList();
+            var order = db.Orders.Find(id);
             return View(order);
         }
         public ActionResult Payment()
@@ -62,7 +51,7 @@ namespace PBL3.Controllers
             return View(list);
         }
         [HttpPost]
-        public ActionResult Payment(string address, string phone, string PayType)
+        public ActionResult Payment(string address, string phone, string PayType,double total)
         {
             var sessionCart = Session[Common.CommonConstants.CartSession];
             var list = new List<CartItem>();
@@ -99,6 +88,7 @@ namespace PBL3.Controllers
             model.Delivered = false;
             model.DeliveryDate = DateTime.Now;
             model.IsPay = false;
+            model.Total = total;
             db.Orders.Add(model);
             db.SaveChanges();
 
