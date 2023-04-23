@@ -41,7 +41,7 @@
                 <a href="~/Admin/Product/Add" class="btn btn-primary">Thêm mới</a>
             </div>
         </div>
-        <div class="card-body">
+        <div class="card-body text-center">
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -53,6 +53,8 @@
                         <th>Số lượng</th>
                         <th>Giá</th>
                         <th>Ngày tạo</th>
+                        <th>Trang chủ</th>
+                        <th>Khuyến mãi</th>
                         <th>Hiển thị</th>
                         <th>#</th>
                     </tr>
@@ -63,6 +65,7 @@
                         var i = ViewBag.Page;
                         foreach (var item in Model)
                         {
+                            var strCheck = item.Status ? "<i class='fa fa-check text-success'></i>" : " <i class='fas fa-times text-danger'></i>";
                             <tr>
                                 <td>@i</td>
                                 <td>
@@ -77,7 +80,15 @@
                                 <td>@item.Quantity</td>
                                 <td>@item.Price.ToString("N0")</td>
                                 <td>@item.CreateDate</td>
-                                <td>@item.Status</td>
+                                <td>
+                                    <a href="#" data-id="@item.ProductID" data-status="@item.isHome" class="btnHome"> @Html.Raw(strCheck)</a>
+                                </td>
+                                <td>
+                                    <a href="#" data-id="@item.ProductID" data-status="@item.isSale" class="btnSale"> @Html.Raw(strCheck)</a>
+                                </td>
+                                <td>
+                                    <a href="#" data-id="@item.ProductID" data-status="@item.Status" class="btnStatus"> @Html.Raw(strCheck)</a>
+                                </td>
                                 <td>
                                     @Html.ActionLink("Sửa", "Edit", new { id = item.ProductID }, new { @class = "btn btn-sm btn-primary" })
                                     @Html.ActionLink("Xóa", "Delete", new { id = item.ProductID }, new { @class = "btn btn-sm btn-danger delete-link", onclick = "return confirm('Bạn có chắc muốn xóa?');" })
@@ -116,46 +127,6 @@
 </div>
 
 
-@*<td>
-        <button type="button" class="btn imgproduct" data-toggle="modal" data-target="#exampleModal" data-productid="@item.ProductID">
-            <img src="@item.ProductImages.FirstOrDefault(x=>x.isDefault).Image" width="60" />
-        </button>
-    </td>*@
-@*<div id="exampleModal" class="modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Hình ảnh sản phẩm</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>Tên:</label>
-                        @Html.Partial("../ProductImage/Index", new List<PBL3.Models.ProductImage>())
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>*@
-
-@*@section DoanJs{
-        <script>
-            $(document).ready(function () {
-                $('#exampleModal').on('show.bs.modal', function (event) {
-                    var button = $(event.relatedTarget);
-                    var productId = button.data('productid');
-                    var modal = $(this);
-                    modal.find('.modal-body').load('../ProductImage/Index?id=' + productId);
-                });
-            });
-        </script>
-    }*@
-
-
-
-
 @section DoanJs{
 
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
@@ -181,6 +152,72 @@
                 $("#dialog #myIframe").attr("src", "/Admin/ProductImage/Index?id=" + proid);
                 $('#dialog').dialog('open');
                 return false;
+            });
+            $('body').on('click', '.btnStatus', function (e) {
+                e.preventDefault();
+                debugger;
+                var btn = $(this);
+                var id = btn.data("id");
+                $.ajax({
+                    url: '/Admin/Product/Status',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        if (rs.success) {
+                            if (rs.isActive) {
+                                btn.html("<i class='fa fa-check text-success'></i>");
+                            } else {
+                                btn.html("<i class='fas fa-times text-danger'></i>");
+                            }
+                        }
+
+                    }
+                });
+
+            });
+            $('body').on('click', '.btnHome', function (e) {
+                e.preventDefault();
+                debugger;
+                var btn = $(this);
+                var id = btn.data("id");
+                $.ajax({
+                    url: '/Admin/Product/isHome',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        if (rs.success) {
+                            if (rs.isActive) {
+                                btn.html("<i class='fa fa-check text-success'></i>");
+                            } else {
+                                btn.html("<i class='fas fa-times text-danger'></i>");
+                            }
+                        }
+
+                    }
+                });
+
+            });
+            $('body').on('click', '.btnSale', function (e) {
+                e.preventDefault();
+                debugger;
+                var btn = $(this);
+                var id = btn.data("id");
+                $.ajax({
+                    url: '/Admin/Product/isSale',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        if (rs.success) {
+                            if (rs.isActive) {
+                                btn.html("<i class='fa fa-check text-success'></i>");
+                            } else {
+                                btn.html("<i class='fas fa-times text-danger'></i>");
+                            }
+                        }
+
+                    }
+                });
+
             });
         });
     </script>

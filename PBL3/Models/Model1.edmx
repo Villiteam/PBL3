@@ -95,7 +95,7 @@
           <Property Name="isHot" Type="bit" Nullable="false" />
           <Property Name="Status" Type="bit" Nullable="false" />
           <Property Name="ViewCount" Type="int" />
-          <Property Name="CatID" Type="int" Nullable="false" />
+          <Property Name="CatID" Type="int" />
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="Size" Type="nvarchar" MaxLength="10" />
           <Property Name="Color" Type="nvarchar" MaxLength="10" />
@@ -284,7 +284,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Products_Category">
-          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
           <End Role="Products" Type="Self.Products" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Category">
@@ -485,7 +485,7 @@
           <Property Name="isHot" Type="Boolean" Nullable="false" />
           <Property Name="Status" Type="Boolean" Nullable="false" />
           <Property Name="ViewCount" Type="Int32" />
-          <Property Name="CatID" Type="Int32" Nullable="false" />
+          <Property Name="CatID" Type="Int32" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Size" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Color" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />

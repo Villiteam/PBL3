@@ -15,16 +15,37 @@ namespace PBL3.Controllers
         // GET: Order
         private pbl3Entities db = new pbl3Entities();
         private string CartSession = Common.CommonConstants.CartSession;
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
             User nvSession = (User)Session["user"];
+            var pageSize = 5;
+            if (page == null)
+            {
+                page = 1;
+            }
+            ViewBag.Page = (page - 1) * pageSize + 1;
+            var pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+
+            IPagedList<Order> list = null;
+
             if (nvSession != null)
             {
-                var list = db.Orders.Where(m => m.UserID == nvSession.UserID).OrderByDescending(m => m.OrderID).ToList();
-                return View(list);
+                list = db.Orders.Where(m => m.UserID == nvSession.UserID).OrderByDescending(m => m.OrderID).ToPagedList(pageIndex, pageSize);
             }
-            return View();
+            return View(list);
         }
+
+
+        //public ActionResult Index()
+        //{
+        //    User nvSession = (User)Session["user"];
+        //    if (nvSession != null)
+        //    {
+        //        var list = db.Orders.Where(m => m.UserID == nvSession.UserID).OrderByDescending(m => m.OrderID).ToList();
+        //        return View(list);
+        //    }
+        //    return View();
+        //}
         public ActionResult Detail(int id)
         {
             var order = db.OrderDetails.Where(m => m.OrderID == id).ToList();
@@ -58,6 +79,7 @@ namespace PBL3.Controllers
             }
             else
             {
+                ViewBag.ShowModal = true;
                 ViewBag.Error = "Vui lòng đăng nhập để thanh toán";
                 return View(list);
             }
@@ -74,7 +96,7 @@ namespace PBL3.Controllers
             model.PayType = PayType;
             model.OrderDate = DateTime.Now;
             model.Status = false;
-            model.Delivered= false;
+            model.Delivered = false;
             model.DeliveryDate = DateTime.Now;
             model.IsPay = false;
             db.Orders.Add(model);
@@ -82,18 +104,18 @@ namespace PBL3.Controllers
 
             // Lưu chi tiết đơn hàng
             var cart = (List<CartItem>)Session[CartSession];
-            foreach(var item in cart)
+            foreach (var item in cart)
             {
                 var orderDetail = new OrderDetail();
                 orderDetail.OrderID = model.OrderID;
                 orderDetail.ProductID = item.Product.ProductID;
-                orderDetail.Quantity= item.Quantity;
+                orderDetail.Quantity = item.Quantity;
                 orderDetail.Price = item.Product.Price;
                 db.OrderDetails.Add(orderDetail);
                 db.SaveChanges();
             }
             Session[CartSession] = null;
-            return RedirectToAction("Success"); 
+            return RedirectToAction("Success");
         }
         public ActionResult Success()
         {

@@ -47,10 +47,13 @@ namespace PBL3.Areas.Admin.Controllers
                     model.CreatedDate = DateTime.Now;
                     var passwrHash = Crypto.HashPassword(model.Password);
                     model.Password = passwrHash;
+                    model.Status = true;
                     //add vao csdl
                     db.Users.Add(model);
                     // luu lai thay doi
                     db.SaveChanges();
+                    TempData["type"] = "success";
+                    TempData["successMessage"] = "Thêm mới thành công!";
                     return RedirectToAction("Index");
                 }
                 return View();
@@ -61,7 +64,6 @@ namespace PBL3.Areas.Admin.Controllers
                 TempData["error"] = "Lưu dữ liệu thất bại. Vui lòng nhập đầy đủ dữ liệu!";
                 return View(model);
             }
-
         }
 
         public ActionResult Edit(int id)
@@ -89,6 +91,8 @@ namespace PBL3.Areas.Admin.Controllers
             update.Role = model.Role;
             update.Status = model.Status;
             db.SaveChanges();
+            TempData["type"] = "success";
+            TempData["successMessage"] = "Cập nhật thành công!";
             return RedirectToAction("Index");
         }
 
@@ -97,7 +101,23 @@ namespace PBL3.Areas.Admin.Controllers
             var del = db.Users.Find(id);
             db.Users.Remove(del);
             db.SaveChanges();
+            TempData["successMessage"] = "Xóa thành công!";
+            TempData["type"] = "error";
+
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult Status(int id)
+        {
+            var item = db.Users.Find(id);
+            if(item  != null)
+            {
+                item.Status = !item.Status;
+                db.SaveChanges();
+                return Json(new { success = true ,isActive = item.Status});
+            }
+            return Json(new { success = false });
         }
     }
 }

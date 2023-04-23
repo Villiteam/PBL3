@@ -43,5 +43,12 @@ namespace PBL3.Controllers
             var item = db.Products.Where(m => m.isSale && m.Status).Take(10).ToList();
             return PartialView("Partial_BestSellers", item);
         }
+
+        public ActionResult Search(string keyword)
+        {
+            var data = db.Products.Where(m => m.ProductName.Contains(keyword)).ToList(); 
+            return View(data);
+        }
+ 
     }
 }

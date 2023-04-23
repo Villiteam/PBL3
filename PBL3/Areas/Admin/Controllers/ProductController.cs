@@ -124,5 +124,41 @@ namespace PBL3.Areas.Admin.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        [HttpPost]
+        public ActionResult Status(int id)
+        {
+            var item = db.Products.Find(id);
+            if (item != null)
+            {
+                item.Status = !item.Status;
+                db.SaveChanges();
+                return Json(new { success = true, isActive = item.Status });
+            }
+            return Json(new { success = false });
+        }
+        [HttpPost]
+        public ActionResult isHome(int id)
+        {
+            var item = db.Products.Find(id);
+            if (item != null)
+            {
+                item.isHome = !item.isHome;
+                db.SaveChanges();
+                return Json(new { success = true, isActive = item.isHome });
+            }
+            return Json(new { success = false });
+        }
+        [HttpPost]
+        public ActionResult isSale(int id)
+        {
+            var item = db.Products.Find(id);
+            if (item != null)
+            {
+                item.isSale = !item.isSale;
+                db.SaveChanges();
+                return Json(new { success = true, isActive = item.isSale });
+            }
+            return Json(new { success = false });
+        }
     }
 }
