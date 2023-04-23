@@ -26,8 +26,32 @@ namespace PBL3.Areas.Admin.Controllers
         }
         public ActionResult Detail(int id)
         {
-            var order = db.OrderDetails.Where(m => m.OrderID == id).ToList();
+            var order = db.Orders.Find(id);
             return View(order);
+        }
+        [HttpPost]
+        public ActionResult Status(int id)
+        {
+            var item = db.Orders.Find(id);
+            if (item != null)
+            {
+                item.Status = !item.Status;
+                db.SaveChanges();
+                return Json(new { success = true, isActive = item.Status });
+            }
+            return Json(new { success = false });
+        }
+        [HttpPost]
+        public ActionResult Delivered(int id)
+        {
+            var item = db.Orders.Find(id);
+            if (item != null)
+            {
+                item.Delivered = !item.Delivered;
+                db.SaveChanges();
+                return Json(new { success = true, isActive = item.Delivered });
+            }
+            return Json(new { success = false });
         }
     }
 }

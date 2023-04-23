@@ -37,7 +37,7 @@
         <div class="card-header">
             <h3 class="card-title">Danh sách đơn hàng</h3>
         </div>
-        <div class="card-body">
+        <div class="card-body text-center">
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -47,7 +47,8 @@
                         <th>Số điện thoại</th>
                         <th>Thành tiền</th>
                         <th>Ngày tạo</th>
-                        <th>Trạng thái</th>
+                        <th>Xác nhận</th>
+                        <th>Đã giao</th>
                         <th>#</th>
                     </tr>
                 </thead>
@@ -57,24 +58,21 @@
                         var i = ViewBag.Page;
                         foreach (var item in Model)
                         {
+                            var strCheck = item.Status ? "<i class='fa fa-check text-success'></i>" : " <i class='fas fa-times text-danger'></i>";
+                            var strCheckDelivered = item.Delivered ? "<i class='fa fa-check text-success'></i>" : " <i class='fas fa-times text-danger'></i>";
                             <tr>
                                 <td>@i</td>
-                                @{
-                                    PBL3.Models.pbl3Entities db = new PBL3.Models.pbl3Entities();
-                                    var User = db.Users.Find(item.UserID);
-                                    var order = db.OrderDetails.Where(m => m.OrderID == item.OrderID).ToList();
-                                    var sum = 0.0;
-                                    foreach (var a in order)
-                                    {
-                                        sum += (a.Quantity * a.Price);
-                                    }
-                                }
-                                <td>@User.UserName</td>
+                                <td>@item.User.UserName</td>
                                 <td>@item.OrderAddress</td>
                                 <td>@item.OrderPhone</td>
-                                <td>@sum.ToString("N0")</td>
+                                <td>@item.Total.Value.ToString("N0")</td>
                                 <td>@item.OrderDate </td>
-                                <td>@item.Status</td>
+                                <td>
+                                    <a href="#" data-id="@item.OrderID" data-status="@item.Status" class="btnStatus"> @Html.Raw(strCheck)</a>
+                                </td>
+                                <td>
+                                    <a href="#" data-id="@item.OrderID" data-status="@item.Delivered" class="btnDelivered"> @Html.Raw(strCheckDelivered)</a>
+                                </td>
                                 <td>
                                     @Html.ActionLink("Chi tiết", "Detail", new { id = item.OrderID }, new { @class = "btn btn-sm btn-success" })
                                     @Html.ActionLink("Hủy đơn", "Delete", new { id = item.OrderID }, new { @class = "btn btn-sm btn-danger delete-link", onclick = "return confirm('Bạn có chắc muốn xóa?');" })
@@ -108,3 +106,49 @@
 
 </section>
 <!-- /.content -->
+@section DoanJS {
+    <script>
+        $(document).ready(function () {
+            $('body').on('click', '.btnStatus', function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var id = btn.data("id");
+                $.ajax({
+                    url: '/Admin/Order/Status',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        if (rs.success) {
+                            if (rs.isActive) {
+                                btn.html("<i class='fa fa-check text-success'></i>");
+                            } else {
+                                btn.html("<i class='fas fa-times text-danger'></i>");
+                            }
+                        }
+
+                    }
+                });
+            });
+            $('body').on('click', '.btnDelivered', function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var id = btn.data("id");
+                $.ajax({
+                    url: '/Admin/Order/Delivered',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        if (rs.success) {
+                            if (rs.isActive) {
+                                btn.html("<i class='fa fa-check text-success'></i>");
+                            } else {
+                                btn.html("<i class='fas fa-times text-danger'></i>");
+                            }
+                        }
+
+                    }
+                });
+            });
+        });
+    </script>
+}

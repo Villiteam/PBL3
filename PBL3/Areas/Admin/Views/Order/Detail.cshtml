@@ -1,22 +1,81 @@
-﻿@model IEnumerable<PBL3.Models.OrderDetail>
+﻿@model PBL3.Models.Order
 
 @{
     ViewBag.Title = "Detail";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
+<style>
+    table {
+        border: 2px solid #ccc;
+    }
+
+    td, th {
+        border: 2px solid #ccc;
+        border-color: #ccc !important;
+    }
+</style>
+<section class="content">
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3>Chi tiết đơn hàng</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Mã đơn hàng</label>
+                        <p class="form-control">@Model.OrderID</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Họ tên khách hàng</label>
+                        <p class="form-control">@Model.User.UserName</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Số điện thoại</label>
+                        <p class="form-control">@Model.OrderPhone</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Địa chỉ</label>
+                        <p class="form-control">@Model.OrderAddress </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Ngày tạo</label>
+                        <p class="form-control">@Model.OrderDate</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Tổng tiền</label>
+                        <p class="form-control">@Model.Total.Value.ToString("N0")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 
 <section class="content">
     <!-- Default box -->
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Danh sách sản phẩm</h3>
-
-            <div class="card-tools">
-                <a href="~/Admin/Product/Add" class="btn btn-primary">Thêm mới</a>
-            </div>
+            <h3>Danh sách sản phẩm</h3>
         </div>
         <div class="card-body">
-            <table class="table table-hover text-center">
+            <table class="table text-center">
                 <thead>
                     <tr>
                         <th>STT</th>
@@ -25,14 +84,13 @@
                         <th>Giá</th>
                         <th>Số lượng</th>
                         <th>Thành tiền</th>
-                        <th>Phương thức thanh toán</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model != null && Model.Any())
+                    @if (Model != null)
                     {
                         var i = 1;
-                        foreach (var item in Model)
+                        foreach (var item in Model.OrderDetails)
                         {
                             <tr>
                                 <td>@i</td>
@@ -45,7 +103,6 @@
                                 <td>@item.Price.ToString("N0")</td>
                                 <td>@item.Quantity</td>
                                 <td>@((item.Price * item.Quantity).ToString("N0"))</td>
-                                <td>@item.Order.PayType</td>
                             </tr>
                             i++;
                         }

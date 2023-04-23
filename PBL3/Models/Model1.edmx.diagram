@@ -4,18 +4,19 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="5316da216dfa430c9523f04188034d54" Name="Diagram1">
-        <EntityTypeShape EntityType="pbl3Model.Category" Width="1.5" PointX="1.5" PointY="13.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.Comment" Width="1.5" PointX="3" PointY="8.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.Feedback" Width="1.5" PointX="6" PointY="8.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.OrderDetail" Width="1.5" PointX="3" PointY="4.25" IsExpanded="true" />
+      <Diagram DiagramId="320cfdc843cd48779cf691aa0fe3e26c" Name="Diagram1">
+        <EntityTypeShape EntityType="pbl3Model.Category" Width="1.5" PointX="1.5" PointY="14.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.Comment" Width="1.5" PointX="3" PointY="9.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.Feedback" Width="1.5" PointX="6" PointY="9.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.OrderDetail" Width="1.5" PointX="3" PointY="5.375" IsExpanded="true" />
         <EntityTypeShape EntityType="pbl3Model.Order" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.ProductImage" Width="1.5" PointX="3" PointY="16.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.Product" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.Role" Width="1.5" PointX="1.5" PointY="26.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.User" Width="1.5" PointX="1.5" PointY="21.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.Voucher" Width="1.5" PointX="1.5" PointY="29.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.Warehouse" Width="1.5" PointX="3" PointY="19.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.ProductImage" Width="1.5" PointX="3" PointY="17.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.Product" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.Role" Width="1.5" PointX="1.5" PointY="28.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.sysdiagram" Width="1.5" PointX="5.75" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.User" Width="1.5" PointX="1.5" PointY="23.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.Voucher" Width="1.5" PointX="1.5" PointY="30.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.Warehouse" Width="1.5" PointX="3" PointY="20.375" IsExpanded="true" />
         <AssociationConnector Association="pbl3Model.FK_Category_Category" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_Products_Category" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_Comment_Products" ManuallyRouted="false" />
@@ -29,9 +30,6 @@
         <AssociationConnector Association="pbl3Model.FK_ProductImage_Products1" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_Warehouse_Products" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_Users_Roles" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="pbl3Model.Product1" Width="1.5" PointX="3.375" PointY="0.75" />
-        <EntityTypeShape EntityType="pbl3Model.sysdiagram" Width="1.5" PointX="5.375" PointY="0.75" />
-        <EntityTypeShape EntityType="pbl3Model.UserAccount" Width="1.5" PointX="5.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
