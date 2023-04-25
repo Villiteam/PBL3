@@ -1,7 +1,10 @@
-﻿using PagedList;
+﻿using Antlr.Runtime.Tree;
+using PagedList;
+using PBL3.EF;
 using PBL3.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -24,14 +27,33 @@ namespace PBL3.Areas.Admin.Controllers
             var ds = db.Products.OrderByDescending(m => m.ProductID).ToPagedList(pageIndex, pageSize);
             return View(ds);
         }
+
         public ActionResult Add()
         {
             return View();
         }
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Add(Product model, List<string> Images, List<int> rDefault)
+        //public ActionResult Add(Product model, List<string> Images, List<int> rDefault, List<int> SizeName)
+        public ActionResult Add(ProductV productV, List<string> Images, List<int> rDefault)
         {
+            var model = productV.Product;
+            var listSize = productV.Sizes;
+            if (listSize == null ||listSize.Count() <= 0)
+            {
+                TempData["error"] = "Sản phẩm chưa có kích cỡ!";
+                return View(productV);
+            }
+            int sl = 0;
+            foreach (var i in listSize)
+            {
+                if (i.SizeName == null || i.Quantity < 1)
+                {
+                    TempData["error"] = "Tên kích cỡ không được để trống và số lượng ít nhất là 1!";
+                    return View(productV);
+                }
+                sl += i.Quantity;
+            }
             var item = db.Products.SingleOrDefault(m => m.ProductName == model.ProductName);
             if (item != null)
             {
@@ -69,20 +91,28 @@ namespace PBL3.Areas.Admin.Controllers
                 return View(model);
             }
 
-
             try
             {
-                if (ModelState.IsValid)
-                {
+                //add vao csdl
+                model.CreateDate = DateTime.Now;
+                model.Quantity = sl;
+                db.Products.Add(model);
+                // luu lai thay doi
+                db.SaveChanges();
 
-                    //add vao csdl
-                    model.CreateDate = DateTime.Now;
-                    db.Products.Add(model);
-                    // luu lai thay doi
+
+                // thêm bảng số lượng   
+                foreach (var v in listSize)
+                {
+                    var size = new Size();
+                    size.ProductID = model.ProductID;
+                    size.SizeName = v.SizeName;
+                    size.Quantity = v.Quantity;
+                    db.Sizes.Add(size);
                     db.SaveChanges();
-                    return RedirectToAction("Index");
                 }
-                return View(model);
+
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
@@ -93,20 +123,40 @@ namespace PBL3.Areas.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
-            var model = db.Products.Find(id);
-            return View(model);
+            var productV = new ProductV();
+            productV.Product = db.Products.Find(id);
+            productV.Sizes = db.Sizes.Where(m => m.ProductID == id).ToList();
+            return View(productV);
         }
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Edit(Product model)
+        public ActionResult Edit(ProductV productV)
         {
-           
+            var model = productV.Product;
+            var listSize = productV.Sizes;
+
+            if (listSize == null || listSize.Count() <= 0)
+            {
+                TempData["error"] = "Sản phẩm chưa có kích cỡ!";
+                return View(productV);
+            }
+            int sl = 0;
+            foreach (var i in listSize)
+            {
+                if (i.SizeName == null || i.Quantity < 1)
+                {
+                    TempData["error"] = "Tên kích cỡ không được để trống và số lượng ít nhất là 1!";
+                    return View(productV);
+                }
+                sl += i.Quantity;
+            }
+
             var update = db.Products.Find(model.ProductID);
             update.ProductName = model.ProductName;
             update.Title = model.Title;
             update.Description = model.Description;
             update.CatID = model.CatID;
-            update.Quantity = model.Quantity;
+            update.Quantity = sl;
             update.Price = model.Price;
             update.PromotionPrice = model.PromotionPrice;
             update.Status = model.Status;
@@ -115,6 +165,24 @@ namespace PBL3.Areas.Admin.Controllers
             update.isSale = model.isSale;
             update.CreateDate = DateTime.Now;
             db.SaveChanges();
+
+
+            // Xóa bảng size cũ của sản phẩm với productid
+            var sizesToDelete = db.Sizes.Where(m => m.ProductID == model.ProductID);
+            db.Sizes.RemoveRange(sizesToDelete);
+            db.SaveChanges();
+
+            // Lưu 1 bảng size mới 
+            foreach (var v in listSize)
+            {
+                var size = new Size();
+                size.ProductID = model.ProductID;
+                size.SizeName = v.SizeName;
+                size.Quantity = v.Quantity;
+                db.Sizes.Add(size);
+                db.SaveChanges();
+            }
+
             return RedirectToAction("Index");
         }
         public ActionResult Delete(int id)
