@@ -19,11 +19,14 @@
                     }
                     else
                     {
-                        <div class="product_price">@item.Price.ToString("N0")</div>     
+                        <div class="product_price">@item.Price.ToString("N0")</div>
                     }
                 </div>
             </div>
-            <div class="red_button add_to_cart_button"><a href="/them-gio-hang?id=@item.ProductID&quantity=1">add to cart</a></div>
+            @{
+                var d = item.Sizes.Select(m => m.SizeID).Take(1);
+            }
+            <div class="red_button add_to_cart_button"><a href="/them-gio-hang?id=@item.ProductID&quantity=1&sizeID=@d">add to cart</a></div>
         </div>
     }
 }

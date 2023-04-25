@@ -63,7 +63,7 @@ namespace PBL3.Controllers
                 status = true
             });
         }
-        public ActionResult AddItem(int id,int quantity)
+        public ActionResult AddItem(int id,int quantity, int sizeID)
         {
             var product = db.Products.Find(id);
             var cart = Session[CartSession];
