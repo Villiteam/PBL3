@@ -20,9 +20,20 @@ namespace PBL3.Controllers
         {
             var cart = Session[CartSession];
             var list = new List<CartItem>();
-            if(cart != null)
+            if (cart != null)
             {
                 list = (List<CartItem>)cart;
+                foreach (var item in list)
+                {
+                    var i = db.Sizes.Find(item.SizeID);
+                    if (item.Quantity > i.Quantity)
+                    {
+                        ViewBag.ShowModal = true;
+                        ViewBag.Error = "Số lượng sản phẩm: \"" + item.Product.ProductName + "\", kích cỡ \"" + i.SizeName + "\" chỉ còn " + i.Quantity + " sản phẩm, vui lòng nhập ít hơn!";
+                        return View(list);
+                    }
+
+                }
             }
             return View(list);
         }
@@ -51,9 +62,10 @@ namespace PBL3.Controllers
             var jsonCart = new JavaScriptSerializer().Deserialize<List<CartItem>>(cartModel);
             var sessionCart = (List<CartItem>)Session[CartSession];
 
-            foreach(var item in sessionCart) {
+            foreach (var item in sessionCart)
+            {
                 var jsonItem = jsonCart.SingleOrDefault(x => x.Product.ProductID == item.Product.ProductID);
-                if(jsonItem!= null)
+                if (jsonItem != null)
                 {
                     item.Quantity = jsonItem.Quantity;
                 }
@@ -64,18 +76,18 @@ namespace PBL3.Controllers
                 status = true
             });
         }
-        public ActionResult AddItem(int id,int quantity, int sizeID)
+        public ActionResult AddItem(int id, int quantity, int sizeID)
         {
             var product = db.Products.Find(id);
             var cart = Session[CartSession];
-            if(cart !=null)
+            if (cart != null)
             {
                 var list = (List<CartItem>)cart;
-                if(list.Exists(m=> m.Product.ProductID== id && m.SizeID == sizeID))
+                if (list.Exists(m => m.Product.ProductID == id && m.SizeID == sizeID))
                 {
-                    foreach(var item in list)
+                    foreach (var item in list)
                     {
-                        if(item.Product.ProductID ==id)
+                        if (item.Product.ProductID == id)
                         {
                             item.Quantity += quantity;
                         }
@@ -85,7 +97,7 @@ namespace PBL3.Controllers
                 {
                     //tạo mới đối tượng cart item 
                     var item = new CartItem();
-                    item.Product= product; 
+                    item.Product = product;
                     item.Quantity = quantity;
                     item.SizeID = sizeID;
                     list.Add(item);
@@ -120,6 +132,6 @@ namespace PBL3.Controllers
             }
             return PartialView(list);
         }
-       
+
     }
 }
