@@ -59,7 +59,7 @@
                     <div class="free_delivery d-flex flex-row align-items-center justify-content-center">
                         <span class="ti-truck"></span><span>free delivery</span>
                     </div>
-                    @if (Model.PromotionPrice > 0)
+                    @if (Model.isSale == true)
                     {
                         <div class="original_price">@Model.Price.ToString("N0") đ</div>
                         <div class="product_price">@Model.PromotionPrice.Value.ToString("N0") đ </div>
