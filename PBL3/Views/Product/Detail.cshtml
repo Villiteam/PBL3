@@ -272,11 +272,8 @@
         function addToCart(productId) {
             debugger
             var radioValue = $("input[name='size']:checked").val();
-            if (radioValue) {
-                alert("Your are a - " + radioValue);
-            }
             var quantity = document.getElementById("quantity_value").innerText;
-            var url = "/them-gio-hang?id=" + productId + "&quantity=" + quantity + "&sizeID=" + sizeID;
+            var url = "/them-gio-hang?id=" + productId + "&quantity=" + quantity + "&sizeID=" + radioValue;
             window.location.href = url;
         }
     </script>

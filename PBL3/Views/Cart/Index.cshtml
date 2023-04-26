@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/LayoutUser.cshtml";
+    PBL3.Models.pbl3Entities db = new PBL3.Models.pbl3Entities();
     double sum = 0;
 }
 <link rel="stylesheet" type="text/css" href="~/Content/assets/styles/single_styles.css">
@@ -22,6 +23,7 @@
                                     <th>STT</th>
                                     <th>Hình ảnh</th>
                                     <th>Tên sản phẩm</th>
+                                    <th>Kích cỡ</th>
                                     <th>Số lượng</th>
                                     <th>Đơn giá</th>
                                     <th>Thành tiền</th>
@@ -40,7 +42,15 @@
                                             <td>
                                                 <img class="imgproduct" data-id="@item.Product.ProductID" src="@item.Product.ListImages" width="60" />
                                             </td>
-                                            <td>@item.Product.ProductName</td>
+                                            <td>
+                                                <a href="/Product/Detail?id=@item.Product.ProductID">@item.Product.ProductName</a>
+                                            </td>
+                                            <td class="col-2">
+                                                @{
+                                                    var size = db.Sizes.Find(item.SizeID);
+                                                }
+                                                <input type="text" class=" text-right" data-sizeID="@item.SizeID" style="margin-top:0; width: 70px; height: 25px; font-size: 14px;" value="@size.SizeName" />
+                                            </td>
                                             <td class="col-2">
                                                 <input type="number" class="txtQuantity text-right" data-id="@item.Product.ProductID" style="margin-top:0; width: 70px; height: 25px; font-size: 14px;" value="@item.Quantity" />
                                             </td>
@@ -52,7 +62,7 @@
                                             <td>@((item.Product.Price * item.Quantity).ToString("N0"))</td>
                                             <td>
                                                 @*@Html.ActionLink("Xóa", "Delete", new { id = item.Product.ProductID }, new { @class = "btn btn-sm btn-danger delete-link", onclick = "return confirm('Bạn có chắc muốn xóa?');" })*@
-                                                <a href="#" class="btnDelete btn btn-sm btn-danger delete-link" data-id="@item.Product.ProductID">Xóa</a>
+                                                <a href="#" class="btnDelete btn btn-sm btn-danger delete-link" data-id="@item.Product.ProductID" data-sizeid="@item.SizeID" onclick="return deleteItem(event, this)">Xóa</a>
                                             </td>
                                         </tr>
                                         i++;
@@ -102,4 +112,26 @@
 
 @section DoanJS{
     <script src="~/Content/assets/js/cart.js"></script>
+    <script>
+        function deleteItem(event, el) {
+            event.stopPropagation();
+            var confirmation = confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?");
+            if (confirmation == true) {
+                var id = $(el).data('id');
+                var sizeID = $(el).data('sizeid');
+                $.ajax({
+                    data: { id: id, sizeID: sizeID },
+                    url: '/Cart/Delete',
+                    dataType: 'json',
+                    type: 'POST',
+                    success: function (res) {
+                        if (res.status == true) {
+                            window.location.href = "/Cart"
+                        }
+                    }
+                });
+            }
+            return false;
+        }
+    </script>
 }

@@ -70,19 +70,17 @@
                                         </a>
                                         <ul class="account_selection">
                                             @{
-                                            PBL3.Models.User nvSession = (PBL3.Models.User)HttpContext.Current.Session["user"];
-                                            if (nvSession == null)
-                                            {
-                                            <li><a href="~/Admin/Account/Login"><i class="fa fa-sign-in" aria-hidden="true"></i>Đăng nhập</a></li>
-                                            <li><a href="~/Admin/Account/Register"><i class="fa fa-user-plus" aria-hidden="true"></i>Đăng kí</a></li>
+                                                PBL3.Models.User nvSession = (PBL3.Models.User)HttpContext.Current.Session["user"];
+                                                if (nvSession == null)
+                                                {
+                                                    <li><a href="~/Admin/Account/Login"><i class="fa fa-sign-in" aria-hidden="true"></i>Đăng nhập</a></li>
+                                                    <li><a href="~/Admin/Account/Register"><i class="fa fa-user-plus" aria-hidden="true"></i>Đăng kí</a></li>
+                                                }
+                                                else
+                                                {
+                                                    <li><a href="~/Admin/Account/Logout"><i class="fa fa-user-plus" aria-hidden="true"></i>Đăng xuất</a></li>
+                                                }
                                             }
-                                            else
-                                            {
-                                            <li><a href="~/Admin/Account/Logout"><i class="fa fa-user-plus" aria-hidden="true"></i>Đăng xuất</a></li>
-                                            }
-                                            }
-
-
                                         </ul>
                                     </li>
                                 </ul>
@@ -239,6 +237,7 @@
                                 <button id="newsletter_submit" type="submit" class="newsletter_submit_btn trans_300" value="Submit">subscribe</button>
                             </div>
                         </form>
+                        @*  *@
                     </div>
                 </div>
             </div>

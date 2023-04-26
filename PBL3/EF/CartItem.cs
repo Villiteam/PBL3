@@ -11,5 +11,6 @@ namespace PBL3.EF
     {
         public Product Product { get; set; }
         public int Quantity { get; set; }
+        public int SizeID { get; set; }
     }
 }

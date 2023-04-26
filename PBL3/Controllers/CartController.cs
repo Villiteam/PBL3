@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using WebGrease;
 using System.Web.Script.Serialization;
+using System.ComponentModel;
 
 namespace PBL3.Controllers
 {
@@ -25,10 +26,10 @@ namespace PBL3.Controllers
             }
             return View(list);
         }
-        public JsonResult Delete(int id)
+        public JsonResult Delete(int id, int sizeID)
         {
             var sessionCart = (List<CartItem>)Session[CartSession];
-            sessionCart.RemoveAll(x => x.Product.ProductID == id);
+            sessionCart.RemoveAll(x => x.Product.ProductID == id && x.SizeID == sizeID);
             Session[CartSession] = sessionCart;
             return Json(new
             {
@@ -70,7 +71,7 @@ namespace PBL3.Controllers
             if(cart !=null)
             {
                 var list = (List<CartItem>)cart;
-                if(list.Exists(m=> m.Product.ProductID== id))
+                if(list.Exists(m=> m.Product.ProductID== id && m.SizeID == sizeID))
                 {
                     foreach(var item in list)
                     {
@@ -86,6 +87,7 @@ namespace PBL3.Controllers
                     var item = new CartItem();
                     item.Product= product; 
                     item.Quantity = quantity;
+                    item.SizeID = sizeID;
                     list.Add(item);
                 }
                 // Gán vào session
@@ -97,6 +99,7 @@ namespace PBL3.Controllers
                 var item = new CartItem();
                 item.Product = product;
                 item.Quantity = quantity;
+                item.SizeID = sizeID;
                 var list = new List<CartItem>();
                 list.Add(item);
 
