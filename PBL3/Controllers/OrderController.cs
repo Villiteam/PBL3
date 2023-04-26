@@ -42,12 +42,19 @@ namespace PBL3.Controllers
         }
         public ActionResult Payment()
         {
-
             var cart = Session[Common.CommonConstants.CartSession];
             var list = new List<CartItem>();
             if (cart != null)
             {
                 list = (List<CartItem>)cart;
+                foreach (var item in list)
+                {
+                    var i = db.Sizes.Find(item.SizeID);
+                    if (item.Quantity > i.Quantity)
+                    {
+                        return RedirectToAction("Index", "Cart");
+                    }
+                }
             }
             // kiểm tra đăng nhập mới cho thanh toán
             User nvSession = (User)Session["user"];
@@ -113,7 +120,6 @@ namespace PBL3.Controllers
                 if(item.Product.isSale == true)
                 {
                     orderDetail.Price = item.Product.PromotionPrice.Value;
-
                 }
                 else
                 {
@@ -121,7 +127,19 @@ namespace PBL3.Controllers
                 }
                 db.OrderDetails.Add(orderDetail);
                 db.SaveChanges();
+
+                // cập nhật số lượng bảng size;
+                var sizeItem = db.Sizes.Find(item.SizeID);
+                sizeItem.Quantity = sizeItem.Quantity - item.Quantity;
+                db.SaveChanges();
+
+                // cập nhật số lượng tổng của sản phẩm
+                var product = db.Products.Find(item.Product.ProductID);
+                product.Quantity = product.Quantity - item.Quantity;
+                db.SaveChanges();
             }
+
+
             Session[CartSession] = null;
             return RedirectToAction("Success");
         }
