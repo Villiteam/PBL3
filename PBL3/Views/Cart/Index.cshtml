@@ -54,12 +54,28 @@
                                             <td class="col-2">
                                                 <input type="number" class="txtQuantity text-right" data-id="@item.Product.ProductID" style="margin-top:0; width: 70px; height: 25px; font-size: 14px;" value="@item.Quantity" />
                                             </td>
+                                            @if (item.Product.isSale == true)
+                                            {
+                                                <td>
+                                                    <div class="product_price">@item.Product.PromotionPrice.Value.ToString("N0")</div>
+                                                </td>
+                                                <td style="display: none;">
+                                                    @(sum +=  item.Product.PromotionPrice.Value * item.Quantity);
+                                                </td>
+                                                <td>@((item.Product.PromotionPrice.Value * item.Quantity).ToString("N0"))</td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    <div class="product_price">@item.Product.Price.ToString("N0")</div>
+                                                </td>
+                                                <td style="display: none;">
+                                                    @(sum +=  item.Product.Price * item.Quantity);
+                                                </td>
+                                                <td>@((item.Product.Price * item.Quantity).ToString("N0"))</td>
+                                            }
 
-                                            <td>@item.Product.Price.ToString("N0")</td>
-                                            <td style="display: none;">
-                                                @(sum +=  item.Product.Price * item.Quantity);
-                                            </td>
-                                            <td>@((item.Product.Price * item.Quantity).ToString("N0"))</td>
+
                                             <td>
                                                 @*@Html.ActionLink("Xóa", "Delete", new { id = item.Product.ProductID }, new { @class = "btn btn-sm btn-danger delete-link", onclick = "return confirm('Bạn có chắc muốn xóa?');" })*@
                                                 <a href="#" class="btnDelete btn btn-sm btn-danger delete-link" data-id="@item.Product.ProductID" data-sizeid="@item.SizeID" onclick="return deleteItem(event, this)">Xóa</a>
