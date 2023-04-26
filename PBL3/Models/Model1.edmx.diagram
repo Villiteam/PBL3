@@ -32,6 +32,7 @@
         <AssociationConnector Association="pbl3Model.FK_Size_Products" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_Warehouse_Products" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_Users_Roles" ManuallyRouted="false" />
+        <AssociationConnector Association="pbl3Model.FK_OrderDetails_Size" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

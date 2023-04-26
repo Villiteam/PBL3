@@ -42,8 +42,19 @@ namespace PBL3.Controllers
         }
         public ActionResult Payment()
         {
+
             var cart = Session[Common.CommonConstants.CartSession];
             var list = new List<CartItem>();
+
+            // kiểm tra đăng nhập mới cho thanh toán
+            User nvSession = (User)Session["user"];
+            if (nvSession == null)
+            {
+                ViewBag.ShowModal = true;
+                ViewBag.Error = "Vui lòng đăng nhập để thanh toán";
+                return View(list);
+            }
+           
             if (cart != null)
             {
                 list = (List<CartItem>)cart;
@@ -100,6 +111,7 @@ namespace PBL3.Controllers
                 orderDetail.OrderID = model.OrderID;
                 orderDetail.ProductID = item.Product.ProductID;
                 orderDetail.Quantity = item.Quantity;
+                orderDetail.SizeID = item.SizeID;
                 orderDetail.Price = item.Product.Price;
                 db.OrderDetails.Add(orderDetail);
                 db.SaveChanges();

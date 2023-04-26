@@ -24,9 +24,13 @@
                 </div>
             </div>
             @{
-                var d = item.Sizes.Select(m => m.SizeID).Take(1);
+                int size;
+                using (var db = new PBL3.Models.pbl3Entities())
+                {
+                    size = Convert.ToInt32(db.Sizes.Where(m => m.ProductID == item.ProductID).Select(m => m.SizeID).Take(1).FirstOrDefault());
+                }
             }
-            <div class="red_button add_to_cart_button"><a href="/them-gio-hang?id=@item.ProductID&quantity=1&sizeID=@d">add to cart</a></div>
+            <div class="red_button add_to_cart_button"><a href="/them-gio-hang?id=@item.ProductID&quantity=1&sizeID=@size">add to cart</a></div>
         </div>
     }
 }

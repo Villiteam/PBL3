@@ -81,6 +81,7 @@
                         <th>STT</th>
                         <th>Hình ảnh</th>
                         <th>Tên sản phẩm</th>
+                        <th>Kích cỡ</th>
                         <th>Giá</th>
                         <th>Số lượng</th>
                         <th>Thành tiền</th>
@@ -100,6 +101,7 @@
                                     </button>
                                 </td>
                                 <td><a href="~/Product/Detail?id=@item.Product.ProductID">@item.Product.ProductName</a></td>
+                                <td>@item.Size.SizeName</td>
                                 <td>@item.Price.ToString("N0")</td>
                                 <td>@item.Quantity</td>
                                 <td>@((item.Price * item.Quantity).ToString("N0"))</td>

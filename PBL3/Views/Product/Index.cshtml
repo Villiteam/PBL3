@@ -25,7 +25,7 @@
                     <div class="sidebar_title">
                         <h5>Product Category</h5>
                     </div>
-                   @Html.Action("MenuLeft","Menu")
+                    @Html.Action("MenuLeft", "Menu")
                 </div>
 
                 <!-- Price Range Filtering -->
@@ -156,7 +156,14 @@
                                                     }
                                                 </div>
                                             </div>
-                                            <div class="red_button add_to_cart_button"><a href="/them-gio-hang?id=@item.ProductID&quantity=1">add to cart</a></div>
+                                            @{
+                                                int size;
+                                                using (var db = new PBL3.Models.pbl3Entities())
+                                                {
+                                                    size = Convert.ToInt32(db.Sizes.Where(m => m.ProductID == item.ProductID).Select(m => m.SizeID).Take(1).FirstOrDefault());
+                                                }
+                                            }
+                                            <div class="red_button add_to_cart_button"><a href="/them-gio-hang?id=@item.ProductID&quantity=1&sizeID=@size">add to cart</a></div>
                                         </div>
                                     }
                                 }
@@ -178,18 +185,18 @@
                                     </li>
                                 </ul>
                                 @*<span class="showing_results">Showing 1–3 of 12 results</span>
-                                <div class="pages d-flex flex-row align-items-center">
-                                    <div class="page_current">
-                                        <span>1</span>
-                                        <ul class="page_selection">
-                                            <li><a href="#">1</a></li>
-                                            <li><a href="#">2</a></li>
-                                            <li><a href="#">3</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="page_total"><span>of</span> 3</div>
-                                    <div id="next_page_1" class="page_next"><a href="#"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a></div>
-                                </div>*@
+                                    <div class="pages d-flex flex-row align-items-center">
+                                        <div class="page_current">
+                                            <span>1</span>
+                                            <ul class="page_selection">
+                                                <li><a href="#">1</a></li>
+                                                <li><a href="#">2</a></li>
+                                                <li><a href="#">3</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="page_total"><span>of</span> 3</div>
+                                        <div id="next_page_1" class="page_next"><a href="#"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a></div>
+                                    </div>*@
 
                             </div>
 

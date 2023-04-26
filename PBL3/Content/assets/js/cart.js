@@ -46,26 +46,6 @@
                 }
             });
         });
-
-        $('.btnDelete').on('click', function (e) {
-            e.preventDefault();
-            var confirmation = confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?");
-            if (confirmation == true) {
-                $.ajax({
-                    data: { id: $(this).data('id') },
-                    url: '/Cart/Delete',
-                    dataType: 'json',
-                    type: 'POST',
-                    success: function (res) {
-                        if (res.status == true) {
-                            window.location.href = "/Cart"
-                        }
-                    }
-                });
-            }
-        });
-
-
     }
 }
 cart.init();
