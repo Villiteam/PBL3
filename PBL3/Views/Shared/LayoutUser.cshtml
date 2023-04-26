@@ -12,21 +12,14 @@
     <link rel="stylesheet" type="text/css" href="~/Content/assets/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
     <link rel="stylesheet" type="text/css" href="~/Content/assets/plugins/OwlCarousel2-2.2.1/animate.css">
     <link rel="stylesheet" href="~/Content/assets/plugins/themify-icons/themify-icons.css">
-    @*<link rel="stylesheet" type="text/css" href="~/Content/assets/plugins/jquery-ui-1.12.1.custom/jquery-ui.css">*@
+    <link rel="stylesheet" type="text/css" href="~/Content/assets/plugins/jquery-ui-1.12.1.custom/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="~/Content/assets/styles/responsive.css">
-
 </head>
-
 <body>
-
     <div class="super_container">
-
-        <!-- Header -->
-
+        @*Header*@
         <header class="header trans_300">
-
-            <!-- Top Navigation -->
-
+            @*Top Navigation*@
             <div class="top_nav">
                 <div class="container">
                     <div class="row">
@@ -44,7 +37,7 @@
                             <div class="top_nav_right">
                                 <ul class="top_nav_menu">
 
-                                    <!-- Currency / Language / My Account -->
+                                    @*Currency / Language / My Account*@
 
                                     <li class="currency">
                                         <a href="#">
@@ -77,17 +70,16 @@
                                         </a>
                                         <ul class="account_selection">
                                             @{
-                                                Layout = null;
-                                                PBL3.Models.User nvSession = (PBL3.Models.User)HttpContext.Current.Session["user"];
-                                                if (nvSession == null)
-                                                {
-                                                    <li><a href="~/Admin/Account/Login"><i class="fa fa-sign-in" aria-hidden="true"></i>Đăng nhập</a></li>
-                                                    <li><a href="~/Admin/Account/Register"><i class="fa fa-user-plus" aria-hidden="true"></i>Đăng kí</a></li>
-                                                }
-                                                else
-                                                {
-                                                    <li><a href="~/Admin/Account/Logout"><i class="fa fa-user-plus" aria-hidden="true"></i>Đăng xuất</a></li>
-                                                }
+                                            PBL3.Models.User nvSession = (PBL3.Models.User)HttpContext.Current.Session["user"];
+                                            if (nvSession == null)
+                                            {
+                                            <li><a href="~/Admin/Account/Login"><i class="fa fa-sign-in" aria-hidden="true"></i>Đăng nhập</a></li>
+                                            <li><a href="~/Admin/Account/Register"><i class="fa fa-user-plus" aria-hidden="true"></i>Đăng kí</a></li>
+                                            }
+                                            else
+                                            {
+                                            <li><a href="~/Admin/Account/Logout"><i class="fa fa-user-plus" aria-hidden="true"></i>Đăng xuất</a></li>
+                                            }
                                             }
 
 
@@ -100,7 +92,7 @@
                 </div>
             </div>
 
-            <!-- Main Navigation -->
+            @*Main Navigation*@
 
             <div class="main_nav_container">
                 <div class="container">
@@ -183,7 +175,7 @@
         </div>
 
         @RenderBody()
-        <!-- Benefit -->
+        @*Benefit*@
 
         <div class="benefit">
             <div class="container">
@@ -229,7 +221,7 @@
         </div>
 
 
-        <!-- Newsletter -->
+        @*Newsletter*@
 
         <div class="newsletter">
             <div class="container">
@@ -253,7 +245,7 @@
         </div>
 
 
-        <!-- Footer -->
+        @*Footer*@
 
         <footer class="footer">
             <div class="container">
@@ -290,18 +282,15 @@
         </footer>
 
     </div>
-
+    <script src="~/Content/assets/plugins/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
     <script src="~/Content/assets/js/jquery-3.2.1.min.js"></script>
     <script src="~/Content/assets/styles/bootstrap4/popper.js"></script>
     <script src="~/Content/assets/styles/bootstrap4/bootstrap.min.js"></script>
     <script src="~/Content/assets/plugins/Isotope/isotope.pkgd.min.js"></script>
     <script src="~/Content/assets/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
     <script src="~/Content/assets/plugins/easing/easing.js"></script>
-    @*<script src="~/Content/assets/plugins/jquery-ui-1.12.1.custom/jquery-ui.js"></script>*@
+    <script src="~/Content/assets/js/custom.js"></script>
     <script src="~/Content/assets/js/cart.js"></script>
     @RenderSection("DoanJs", false)
-
-
 </body>
-
 </html>
