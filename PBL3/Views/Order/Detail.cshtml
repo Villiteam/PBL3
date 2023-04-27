@@ -27,6 +27,7 @@
                                     <th>Số lượng</th>
                                     <th>Thành tiền</th>
                                     <th>Phương thức thanh toán</th>
+                                    <th>#</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -48,6 +49,12 @@
                                             <td>@item.Quantity</td>
                                             <td>@((item.Price * item.Quantity).ToString("N0"))</td>
                                             <td>@item.Order.PayType</td>
+                                            @if (Model.Status == true && Model.Delivered == true)
+                                            {
+                                                <td>
+                                                    <a href="~/Comment/CommentByOrderDetailID?id=@item.OderDetailID" class="btn btn-warning">Đánh giá</a>
+                                                </td>
+                                            }
                                         </tr>
                                         i++;
                                     }
