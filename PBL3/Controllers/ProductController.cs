@@ -2,6 +2,7 @@
 using PBL3.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,12 +11,17 @@ namespace PBL3.Controllers
 {
     public class ProductController : Controller
     {
+        
         // GET: Product
         private pbl3Entities db = new pbl3Entities();
         public ActionResult Index()
         {
             var ds = db.Products.ToList();
             return View(ds);
+        }
+        public ActionResult test()
+        {
+            return View();
         }
         public ActionResult Detail(int? id)
         {

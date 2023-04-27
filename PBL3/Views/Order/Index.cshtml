@@ -26,6 +26,7 @@
                             <li class="nav-item"><a class="nav-link " href="#wait" data-toggle="tab"><i class="fa fa-envelope-open"></i> Chờ xác nhận</a></li>
                             <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab"><i class="fa fa-truck"></i> Đang giao</a></li>
                             <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab"><i class="fa fa-check-circle"></i> Đã giao</a></li>
+                            <li class="nav-item btn btn-sm  btn-warning"><a class="nav-link" href="~/Comment" ><i class="fa fa-check-circle"></i>Đánh giá</a></li>
                         </ul>
                     </div><!-- /.card-header -->
                     <div class="card-body">
@@ -368,6 +369,7 @@
                                                             <td>
                                                                 @Html.ActionLink("Chi tiết", "Detail", new { id = item.OrderID }, new { @class = "btn btn-sm btn-success" })
                                                             </td>
+                                                            
                                                         </tr>
                                                         i++;
                                                     }

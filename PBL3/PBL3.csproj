@@ -149,6 +149,7 @@
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Common\CommonConstants.cs" />
     <Compile Include="Controllers\CartController.cs" />
+    <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -3304,6 +3305,10 @@
     <None Include="packages.config" />
     <Content Include="Views\Product\Search.cshtml" />
     <Content Include="Views\Order\test.cshtml" />
+    <Content Include="Views\Product\test.cshtml" />
+    <Content Include="Views\Comment\CommentByOrderDetailID.cshtml" />
+    <Content Include="Views\Comment\Index.cshtml" />
+    <Content Include="Views\Comment\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
