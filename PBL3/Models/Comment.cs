@@ -15,13 +15,13 @@ namespace PBL3.Models
     public partial class Comment
     {
         public int CommentID { get; set; }
-        public int ProductID { get; set; }
+        public int OrderDetailID { get; set; }
         public System.DateTime CreateDate { get; set; }
         public int UserID { get; set; }
-        public double Rating { get; set; }
+        public int Rating { get; set; }
         public string Comment1 { get; set; }
     
-        public virtual Product Product { get; set; }
+        public virtual OrderDetail OrderDetail { get; set; }
         public virtual User User { get; set; }
     }
 }

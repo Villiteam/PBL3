@@ -72,7 +72,11 @@
                                     var role = db.Roles.Find(item.Role);
                                 }
                                 <td>@role.RoleName</td>
-                                <td>@item.CreatedDate </td>
+                                @{
+                                    DateTime date = DateTime.Parse(item.CreatedDate.ToString());
+                                    string formattedDate = date.ToString("dd MMMM yyyy HH:mm:ss");
+                                }
+                                <td>@formattedDate</td>
                                 <td>
                                     <a href="#" data-id="@item.UserID" data-status="@item.Status" class="btnStatus"> @Html.Raw(strCheck)</a>
                                 </td>

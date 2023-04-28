@@ -53,7 +53,11 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Ngày tạo</label>
-                        <p class="form-control">@Model.OrderDate</p>
+                        @{
+                            DateTime date = DateTime.Parse(Model.OrderDate.ToString());
+                            string formattedDate = date.ToString("dd MMMM yyyy HH:mm:ss");
+                        }
+                        <p class="form-control">@formattedDate</p>
                     </div>
                 </div>
                 <div class="col-md-6">

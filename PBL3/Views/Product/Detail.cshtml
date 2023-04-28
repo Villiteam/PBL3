@@ -69,14 +69,17 @@
                         <div class="product_price">@Model.Price.ToString("N0") đ </div>
                     }
 
-                    <ul class="star_rating">
-                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                        <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-                    </ul>
-               
+                    <div id="ratingStars" class="star_rating">
+                        <ul>
+                            <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                            <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                            <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                            <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                            <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+                        </ul>
+                    </div>
+
+
                     <ul>
                         <li class="product_color row">
                             <span class="col-sm-4">Chọn kích cỡ:</span>
@@ -142,7 +145,7 @@
                         <ul class="tabs d-flex flex-sm-row flex-column align-items-left align-items-md-center justify-content-center">
                             <li class="tab active" data-active-tab="tab_1"><span>Description</span></li>
                             <li class="tab" data-active-tab="tab_2"><span>Additional Information</span></li>
-                            <li class="tab" data-active-tab="tab_3"><span>Reviews (2)</span></li>
+                            <li class="tab" data-active-tab="tab_3"><span>Reviews (@ViewBag.Count)</span></li>
                         </ul>
                     </div>
                 </div>
@@ -188,86 +191,62 @@
 
                             <!-- User Reviews -->
 
-                            <div class="col-lg-6 reviews_col">
+                            <div class="col-md-12 reviews_col">
                                 <div class="tab_title reviews_title">
-                                    <h4>Reviews (2)</h4>
+                                    <h4>Reviews (@ViewBag.Count)</h4>
                                 </div>
 
-                                <!-- User Review -->
+                                @if (ViewBag.Join != null)
+                                {
+                                    var comments = ViewBag.Join as List<PBL3.EF.CommentViewModel>;
+                                    if (comments != null)
+                                    {
+                                        foreach (var i in comments)
+                                        {
+                                            <!-- User Review -->
 
-                                <div class="user_review_container d-flex flex-column flex-sm-row">
-                                    <div class="user">
-                                        <div class="user_pic"></div>
-                                        <div class="user_rating">
-                                            <ul class="star_rating">
-                                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                                <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="review">
-                                        <div class="review_date">27 Aug 2016</div>
-                                        <div class="user_name">Brandon William</div>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                    </div>
-                                </div>
+                                            <div class="user_review_container d-flex flex-column flex-sm-row">
+                                                <div class="user">
 
-                                <!-- User Review -->
-
-                                <div class="user_review_container d-flex flex-column flex-sm-row">
-                                    <div class="user">
-                                        <div class="user_pic"></div>
-                                        <div class="user_rating">
-                                            <ul class="star_rating">
-                                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                                <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="review">
-                                        <div class="review_date">27 Aug 2016</div>
-                                        <div class="user_name">Brandon William</div>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Add Review -->
-
-                            <div class="col-lg-6 add_review_col">
-
-                                <div class="add_review">
-                                    <form id="review_form" action="post">
-                                        <div>
-                                            <h1>Add Review</h1>
-                                            <input id="review_name" class="form_input input_name" type="text" name="name" placeholder="Name*" required="required" data-error="Name is required.">
-                                            <input id="review_email" class="form_input input_email" type="email" name="email" placeholder="Email*" required="required" data-error="Valid email is required.">
-                                        </div>
-                                        <div>
-                                            <h1>Your Rating:</h1>
-                                            <ul class="user_star_rating">
-                                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                                <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-                                            </ul>
-                                            <textarea id="review_message" class="input_review" name="message" placeholder="Your Review" rows="4" required data-error="Please, leave us a review."></textarea>
-                                        </div>
-                                        <div class="text-left text-sm-right">
-                                            <button id="review_submit" type="submit" class="red_button review_submit_btn trans_300" value="Submit">submit</button>
-                                        </div>
-                                    </form>
-                                </div>
+                                                    <div class="user_pic">
+                                                        <img style="width: 70px" src="~/Uploads/_thumbs/upng.png" />
+                                                    </div>
+                                                    <div class="user_rating">
+                                                        <ul class="star_rating ml-0">
+                                                            @for (int rate = 1; rate <= 5; rate++)
+                                                            {
+                                                                if (rate <= Convert.ToInt32(i.Rating))
+                                                                {
+                                                                    <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+                                                                }
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="review">
+                                                    @{ 
+                                                        DateTime date = DateTime.Parse(i.CreateDate.ToString());
+                                                        string formattedDate = date.ToString("dd MMMM yyyy HH:mm:ss");
+                                                    }
+                                                    <div class="review_date">@formattedDate</div>
+                                                    @{ string name = "";}
+                                                    @using (PBL3.Models.pbl3Entities db = new PBL3.Models.pbl3Entities())
+                                                    {
+                                                        name = db.Users.Find(i.UserID).UserName.ToString();
+                                                    }
+                                                    <div class="user_name">@name</div>
+                                                    <p>@i.Comment</p>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                }
 
                             </div>
-
                         </div>
                     </div>
 
@@ -291,4 +270,18 @@
             window.location.href = url;
         }
     </script>
+    <script>
+        $(document).ready(function () {
+            var rating = parseFloat('@ViewBag.Rating');
+            var stars = $('#ratingStars i');
+            var fullStars = Math.floor(rating);
+            for (var i = 0; i < fullStars; i++) {
+                $(stars[i]).removeClass('fa-star-o').addClass('fa-star');
+            }
+            if (rating > fullStars) {
+                $(stars[fullStars]).removeClass('fa-star-o').addClass('fa-star-half-o');
+            }
+        });
+    </script>
+
 }

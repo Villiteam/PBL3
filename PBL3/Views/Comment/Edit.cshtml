@@ -21,6 +21,7 @@
                                     <th>STT</th>
                                     <th>Hình ảnh</th>
                                     <th>Tên sản phẩm</th>
+                                    <th>Kích cỡ</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -31,10 +32,11 @@
                                         <td>@i</td>
                                         <td>
                                             <button type="button" class="btn">
-                                                <img class="imgproduct" data-id="@Model.Product.ProductID" src="@Model.Product.ListImages" width="60" />
+                                                <img class="imgproduct" data-id="" src="@Model.OrderDetail.Product.ListImages" width="60" />
                                             </button>
                                         </td>
-                                        <td><a href="~/Product/Detail?id=@Model.Product.ProductID">@Model.Product.ProductName</a></td>
+                                        <td><a href="~/Product/Detail?id=@Model.OrderDetail.Product.ProductID">@Model.OrderDetail.Product.ProductName</a></td>
+                                        <td>@Model.OrderDetail.Size.SizeName</td>
                                     </tr>
                                     i++;
                                 }
