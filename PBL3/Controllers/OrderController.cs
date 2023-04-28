@@ -117,7 +117,6 @@ namespace PBL3.Controllers
                 orderDetail.ProductID = item.Product.ProductID;
                 orderDetail.Quantity = item.Quantity;
                 orderDetail.SizeID = item.SizeID;
-                orderDetail.isComment = false;
                 if(item.Product.isSale == true)
                 {
                     orderDetail.Price = item.Product.PromotionPrice.Value;

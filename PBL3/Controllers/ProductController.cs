@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
+using PBL3.EF;
 
 namespace PBL3.Controllers
 {
@@ -25,6 +27,25 @@ namespace PBL3.Controllers
         }
         public ActionResult Detail(int? id)
         {
+            var detail = db.OrderDetails.Where(m => m.ProductID == id);
+            var join = (from p in detail
+                        join q in db.Comments on p.OderDetailID equals q.OrderDetailID
+                        select new CommentViewModel
+                        {
+                            CommentID = q.CommentID,
+                            OrderDetailID = q.OrderDetailID,
+                            CreateDate = q.CreateDate,
+                            UserID = q.UserID,
+                            Rating = q.Rating,
+                            Comment = q.Comment1
+                        }).ToList();
+
+            var count = join.Count();
+            double rate = (double)join.Select(m=> m.Rating).Sum()/count;
+
+            ViewBag.Join = join;
+            ViewBag.Rating = rate;
+            ViewBag.Count = count;
             var item = db.Products.Find(id);
             return View(item);
         }

@@ -66,7 +66,11 @@
                                 <td>@item.OrderAddress</td>
                                 <td>@item.OrderPhone</td>
                                 <td>@item.Total.Value.ToString("N0")</td>
-                                <td>@item.OrderDate </td>
+                                @{
+                                    DateTime date = DateTime.Parse(item.OrderDate.ToString());
+                                    string formattedDate = date.ToString("dd MMMM yyyy HH:mm:ss");
+                                }
+                                <td>@formattedDate</td>
                                 <td>
                                     <a href="#" data-id="@item.OrderID" data-status="@item.Status" class="btnStatus"> @Html.Raw(strCheck)</a>
                                 </td>

@@ -55,7 +55,11 @@
                                                         <td>@item.OrderAddress</td>
                                                         <td>@item.OrderPhone</td>
                                                         <td>@item.Total.Value.ToString("N0")</td>
-                                                        <td>@item.OrderDate </td>
+                                                        @{
+                                                            DateTime date = DateTime.Parse(item.OrderDate.ToString());
+                                                            string formattedDate = date.ToString("dd MMMM yyyy HH:mm:ss");
+                                                        }
+                                                        <td>@formattedDate</td>
                                                         <td>
                                                             @Html.ActionLink("Chi tiết", "Detail", new { id = item.OrderID }, new { @class = "btn btn-sm btn-success" })
                                                             @Html.ActionLink("Hủy đơn", "Delete", new { id = item.OrderID }, new { @class = "btn btn-sm btn-danger delete-link", onclick = "return confirm('Bạn có chắc muốn xóa?');" })
@@ -157,7 +161,11 @@
                                                             <td>@item.OrderAddress</td>
                                                             <td>@item.OrderPhone</td>
                                                             <td>@item.Total.Value.ToString("N0")</td>
-                                                            <td>@item.OrderDate </td>
+                                                            @{
+                                                                DateTime date = DateTime.Parse(item.OrderDate.ToString());
+                                                                string formattedDate = date.ToString("dd MMMM yyyy HH:mm:ss");
+                                                            }
+                                                            <td>@formattedDate</td>
                                                             <td>
                                                                 @Html.ActionLink("Chi tiết", "Detail", new { id = item.OrderID }, new { @class = "btn btn-sm btn-success" })
                                                                 @Html.ActionLink("Hủy đơn", "Delete", new { id = item.OrderID }, new { @class = "btn btn-sm btn-danger delete-link", onclick = "return confirm('Bạn có chắc muốn xóa?');" })
@@ -263,7 +271,11 @@
                                                             <td>@item.OrderAddress</td>
                                                             <td>@item.OrderPhone</td>
                                                             <td>@item.Total.Value.ToString("N0")</td>
-                                                            <td>@item.OrderDate </td>
+                                                            @{
+                                                                DateTime date = DateTime.Parse(item.OrderDate.ToString());
+                                                                string formattedDate = date.ToString("dd MMMM yyyy HH:mm:ss");
+                                                            }
+                                                            <td>@formattedDate</td>
                                                             <td>
                                                                 @Html.ActionLink("Chi tiết", "Detail", new { id = item.OrderID }, new { @class = "btn btn-sm btn-success" })
                                                             </td>
@@ -365,11 +377,15 @@
                                                             <td>@item.OrderAddress</td>
                                                             <td>@item.OrderPhone</td>
                                                             <td>@item.Total.Value.ToString("N0")</td>
-                                                            <td>@item.OrderDate </td>
+                                                            @{
+                                                                DateTime date = DateTime.Parse(item.OrderDate.ToString());
+                                                                string formattedDate = date.ToString("dd MMMM yyyy HH:mm:ss");
+                                                            }
+                                                            <td>@formattedDate</td>
                                                             <td>
                                                                 @Html.ActionLink("Chi tiết", "Detail", new { id = item.OrderID }, new { @class = "btn btn-sm btn-success" })
                                                             </td>
-                                                            
+
                                                         </tr>
                                                         i++;
                                                     }

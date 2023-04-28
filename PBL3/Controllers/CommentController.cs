@@ -16,22 +16,7 @@ namespace PBL3.Controllers
         private pbl3Entities db = new pbl3Entities();
         public ActionResult Index(int? page)
         {
-            //int id = 0;
-            //if (TempData["OrderDetailID"] != null)
-            //{
-            //    id = (int)TempData["OrderDetailID"];
-            //    // xóa TempData để tránh giá trị cũ bị lưu lại
-            //    TempData.Remove("OrderDetailID");
-            //}
-            //if (id == 0)
-            //{
-            //    ModelState.AddModelError("New Error", "Không tìm được đơn hàng chi tiết!");
-            //    return View();
-            //}
-            //else
-            //{
-            //    ViewBag.OrderDetailID = id;
-            //}
+   
             User nvSession = (User)Session["user"];
             if (nvSession == null)
             {
@@ -54,8 +39,8 @@ namespace PBL3.Controllers
         }
         public ActionResult CommentByOrderDetailID(int id)
         {
-            var item = db.OrderDetails.Find(id);
-            if (item != null && item.isComment == true)
+            var item = db.Comments.Find(id);
+            if (item != null)
             {
                 //TempData["OrderDetailID"] = id;
                 return RedirectToAction("Index");
@@ -78,13 +63,12 @@ namespace PBL3.Controllers
             }
 
             var orderDetail = db.OrderDetails.Find(detailid);
-            orderDetail.isComment = true;
             db.SaveChanges();
             var order = db.Orders.Find(orderDetail.OrderID);
 
             var com = new Comment();
             com.UserID = order.UserID;
-            com.ProductID = orderDetail.ProductID;
+            com.OrderDetailID = detailid;
             com.Comment1 = comment;
             com.Rating = rating;
             com.CreateDate = DateTime.Now;

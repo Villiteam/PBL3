@@ -39,7 +39,7 @@ namespace PBL3.Areas.Admin.Controllers
         {
             var model = productV.Product;
             var listSize = productV.Sizes;
-            if (listSize == null ||listSize.Count() <= 0)
+            if (listSize == null || listSize.Count() <= 0)
             {
                 TempData["error"] = "Sản phẩm chưa có kích cỡ!";
                 return View(productV);
@@ -167,22 +167,42 @@ namespace PBL3.Areas.Admin.Controllers
             db.SaveChanges();
 
 
-            // Xóa bảng size cũ của sản phẩm với productid
-            var sizesToDelete = db.Sizes.Where(m => m.ProductID == model.ProductID);
-            db.Sizes.RemoveRange(sizesToDelete);
-            db.SaveChanges();
+            // Cập nhật bảng size 
+            var sizeOld = db.Sizes.Where(m => m.ProductID == model.ProductID).ToList();
+            int slNew = listSize.Count();
+            int slOld = sizeOld.Count();
 
-            // Lưu 1 bảng size mới 
-            foreach (var v in listSize)
+            if (slNew < slOld)
             {
-                var size = new Size();
-                size.ProductID = model.ProductID;
-                size.SizeName = v.SizeName;
-                size.Quantity = v.Quantity;
-                db.Sizes.Add(size);
-                db.SaveChanges();
+                TempData["error"] = "Số lượng kích cỡ không được ít hơn lúc tạo!  Vui lòng nhập ít nhất \"" + slOld + "\" kích cỡ!";
+                return View(productV);
             }
-
+            else
+            {
+                for(int i = 0; i< slNew; i++)
+                {
+                    if(i< slOld)
+                    {
+                        int id = sizeOld[i].SizeID;
+                        var item = db.Sizes.Find(id);
+                        if (item != null)
+                        {
+                            item.SizeName = listSize[i].SizeName;
+                            item.Quantity = listSize[i].Quantity;
+                            db.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        var size = new Size();
+                        size.ProductID = model.ProductID;
+                        size.SizeName = listSize[i].SizeName;
+                        size.Quantity = listSize[i].Quantity;
+                        db.Sizes.Add(size);
+                        db.SaveChanges();
+                    }
+                }
+            }
             return RedirectToAction("Index");
         }
         public ActionResult Delete(int id)
