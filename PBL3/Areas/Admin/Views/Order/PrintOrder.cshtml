@@ -1,37 +1,41 @@
 ﻿@model PBL3.Models.Order
 
-@{
-    ViewBag.Title = "Detail";
-    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-}
-<style>
-    table {
-        border: 2px solid #ccc;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Content/clients/dist/css/adminlte.min.css">
+    <style>
+        .card-body p {
+            border: 3px solid #ccc;
+            padding: 5px;
+        }
 
-    td, th {
-        border: 2px solid #ccc;
-        border-color: #ccc !important;
-    }
-</style>
-<section class="content">
+        table {
+            border: 2px solid #ccc;
+        }
+
+        td, th {
+            border: 2px solid #ccc;
+            border-color: #ccc !important;
+        }
+    </style>
+
+</head>
+<body>
     <div id="content-to-print">
         <section class="content">
             <!-- Default box -->
             <div class="card">
-                <div class="card-header bg-gray">
-                    <h3>Chi tiết đơn hàng</h3>
+                <div class="card-header text-center">
+                    <h3>Hóa đơn thanh toán</h3>
                 </div>
-
                 <div class="card-body">
-                    <div class="row form-group">
-                        <a href="~/Admin/Order/PrintOrder?id=@Model.OrderID" class="btn btn-warning">Xuất hóa đơn</a>
-                    </div>
-                    <div class="row">
+                    <div class="row ">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Mã đơn hàng</label>
-                                <p class="form-control">@Model.OrderID</p>
+                                <p class="form-control ">@Model.OrderID</p>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -138,5 +142,9 @@
 
         </section>
     </div>
-
-</section>
+    <!-- jQuery -->
+    <script>
+        window.print();
+    </script>
+</body>
+</html>

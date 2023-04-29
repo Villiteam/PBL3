@@ -53,5 +53,10 @@ namespace PBL3.Areas.Admin.Controllers
             }
             return Json(new { success = false });
         }
+        public ActionResult PrintOrder(int id)
+        {
+            var order = db.Orders.Find(id);
+            return View(order);
+        }
     }
 }
