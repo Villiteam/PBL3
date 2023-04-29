@@ -1,4 +1,4 @@
-﻿using Antlr.Runtime.Tree;
+﻿ using Antlr.Runtime.Tree;
 using PBL3.Models;
 using System;
 using System.Collections.Generic;
@@ -27,23 +27,16 @@ namespace PBL3.Controllers
         }
         public ActionResult Detail(int? id)
         {
-            var detail = db.OrderDetails.Where(m => m.ProductID == id);
-            var join = (from p in detail
-                        join q in db.Comments on p.OderDetailID equals q.OrderDetailID
-                        select new CommentViewModel
-                        {
-                            CommentID = q.CommentID,
-                            OrderDetailID = q.OrderDetailID,
-                            CreateDate = q.CreateDate,
-                            UserID = q.UserID,
-                            Rating = q.Rating,
-                            Comment = q.Comment1
-                        }).ToList();
 
-            var count = join.Count();
-            double rate = (double)join.Select(m=> m.Rating).Sum()/count;
+            var comments = (from od in db.OrderDetails
+                            join c in db.Comments on od.OderDetailID equals c.OrderDetailID
+                            where od.ProductID == id
+                            select c).ToList();
+            ViewBag.Comment = comments;
 
-            ViewBag.Join = join;
+            var count = comments.Count();
+            double rate = (double)comments.Select(m=> m.Rating).Sum()/count;
+
             ViewBag.Rating = rate;
             ViewBag.Count = count;
             var item = db.Products.Find(id);

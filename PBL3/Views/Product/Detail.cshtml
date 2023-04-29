@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Detail";
     Layout = "~/Views/Shared/LayoutUser.cshtml";
+
 }
 <link rel="stylesheet" type="text/css" href="~/Content/assets/styles/single_styles.css">
 <link rel="stylesheet" type="text/css" href="~/Content/assets/styles/single_responsive.css">
@@ -196,9 +197,9 @@
                                     <h4>Reviews (@ViewBag.Count)</h4>
                                 </div>
 
-                                @if (ViewBag.Join != null)
+                                @if (ViewBag.Comment != null)
                                 {
-                                    var comments = ViewBag.Join as List<PBL3.EF.CommentViewModel>;
+                                    var comments = ViewBag.comment as List<PBL3.Models.Comment>;
                                     if (comments != null)
                                     {
                                         foreach (var i in comments)
@@ -228,18 +229,14 @@
                                                     </div>
                                                 </div>
                                                 <div class="review">
-                                                    @{ 
+                                                    @{
                                                         DateTime date = DateTime.Parse(i.CreateDate.ToString());
                                                         string formattedDate = date.ToString("dd MMMM yyyy HH:mm:ss");
                                                     }
                                                     <div class="review_date">@formattedDate</div>
-                                                    @{ string name = "";}
-                                                    @using (PBL3.Models.pbl3Entities db = new PBL3.Models.pbl3Entities())
-                                                    {
-                                                        name = db.Users.Find(i.UserID).UserName.ToString();
-                                                    }
-                                                    <div class="user_name">@name</div>
-                                                    <p>@i.Comment</p>
+                                                   
+                                                    <div class="user_name">@i.User.UserName</div>
+                                                    <p>@i.Comment1</p>
                                                 </div>
                                             </div>
                                         }

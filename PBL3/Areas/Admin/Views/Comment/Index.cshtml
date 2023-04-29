@@ -1,0 +1,15 @@
+﻿@{
+    var comments = ViewBag.comment as List<PBL3.Models.Comment>;
+}
+
+
+<h2>Comments</h2>
+
+@foreach (var comment in comments)
+{
+    <div>
+        <p>Comment ID: @comment.CommentID</p>
+        <p>Comment text: @comment.Comment1</p>
+        <p>User: @comment.User.UserName</p>
+    </div>
+}
