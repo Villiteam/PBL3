@@ -1,0 +1,202 @@
+﻿
+
+@model PBL3.Models.Product
+@{
+    ViewBag.Title = "review";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<style>
+    ul {
+        list-style: none;
+        margin-bottom: 0px;
+    }
+
+    .reviews_title {
+        margin-bottom: 58px;
+    }
+
+    .user_review_container {
+        width: 100%;
+        margin-bottom: 37px;
+    }
+
+    .reviews_col {
+        padding-right: 30px;
+    }
+
+    .user_pic {
+        width: 70px;
+        height: 70px;
+        background: #ebebeb;
+        border-radius: 50%;
+        margin-right: 0;
+    }
+
+    .review {
+        padding-left: 30px;
+    }
+
+    .review_date {
+        color: #fe4c50;
+        margin-top: -4px;
+    }
+
+    .user_name {
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 18px;
+    }
+
+    .review p {
+        font-weight: 400;
+    }
+
+    .star_rating {
+        display: inline-block;
+        font-size: 15px;
+    }
+
+        .star_rating li {
+            display: inline-block;
+            color: #ffd700; /* màu vàng */
+        }
+
+            .star_rating li i {
+                margin-right: 5px;
+            }
+
+    .overflow-auto {
+        overflow-x: hidden !important;
+    }
+</style>
+@section naviheader{
+    <!-- Left navbar links -->
+    <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">Đánh giá sản phẩm</a>
+    </li>
+
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Đánh giá sản phẩm</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Đánh giá sản phẩm</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<div class="tabs_section_container">
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <h3 class="my-3">@Model.ProductName</h3>
+                <p>@Model.Title</p>
+                <div>
+                    <img src="@Model.ListImages" />
+                </div>
+                <div class=" py-2 px-3 mt-4">
+                    <h3 class="mb-0">
+                        Giá: @Model.Price.ToString("N0")
+                    </h3>
+                </div>
+                <div>
+                    <h3 class="mb-0">
+                        Đánh giá:  @ViewBag.Rating / 5
+                    </h3>
+                </div>
+            </div>
+            <div class="col-6">
+                <!-- Tab Reviews -->
+                <div class="tab_title reviews_title">
+                    <h4>Reviews (@ViewBag.Count)</h4>
+                </div>
+                <div class="overflow-auto" style="max-height: 500px;">
+                    <div class="row">
+                        <!-- User Reviews -->
+                        <div class="col-md-12 reviews_col">
+                            @if (ViewBag.Comment != null)
+                            {
+                                var comments = ViewBag.comment as List<PBL3.Models.Comment>;
+                                if (comments != null)
+                                {
+                                    foreach (var i in comments)
+                                    {
+                                        <!-- User Review -->
+
+                                        <div class="user_review_container d-flex flex-column flex-sm-row">
+                                            <div class="user">
+                                                <div class="user_pic mr-2">
+                                                    <img style="width: 70px" src="~/Uploads/_thumbs/upng.png" />
+                                                </div>
+                                                <div class="user_rating">
+                                                    <ul class="star_rating ml-0 pl-0">
+                                                        @for (int rate = 1; rate <= 5; rate++)
+                                                        {
+                                                            if (rate <= Convert.ToInt32(i.Rating))
+                                                            {
+                                                                <li><i class="fa fa-star"></i></li>
+                                                            }
+                                                            else
+                                                            {
+                                                                <li><i class="far fa-star"></i></li>
+                                                            }
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="review">
+                                                @{
+                                                    DateTime date = DateTime.Parse(i.CreateDate.ToString());
+                                                    string formattedDate = date.ToString("dd MMMM yyyy HH:mm:ss");
+                                                }
+                                                <div class="review_date">@formattedDate</div>
+
+                                                <div class="user_name">@i.User.UserName</div>
+                                                <p>@i.Comment1</p>
+                                            </div>
+                                            <div class="ml-auto">
+                                                <a href="#" data-id="@i.CommentID" class="btn btn-sm btn-danger btnDelete">Xóa</a>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section DoanJS{
+    <script>
+        $(document).ready(function () {
+            $('body').on('click', '.btnDelete', function () {
+                var id = $(this).data('id');
+                var conf = confirm("Bạn có chắc muốn xóa bình luận này không?");
+                if (conf === true) {
+                    $.ajax({
+                        url: "/Admin/Comment/Delete",
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (rs) {
+                            if (rs.success) {
+                                location.reload();
+                            }
+                        }
+                    });
+                };
+
+            });
+        });
+    </script>
+}

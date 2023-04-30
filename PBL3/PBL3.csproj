@@ -3314,6 +3314,8 @@
     </Content>
     <Content Include="Areas\Admin\Views\Comment\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Order\PrintOrder.cshtml" />
+    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\Comment\CommentByProductID.cshtml" />
     <None Include="packages.config" />
     <Content Include="Views\Product\Search.cshtml" />
     <Content Include="Views\Order\test.cshtml" />
