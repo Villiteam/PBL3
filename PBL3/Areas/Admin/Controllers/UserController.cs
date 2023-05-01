@@ -14,7 +14,7 @@ namespace PBL3.Areas.Admin.Controllers
         // GET: Admin/User
         private pbl3Entities db = new pbl3Entities();
         //  [AdminAuthorize(Role = new string[] { "Manager" })]
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? page, string sort, string keyword, int? role)
         {
             var pageSize = 5;
             if (page == null)
@@ -23,8 +23,62 @@ namespace PBL3.Areas.Admin.Controllers
             }
             ViewBag.Page = (page - 1) * pageSize + 1;
             var pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
-            var ds = db.Users.OrderByDescending(m => m.UserID).ToPagedList(pageIndex, pageSize);
-            return View(ds);
+
+            IPagedList<User> list = null;
+            // Lọc tên theo keyword
+            ViewBag.Keyword = keyword;
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                list = db.Users.Where(m => m.UserName.Contains(keyword)).OrderBy(m => m.UserName).ToPagedList(pageIndex, pageSize);
+            }
+            else
+            {
+                list = db.Users.OrderBy(m => m.UserName).ToPagedList(pageIndex, pageSize);
+            }
+
+            // Lọc theo quyền 
+            ViewBag.Role = role;
+            if (role != null)
+            {
+                list = list.Where(m=> m.Role == role).OrderBy(m => m.UserName).ToPagedList(pageIndex, pageSize);
+            }
+
+            //Sort
+            ViewBag.SortByDate = String.IsNullOrEmpty(sort) ? "date" : "";
+            ViewBag.SortByName = (sort == "name_desc") ? "name" : "name_desc";
+            ViewBag.SortByRole = (sort == "role_desc") ? "role" : "role_desc";
+            ViewBag.SortByStatus = (sort == "status_desc") ? "status" : "status_desc";
+
+            switch (sort)
+            {
+                case "date":
+                    list = list.OrderBy(m => m.CreatedDate).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "name":
+                    list = list.OrderBy(m => m.UserName).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "name_desc":
+                    list = list.OrderByDescending(m => m.UserName).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "role":
+                    list = list.OrderBy(m => m.Role).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "role_desc":
+                    list = list.OrderByDescending(m => m.Role).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "status":
+                    list = list.OrderBy(m => m.Status).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "status_desc":
+                    list = list.OrderByDescending(m => m.Status).ToPagedList(pageIndex, pageSize);
+                    break;
+                default:
+                    list = list.OrderByDescending(m => m.CreatedDate).ToPagedList(pageIndex, pageSize);
+                    break;
+            }
+
+
+            return View(list);
         }
         public ActionResult Add()
         {
@@ -75,7 +129,7 @@ namespace PBL3.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult Edit(User model)
         {
-         
+
             var update = db.Users.Find(model.UserID);
             update.UserName = model.UserName;
             if (update.Password == model.Password)
@@ -111,11 +165,11 @@ namespace PBL3.Areas.Admin.Controllers
         public ActionResult Status(int id)
         {
             var item = db.Users.Find(id);
-            if(item  != null)
+            if (item != null)
             {
                 item.Status = !item.Status;
                 db.SaveChanges();
-                return Json(new { success = true ,isActive = item.Status});
+                return Json(new { success = true, isActive = item.Status });
             }
             return Json(new { success = false });
         }
