@@ -28,6 +28,12 @@ namespace PBL3.Areas.Admin.Controllers
             var item = db.Products.Find(id);
             return View(item);
         }
-
+        public ActionResult Delete(int id)
+        {
+            var cmm = db.Comments.Find(id);
+            db.Comments.Remove(cmm);
+            db.SaveChanges();
+            return Json(new { success = true });
+        }
     }
 }

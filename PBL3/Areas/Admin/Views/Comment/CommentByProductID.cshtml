@@ -1,4 +1,6 @@
-﻿@model PBL3.Models.Product
+﻿
+
+@model PBL3.Models.Product
 @{
     ViewBag.Title = "review";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
@@ -62,6 +64,10 @@
             .star_rating li i {
                 margin-right: 5px;
             }
+
+    .overflow-auto {
+        overflow-x: hidden !important;
+    }
 </style>
 @section naviheader{
     <!-- Left navbar links -->
@@ -96,21 +102,25 @@
                     <img src="@Model.ListImages" />
                 </div>
                 <div class=" py-2 px-3 mt-4">
-                    <h2 class="mb-0">
+                    <h3 class="mb-0">
                         Giá: @Model.Price.ToString("N0")
-                    </h2>
+                    </h3>
+                </div>
+                <div>
+                    <h3 class="mb-0">
+                        Đánh giá:  @ViewBag.Rating / 5
+                    </h3>
                 </div>
             </div>
             <div class="col-6">
                 <!-- Tab Reviews -->
-                <div class="overflow-auto" style="max-height: 500px; overflow-y: hidden;">
+                <div class="tab_title reviews_title">
+                    <h4>Reviews (@ViewBag.Count)</h4>
+                </div>
+                <div class="overflow-auto" style="max-height: 500px;">
                     <div class="row">
                         <!-- User Reviews -->
                         <div class="col-md-12 reviews_col">
-                            <div class="tab_title reviews_title">
-                                <h4>Reviews (@ViewBag.Count)</h4>
-                            </div>
-
                             @if (ViewBag.Comment != null)
                             {
                                 var comments = ViewBag.comment as List<PBL3.Models.Comment>;
@@ -151,6 +161,9 @@
                                                 <div class="user_name">@i.User.UserName</div>
                                                 <p>@i.Comment1</p>
                                             </div>
+                                            <div class="ml-auto">
+                                                <a href="#" data-id="@i.CommentID" class="btn btn-sm btn-danger btnDelete">Xóa</a>
+                                            </div>
                                         </div>
                                     }
                                 }
@@ -166,3 +179,26 @@
     </div>
 
 </div>
+@section DoanJS{
+    <script>
+        $(document).ready(function () {
+            $('body').on('click', '.btnDelete', function () {
+                var id = $(this).data('id');
+                var conf = confirm("Bạn có chắc muốn xóa bình luận này không?");
+                if (conf === true) {
+                    $.ajax({
+                        url: "/Admin/Comment/Delete",
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (rs) {
+                            if (rs.success) {
+                                location.reload();
+                            }
+                        }
+                    });
+                };
+
+            });
+        });
+    </script>
+}
