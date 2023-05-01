@@ -145,7 +145,7 @@
                                                 <div class="favorite favorite_left"></div>
                                                 <div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-$20</span></div>
                                                 <div class="product_info">
-                                                    <h6 class="product_name"><a href="~/Product/Detail?id=@item.ProductID">@item.Title</a></h6>
+                                                    <h6 class="product_name"><a href="~/Product/Detail?id=@item.ProductID">@item.ProductName</a></h6>
                                                     @if (item.isSale == true)
                                                     {
                                                         <div class="product_price">@item.PromotionPrice.Value.ToString("N0")<span>@item.Price.ToString("N0")</span></div>

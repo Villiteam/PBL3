@@ -103,6 +103,7 @@
                                 <td>
                                     @Html.ActionLink("Sửa", "Edit", new { id = item.ProductID }, new { @class = "btn btn-sm btn-primary" })
                                     @Html.ActionLink("Xóa", "Delete", new { id = item.ProductID }, new { @class = "btn btn-sm btn-danger delete-link", onclick = "return confirm('Bạn có chắc muốn xóa?');" })
+                                    <a href="~/Admin/Comment/CommentByProductID?id=@item.ProductID" class="btn btn-sm btn-warning">Đánh giá</a>
                                 </td>
                             </tr>
                             i++;

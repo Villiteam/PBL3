@@ -39,6 +39,7 @@ namespace PBL3.Controllers
 
             ViewBag.Rating = rate;
             ViewBag.Count = count;
+
             var item = db.Products.Find(id);
             return View(item);
         }
