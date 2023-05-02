@@ -13,8 +13,15 @@
 
             <div class="breadcrumbs d-flex flex-row align-items-center">
                 <ul>
-                    <li><a href="#">Home</a></li>
-                    <li class="active"><a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i>All</a></li>
+                    <li><a href="~/Home">Home</a></li>
+                    @if (ViewBag.CatName == null)
+                    {
+                        <li class="active"><a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i>All</a></li>
+                    }
+                    else
+                    {
+                        <li class="active"><a href="#"><i class="fa fa-angle-right" aria-hidden="true"></i>@ViewBag.CatName</a></li>
+                    }
                 </ul>
             </div>
 
@@ -25,7 +32,7 @@
                     <div class="sidebar_title">
                         <h5>Product Category</h5>
                     </div>
-                    @Html.Action("MenuLeft", "Menu")
+                    @Html.Action("MenuLeft", "Menu", new { id = ViewBag.CatID })
                 </div>
 
                 <!-- Price Range Filtering -->
@@ -35,47 +42,49 @@
                     </div>
                     <p>
                         <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                        <input type="hidden" id="fromAmount" />
+                        <input type="hidden" id="toAmount" />
                     </p>
                     <div id="slider-range"></div>
                     <div class="filter_button"><span>filter</span></div>
                 </div>
-
+               
                 <!-- Sizes -->
-                <div class="sidebar_section">
-                    <div class="sidebar_title">
-                        <h5>Sizes</h5>
-                    </div>
-                    <ul class="checkboxes">
-                        <li><i class="fa fa-square-o" aria-hidden="true"></i><span>S</span></li>
-                        <li class="active"><i class="fa fa-square" aria-hidden="true"></i><span>M</span></li>
-                        <li><i class="fa fa-square-o" aria-hidden="true"></i><span>L</span></li>
-                        <li><i class="fa fa-square-o" aria-hidden="true"></i><span>XL</span></li>
-                        <li><i class="fa fa-square-o" aria-hidden="true"></i><span>XXL</span></li>
-                    </ul>
-                </div>
+                @*<div class="sidebar_section">
+            <div class="sidebar_title">
+                <h5>Sizes</h5>
+            </div>
+            <ul class="checkboxes">
+                <li><i class="fa fa-square-o" aria-hidden="true"></i><span>S</span></li>
+                <li class="active"><i class="fa fa-square" aria-hidden="true"></i><span>M</span></li>
+                <li><i class="fa fa-square-o" aria-hidden="true"></i><span>L</span></li>
+                <li><i class="fa fa-square-o" aria-hidden="true"></i><span>XL</span></li>
+                <li><i class="fa fa-square-o" aria-hidden="true"></i><span>XXL</span></li>
+            </ul>
+        </div>*@
 
                 <!-- Color -->
-                <div class="sidebar_section">
-                    <div class="sidebar_title">
-                        <h5>Color</h5>
-                    </div>
-                    <ul class="checkboxes">
-                        <li><i class="fa fa-square-o" aria-hidden="true"></i><span>Black</span></li>
-                        <li class="active"><i class="fa fa-square" aria-hidden="true"></i><span>Pink</span></li>
-                        <li><i class="fa fa-square-o" aria-hidden="true"></i><span>White</span></li>
-                        <li><i class="fa fa-square-o" aria-hidden="true"></i><span>Blue</span></li>
-                        <li><i class="fa fa-square-o" aria-hidden="true"></i><span>Orange</span></li>
-                        <li><i class="fa fa-square-o" aria-hidden="true"></i><span>White</span></li>
-                        <li><i class="fa fa-square-o" aria-hidden="true"></i><span>Blue</span></li>
-                        <li><i class="fa fa-square-o" aria-hidden="true"></i><span>Orange</span></li>
-                        <li><i class="fa fa-square-o" aria-hidden="true"></i><span>White</span></li>
-                        <li><i class="fa fa-square-o" aria-hidden="true"></i><span>Blue</span></li>
-                        <li><i class="fa fa-square-o" aria-hidden="true"></i><span>Orange</span></li>
-                    </ul>
-                    <div class="show_more">
-                        <span><span>+</span>Show More</span>
-                    </div>
-                </div>
+                @*<div class="sidebar_section">
+            <div class="sidebar_title">
+                <h5>Color</h5>
+            </div>
+            <ul class="checkboxes">
+                <li><i class="fa fa-square-o" aria-hidden="true"></i><span>Black</span></li>
+                <li class="active"><i class="fa fa-square" aria-hidden="true"></i><span>Pink</span></li>
+                <li><i class="fa fa-square-o" aria-hidden="true"></i><span>White</span></li>
+                <li><i class="fa fa-square-o" aria-hidden="true"></i><span>Blue</span></li>
+                <li><i class="fa fa-square-o" aria-hidden="true"></i><span>Orange</span></li>
+                <li><i class="fa fa-square-o" aria-hidden="true"></i><span>White</span></li>
+                <li><i class="fa fa-square-o" aria-hidden="true"></i><span>Blue</span></li>
+                <li><i class="fa fa-square-o" aria-hidden="true"></i><span>Orange</span></li>
+                <li><i class="fa fa-square-o" aria-hidden="true"></i><span>White</span></li>
+                <li><i class="fa fa-square-o" aria-hidden="true"></i><span>Blue</span></li>
+                <li><i class="fa fa-square-o" aria-hidden="true"></i><span>Orange</span></li>
+            </ul>
+            <div class="show_more">
+                <span><span>+</span>Show More</span>
+            </div>
+        </div>*@
 
             </div>
 
@@ -94,12 +103,12 @@
                             <div class="product_sorting_container product_sorting_container_top">
                                 <ul class="product_sorting">
                                     <li>
-                                        <span class="type_sorting_text">Default Sorting</span>
+                                        <span class="type_sorting_text">Mặc định</span>
                                         <i class="fa fa-angle-down"></i>
                                         <ul class="sorting_type">
-                                            <li class="type_sorting_btn" data-isotope-option='{ "sortBy": "original-order" }'><span>Default Sorting</span></li>
-                                            <li class="type_sorting_btn" data-isotope-option='{ "sortBy": "price" }'><span>Price</span></li>
-                                            <li class="type_sorting_btn" data-isotope-option='{ "sortBy": "name" }'><span>Product Name</span></li>
+                                            <li class="type_sorting_btn" data-isotope-option='{ "sortBy": "original-order" }'><span>Mặc định</span></li>
+                                            <li class="type_sorting_btn" data-isotope-option='{ "sortBy": "price" }'><span>Giá</span></li>
+                                            <li class="type_sorting_btn" data-isotope-option='{ "sortBy": "name" }'><span>Tên sản phẩm</span></li>
                                         </ul>
                                     </li>
                                     <li>
@@ -149,10 +158,12 @@
                                                     @if (item.isSale == true)
                                                     {
                                                         <div class="product_price">@item.PromotionPrice.Value.ToString("N0")<span>@item.Price.ToString("N0")</span></div>
+                                                        <div style="display: none;" class="in_product_price">@item.PromotionPrice</div>
                                                     }
                                                     else
                                                     {
                                                         <div class="product_price">@item.Price.ToString("N0")</div>
+                                                        <div style="display: none;" class="in_product_price">@item.Price</div>
                                                     }
                                                 </div>
                                             </div>
@@ -166,6 +177,10 @@
                                             <div class="red_button add_to_cart_button"><a href="/them-gio-hang?id=@item.ProductID&quantity=1&sizeID=@size">add to cart</a></div>
                                         </div>
                                     }
+                                }
+                                else
+                                {
+                                    <div>Không có sản phẩm nào</div>
                                 }
                             </div>
                             <!-- Product Sorting -->

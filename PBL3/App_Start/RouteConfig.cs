@@ -15,7 +15,7 @@ namespace PBL3
             routes.MapRoute(
                name: "Category",
                url: "danh-muc-san-pham/{id}",
-               defaults: new { controller = "Product", action = "ProductCategory", id = UrlParameter.Optional },
+               defaults: new { controller = "Product", action = "Index", id = UrlParameter.Optional },
                namespaces: new[] { "PBL3.Controllers" }
            );
             routes.MapRoute(

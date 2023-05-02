@@ -3272,7 +3272,6 @@
     <Content Include="Views\Product\Partial_BestSellers.cshtml" />
     <Content Include="Views\Product\Index.cshtml" />
     <Content Include="Views\Menu\_MenuLeft.cshtml" />
-    <Content Include="Views\Product\ProductCategory.cshtml" />
     <Content Include="Views\Product\Detail.cshtml" />
     <Content Include="Views\Cart\Index.cshtml" />
     <Content Include="Views\Shared\ViewCart.cshtml" />
