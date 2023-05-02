@@ -16,10 +16,24 @@ namespace PBL3.Controllers
         
         // GET: Product
         private pbl3Entities db = new pbl3Entities();
-        public ActionResult Index()
+        public ActionResult Index(int? id)
         {
-            var ds = db.Products.ToList();
-            return View(ds);
+            if(id != null)
+            {
+                var ds = db.Products.Where(m => m.CatID == id).ToList();
+                ViewBag.CatID = id;
+
+                var cat = db.Categories.Find(id).CatName;
+                ViewBag.CatName = cat;
+                return View(ds);
+            }
+            else
+            {
+                ViewBag.CatID = null;
+                ViewBag.CatName = null;
+                var ds = db.Products.ToList();
+                return View(ds);
+            }
         }
 
         public ActionResult Detail(int? id)
@@ -39,16 +53,6 @@ namespace PBL3.Controllers
 
             var item = db.Products.Find(id);
             return View(item);
-        }
-
-        public ActionResult ProductCategory(int id)
-        {
-            var ds = db.Products.Where(m=>m.CatID== id).ToList();   
-            ViewBag.CatID = id;
-
-            var cat = db.Categories.Find(id).CatName;
-            ViewBag.CatName = cat;
-            return View(ds);
         }
 
         public ActionResult Partial_ItemByCatID()
