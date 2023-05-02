@@ -28,6 +28,7 @@ namespace PBL3.Models
         public bool Delivered { get; set; }
         public System.DateTime DeliveryDate { get; set; }
         public int UserID { get; set; }
+        // Khai báo navigation property User
         public bool IsPay { get; set; }
         public string PayType { get; set; }
         public Nullable<int> VoucherID { get; set; }

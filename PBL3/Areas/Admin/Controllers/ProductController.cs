@@ -8,6 +8,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Razor.Tokenizer.Symbols;
 
 namespace PBL3.Areas.Admin.Controllers
 {
@@ -15,7 +16,7 @@ namespace PBL3.Areas.Admin.Controllers
     {
         // GET: Admin/Product
         private pbl3Entities db = new pbl3Entities();
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? page, string sort,string keyword,int? cate)
         {
             var pageSize = 5;
             if (page == null)
@@ -24,8 +25,91 @@ namespace PBL3.Areas.Admin.Controllers
             }
             ViewBag.Page = (page - 1) * pageSize + 1;
             var pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
-            var ds = db.Products.OrderByDescending(m => m.ProductID).ToPagedList(pageIndex, pageSize);
-            return View(ds);
+           
+
+            IPagedList<Product> list = null;
+            // Lọc tên theo keyword
+            ViewBag.Keyword = keyword;
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                list = db.Products.Where(m => m.ProductName.Contains(keyword)).OrderBy(m => m.ProductName).ToPagedList(pageIndex, pageSize);
+            }
+            else
+            {
+                list = db.Products.OrderBy(m => m.ProductName).ToPagedList(pageIndex, pageSize);
+            }
+
+            // Lọc theo danh mục  
+            ViewBag.Cate = cate;
+            if (cate != null)
+            {
+                list = list.Where(m => m.CatID == cate).OrderBy(m => m.CatID).ToPagedList(pageIndex, pageSize);
+            }
+
+            //Sort
+            ViewBag.SortByDate = String.IsNullOrEmpty(sort) ? "date" : "";
+            ViewBag.SortByName = (sort == "name_desc") ? "name" : "name_desc";
+            ViewBag.SortByQuantity = (sort == "quantity_desc") ? "quantity" : "quantity_desc";
+            ViewBag.SortByPrice  = (sort == "price_desc") ? "price" : "price_desc";
+            ViewBag.SortByPromotionPrice = (sort == "pprice_desc") ? "pprice" : "pprice_desc";
+            ViewBag.SortByHome = (sort == "home_desc") ? "home" : "home_desc";
+            ViewBag.SortBySale = (sort == "sale_desc") ? "sale" : "sale_desc";
+            ViewBag.SortByStatus = (sort == "status_desc") ? "status" : "status_desc";
+
+            switch (sort)
+            {
+                case "date":
+                    list = list.OrderBy(m => m.CreateDate).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "name":
+                    list = list.OrderBy(m => m.ProductName).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "name_desc":
+                    list = list.OrderByDescending(m => m.ProductName).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "quantity":
+                    list = list.OrderBy(m => m.Quantity).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "quantity_desc":
+                    list = list.OrderByDescending(m => m.Quantity).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "price":
+                    list = list.OrderBy(m => m.Price).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "price_desc":
+                    list = list.OrderByDescending(m => m.Price).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "pprice":
+                    list = list.OrderBy(m => m.PromotionPrice).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "pprice_desc":
+                    list = list.OrderByDescending(m => m.PromotionPrice).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "home":
+                    list = list.OrderBy(m => m.isHome).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "home_desc":
+                    list = list.OrderByDescending(m => m.isHome).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "sale":
+                    list = list.OrderBy(m => m.isSale).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "sale_desc":
+                    list = list.OrderByDescending(m => m.isSale).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "status":
+                    list = list.OrderBy(m => m.Status).ToPagedList(pageIndex, pageSize);
+                    break;
+                case "status_desc":
+                    list = list.OrderByDescending(m => m.Status).ToPagedList(pageIndex, pageSize);
+                    break;
+                default:
+                    list = list.OrderByDescending(m => m.CreateDate).ToPagedList(pageIndex, pageSize);
+                    break;
+            }
+
+
+            return View(list);
         }
 
         public ActionResult Add()

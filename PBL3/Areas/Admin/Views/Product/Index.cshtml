@@ -42,87 +42,184 @@
             </div>
         </div>
         <div class="card-body text-center">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Hình ảnh</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Tiêu đề</th>
-                        <th>Danh mục</th>
-                        <th>Số lượng</th>
-                        <th>Giá</th>
-                        @*<th>Ngày tạo</th>*@
-                        <th>Trang chủ</th>
-                        <th>Khuyến mãi</th>
-                        <th>Hiển thị</th>
-                        <th>#</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model != null && Model.Any())
-                    {
-                        var i = ViewBag.Page;
-                        foreach (var item in Model)
-                        {
-                            var strCheck = item.Status ? "<i class='fa fa-check text-success'></i>" : " <i class='fas fa-times text-danger'></i>";
-                            var strCheckHome = item.isHome ? "<i class='fa fa-check text-success'></i>" : " <i class='fas fa-times text-danger'></i>";
-                            var strCheckSale = item.isSale ? "<i class='fa fa-check text-success'></i>" : " <i class='fas fa-times text-danger'></i>";
-                            <tr>
-                                <td>@i</td>
-                                <td>
-                                    <button type="button" class="btn">
-                                        @*<img class="imgproduct" data-id="@item.ProductID" src="@item.ProductImages.FirstOrDefault(x=>x.isDefault).Image" width="60" />*@
-                                        <img class="imgproduct" data-id="@item.ProductID" src="@item.ListImages" width="60" />
+            <form action="/Admin/Product/Index">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-inline">
+                            <div class="input-group">
+                                <input class="form-control" type="search" name="keyword" value="@ViewBag.Keyword" placeholder="Search">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-sidebar">
+                                        <i class="fas fa-search fa-fw"></i>
                                     </button>
-                                </td>
-                                <td>@item.ProductName</td>
-                                <td>@item.Title</td>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <lable class="col-md-3 text-bold pt-2">Danh mục:</lable>
+                            <div class="col-md-9">
+                                <select class="form-control" name="cate">
+                                    @using (PBL3.Models.pbl3Entities db = new PBL3.Models.pbl3Entities())
+                                    {
 
-                                @if (item.Category != null)
-                                {
-                                    <td> @item.Category.CatName</td>
-                                }
-                                else
-                                {
-                                    <td> Trống</td>
-                                }
+                                        if (ViewBag.Cate == null)
+                                        {
+                                            <option value="" selected>All</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="">All</option>
+                                        }
+                                        foreach (var loai in db.Categories.ToList())
+                                        {
+                                            if (loai.CatID == ViewBag.Cate)
+                                            {
+                                                <option value="@loai.CatID" selected>@loai.CatName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@loai.CatID">@loai.CatName</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
 
-                                <td>@item.Quantity</td>
-                                <td>@item.Price.ToString("N0")</td>
-                                @*<td>@item.CreateDate</td>*@
-                                <td>
-                                    <a href="#" data-id="@item.ProductID" data-status="@item.isHome" class="btnHome"> @Html.Raw(strCheckHome)</a>
-                                </td>
-                                <td>
-                                    <a href="#" data-id="@item.ProductID" data-status="@item.isSale" class="btnSale"> @Html.Raw(strCheckSale)</a>
-                                </td>
-                                <td>
-                                    <a href="#" data-id="@item.ProductID" data-status="@item.Status" class="btnStatus"> @Html.Raw(strCheck)</a>
-                                </td>
-                                <td>
-                                    @Html.ActionLink("Sửa", "Edit", new { id = item.ProductID }, new { @class = "btn btn-sm btn-primary" })
-                                    @Html.ActionLink("Xóa", "Delete", new { id = item.ProductID }, new { @class = "btn btn-sm btn-danger delete-link", onclick = "return confirm('Bạn có chắc muốn xóa?');" })
-                                    <a href="~/Admin/Comment/CommentByProductID?id=@item.ProductID" class="btn btn-sm btn-warning">Đánh giá</a>
-                                </td>
-                            </tr>
-                            i++;
-                        }
-                    }
-                    else
-                    {
+                <table class="table table-hover">
+                    <thead>
                         <tr>
-                            <td colspan="4">Không có bản ghi nào</td>
+                            <th>STT</th>
+                            <th>Hình ảnh</th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByName , keyword = ViewBag.Keyword, cate = ViewBag.Cate})" style="color: #343a40;">
+                                    Tên sản phẩm
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            @*<th>Tiêu đề</th>*@
+                            <th>Danh mục</th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByQuantity , keyword = ViewBag.Keyword, cate = ViewBag.Cate})" style="color: #343a40;">
+                                    Số lượng
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByPrice , keyword = ViewBag.Keyword, cate = ViewBag.Cate})" style="color: #343a40;">
+                                    Giá
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByPromotionPrice , keyword = ViewBag.Keyword, cate = ViewBag.Cate})" style="color: #343a40;">
+                                    Giá khuyến mãi
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByDate , keyword = ViewBag.Keyword, cate = ViewBag.Cate})" style="color: #343a40;">
+                                    Ngày tạo
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByHome , keyword = ViewBag.Keyword, cate = ViewBag.Cate})" style="color: #343a40;">
+                                   Trang chủ
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortBySale , keyword = ViewBag.Keyword, cate = ViewBag.Cate})" style="color: #343a40;">
+                                    Khuyến mãi 
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByStatus , keyword = ViewBag.Keyword, cate = ViewBag.Cate})" style="color: #343a40;">
+                                    Hiển thị 
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>#</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-            <div class="row">
-                <div class="col-md-3"></div>
-                <div class="col-md-6 " style="text-align: center">  @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))</div>
-                <div class="col-md-3"></div>
-            </div>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            var i = ViewBag.Page;
+                            foreach (var item in Model)
+                            {
+                                var strCheck = item.Status ? "<i class='fa fa-check text-success'></i>" : " <i class='fas fa-times text-danger'></i>";
+                                var strCheckHome = item.isHome ? "<i class='fa fa-check text-success'></i>" : " <i class='fas fa-times text-danger'></i>";
+                                var strCheckSale = item.isSale ? "<i class='fa fa-check text-success'></i>" : " <i class='fas fa-times text-danger'></i>";
+                                <tr>
+                                    <td>@i</td>
+                                    <td>
+                                        <button type="button" class="btn">
+                                            @*<img class="imgproduct" data-id="@item.ProductID" src="@item.ProductImages.FirstOrDefault(x=>x.isDefault).Image" width="60" />*@
+                                            <img class="imgproduct" data-id="@item.ProductID" src="@item.ListImages" width="60" />
+                                        </button>
+                                    </td>
+                                    <td>@item.ProductName</td>
+                                    @*<td>@item.Title</td>*@
+                                    @if (item.Category != null)
+                                    {
+                                        <td> @item.Category.CatName</td>
+                                    }
+                                    else
+                                    {
+                                        <td> Trống</td>
+                                    }
 
+                                    <td>@item.Quantity</td>
+                                    <td>@item.Price.ToString("N0")</td>
+                                    <td>@item.PromotionPrice.Value.ToString("N0")</td>
+                                    @{
+                                        DateTime date = DateTime.Parse(item.CreateDate.ToString());
+                                        string formattedDate = date.ToString("dd MMMM yyyy HH:mm:ss");
+                                    }
+                                    <td>@formattedDate</td>
+
+                                    <td>
+                                        <a href="#" data-id="@item.ProductID" data-status="@item.isHome" class="btnHome"> @Html.Raw(strCheckHome)</a>
+                                    </td>
+                                    <td>
+                                        <a href="#" data-id="@item.ProductID" data-status="@item.isSale" class="btnSale"> @Html.Raw(strCheckSale)</a>
+                                    </td>
+                                    <td>
+                                        <a href="#" data-id="@item.ProductID" data-status="@item.Status" class="btnStatus"> @Html.Raw(strCheck)</a>
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Sửa", "Edit", new { id = item.ProductID }, new { @class = "btn btn-sm btn-primary" })
+                                        @Html.ActionLink("Xóa", "Delete", new { id = item.ProductID }, new { @class = "btn btn-sm btn-danger delete-link", onclick = "return confirm('Bạn có chắc muốn xóa?');" })
+                                        <a href="~/Admin/Comment/CommentByProductID?id=@item.ProductID" class="btn btn-sm btn-warning">Đánh giá</a>
+                                    </td>
+                                </tr>
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4">Không có bản ghi nào</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6 " style="text-align: center">  @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))</div>
+                    <div class="col-md-3"></div>
+                </div>
+
+            </form>
+              
         </div>
         <!-- /.card-body -->
         <div class="card-footer">

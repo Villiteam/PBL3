@@ -21,10 +21,7 @@ namespace PBL3.Controllers
             var ds = db.Products.ToList();
             return View(ds);
         }
-        public ActionResult test()
-        {
-            return View();
-        }
+
         public ActionResult Detail(int? id)
         {
 
