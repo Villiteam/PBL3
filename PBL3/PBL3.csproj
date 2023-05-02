@@ -3318,7 +3318,6 @@
     <None Include="packages.config" />
     <Content Include="Views\Product\Search.cshtml" />
     <Content Include="Views\Order\test.cshtml" />
-    <Content Include="Views\Product\test.cshtml" />
     <Content Include="Views\Comment\CommentByOrderDetailID.cshtml" />
     <Content Include="Views\Comment\Index.cshtml" />
     <Content Include="Views\Comment\Edit.cshtml" />

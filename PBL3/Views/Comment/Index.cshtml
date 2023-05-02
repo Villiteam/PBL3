@@ -39,7 +39,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if (Model != null)
+                                            @if (Model != null && Model.Any())
                                             {
                                                 var i = 1;
                                                 foreach (var item in Model)
