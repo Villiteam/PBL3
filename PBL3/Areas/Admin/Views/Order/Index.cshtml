@@ -40,29 +40,40 @@
         <div class="card-body text-center">
             <form action="/Admin/Order/Index">
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-inline">
-                            <div class="input-group">
-                                <input class="form-control" type="search" name="keyword" value="@ViewBag.Keyword" placeholder="Search">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-sidebar">
-                                        <i class="fas fa-search fa-fw"></i>
-                                    </button>
-                                </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <input class="form-control" type="search" name="keyword" value="@ViewBag.Keyword" placeholder="Search">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-sidebar">
+                                    <i class="fas fa-search fa-fw"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="row">
-                            <lable class="col-md-2 text-bold pt-2">Số điện thoại:</lable>
-                            <div class="col-md-10">
+                            <lable class="col-md-5 text-bold pt-2">Số điện thoại:</lable>
+                            <div class="col-md-7">
                                 <div class="input-group">
                                     <input class="form-control" type="text" name="phone" value="@ViewBag.Phone" placeholder="">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4"></div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <input class="form-control" type="date" id="fromdate" name="fromdate" value="@((ViewBag.FromDate != null) ? ViewBag.FromDate : "2023-04-20")" placeholder="Từ ngày">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <input class="form-control" type="date" id="todate" name="todate" value="@((ViewBag.ToDate != null) ? ViewBag.ToDate : DateTime.Now.ToString("yyyy-MM-dd"))" placeholder="Đến ngày">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <table class="table table-hover">
@@ -120,7 +131,7 @@
                                     <td>@item.Total.Value.ToString("N0")</td>
                                     @{
                                         DateTime date = DateTime.Parse(item.OrderDate.ToString());
-                                        string formattedDate = date.ToString("dd MMMM yyyy HH:mm:ss");
+                                        string formattedDate = date.ToString("dd/MM/yyyy HH:mm:ss");
                                     }
                                     <td>@formattedDate</td>
                                     <td>
@@ -152,7 +163,7 @@
                 </div>
 
             </form>
-              
+
         </div>
         <!-- /.card-body -->
         <div class="card-footer">
@@ -165,6 +176,19 @@
 </section>
 <!-- /.content -->
 @section DoanJS {
+    <script>
+        @*if (@ViewBag.ToDate == null) {
+            const today = new Date().toISOString().slice(0, 10);
+            document.getElementById("todate").value = today;
+        } else {
+            document.getElementById("todate").value = @ViewBag.ToDate;
+        }*@
+
+        const fromday = new Date();
+        fromday.setDate(fromday.getDate() - 1);
+        document.getElementById("fromdate").max = fromday.toISOString().slice(0, 10);
+
+    </script>
     <script>
         $(document).ready(function () {
             $('body').on('click', '.btnStatus', function (e) {
