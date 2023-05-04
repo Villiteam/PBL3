@@ -241,11 +241,11 @@ namespace PBL3.Areas.Admin.Controllers
             update.Description = model.Description;
             update.CatID = model.CatID;
             update.Quantity = sl;
+            update.OriginalPrice = model.OriginalPrice;
             update.Price = model.Price;
             update.PromotionPrice = model.PromotionPrice;
             update.Status = model.Status;
             update.isHome = model.isHome;
-            update.isHot = model.isHot;
             update.isSale = model.isSale;
             update.CreateDate = DateTime.Now;
             db.SaveChanges();

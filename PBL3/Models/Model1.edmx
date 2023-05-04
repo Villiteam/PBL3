@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="pbl3Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="pbl3Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CatID" />
@@ -79,6 +79,7 @@
           <Property Name="ProductID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProductName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="OriginalPrice" Type="float" />
           <Property Name="Price" Type="float" Nullable="false" />
           <Property Name="PromotionPrice" Type="float" />
           <Property Name="ListImages" Type="xml" />
@@ -87,13 +88,11 @@
           <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="isHome" Type="bit" Nullable="false" />
           <Property Name="isSale" Type="bit" Nullable="false" />
-          <Property Name="isHot" Type="bit" Nullable="false" />
           <Property Name="Status" Type="bit" Nullable="false" />
           <Property Name="ViewCount" Type="int" />
           <Property Name="CatID" Type="int" />
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="Size" Type="nvarchar" MaxLength="10" />
-          <Property Name="Color" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -418,8 +417,7 @@
             <End Role="Warehouse" EntitySet="Warehouse" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="pbl3Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -520,19 +518,18 @@
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="isHome" Type="Boolean" Nullable="false" />
           <Property Name="isSale" Type="Boolean" Nullable="false" />
-          <Property Name="isHot" Type="Boolean" Nullable="false" />
           <Property Name="Status" Type="Boolean" Nullable="false" />
           <Property Name="ViewCount" Type="Int32" />
           <Property Name="CatID" Type="Int32" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Size" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Color" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Category" Relationship="Self.FK_Products_Category" FromRole="Products" ToRole="Category" />
           <NavigationProperty Name="Feedbacks" Relationship="Self.FK_Feedback_Products" FromRole="Products" ToRole="Feedback" />
           <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetails_Products" FromRole="Products" ToRole="OrderDetails" />
           <NavigationProperty Name="ProductImages" Relationship="Self.FK_ProductImage_Products1" FromRole="Products" ToRole="ProductImage" />
           <NavigationProperty Name="Sizes" Relationship="Self.FK_Size_Products" FromRole="Products" ToRole="Size" />
           <NavigationProperty Name="Warehouses" Relationship="Self.FK_Warehouse_Products" FromRole="Products" ToRole="Warehouse" />
+          <Property Name="OriginalPrice" Type="Double" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -948,6 +945,7 @@
           <EntitySetMapping Name="Products">
             <EntityTypeMapping TypeName="pbl3Model.Product">
               <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="OriginalPrice" ColumnName="OriginalPrice" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
                 <ScalarProperty Name="ProductName" ColumnName="ProductName" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
@@ -959,13 +957,11 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="isHome" ColumnName="isHome" />
                 <ScalarProperty Name="isSale" ColumnName="isSale" />
-                <ScalarProperty Name="isHot" ColumnName="isHot" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="ViewCount" ColumnName="ViewCount" />
                 <ScalarProperty Name="CatID" ColumnName="CatID" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="Size" ColumnName="Size" />
-                <ScalarProperty Name="Color" ColumnName="Color" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

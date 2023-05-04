@@ -3,11 +3,13 @@ using PBL3.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Razor.Tokenizer.Symbols;
 using System.Web.Services.Description;
+using static System.Data.Entity.Infrastructure.Design.Executor;
 
 namespace PBL3.Areas.Admin.Controllers
 {
@@ -15,7 +17,7 @@ namespace PBL3.Areas.Admin.Controllers
     {
         // GET: Admin/Order
         private pbl3Entities db = new pbl3Entities();
-        public ActionResult Index(int? page, string sort, string keyword, string phone)
+        public ActionResult Index(int? page, string sort, string keyword, string phone,string fromdate, string todate)
         {
             var pageSize = 5;
             if (page == null)
@@ -27,6 +29,7 @@ namespace PBL3.Areas.Admin.Controllers
 
             var list = db.Orders.Include(m => m.User).ToList();
 
+          
             // Lọc tên theo keyword
             if (!string.IsNullOrEmpty(keyword))
             {
@@ -42,6 +45,19 @@ namespace PBL3.Areas.Admin.Controllers
             }
             ViewBag.Phone = phone;
 
+            //Lọc theo ngày 
+            if (!string.IsNullOrEmpty(fromdate))
+            {
+                DateTime startDate = DateTime.ParseExact(fromdate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                list = list.Where(x => x.OrderDate >= startDate).ToList();
+            }
+            if (!string.IsNullOrEmpty(todate))
+            {
+                DateTime endDate = DateTime.ParseExact(todate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                list = list.Where(x => x.OrderDate <= endDate).ToList();
+            }
+            ViewBag.FromDate = fromdate;
+            ViewBag.ToDate = todate;
 
             //Sort
             ViewBag.SortByDate = String.IsNullOrEmpty(sort) ? "date" : "";

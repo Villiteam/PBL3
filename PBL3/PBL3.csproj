@@ -153,6 +153,7 @@
     <Compile Include="Areas\Admin\Controllers\OrderController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductImageController.cs" />
+    <Compile Include="Areas\Admin\Controllers\StatisticalController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Common\CommonConstants.cs" />
     <Compile Include="Controllers\CartController.cs" />
@@ -263,6 +264,12 @@
     <Content Include="Content\assets\js\cart.js" />
     <Content Include="Content\assets\js\jquery-3.2.1.min.js" />
     <Content Include="Content\assets\js\single_custom.js" />
+    <Content Include="Content\assets\plugins\chart.js\Chart.bundle.js" />
+    <Content Include="Content\assets\plugins\chart.js\Chart.bundle.min.js" />
+    <Content Include="Content\assets\plugins\chart.js\Chart.css" />
+    <Content Include="Content\assets\plugins\chart.js\Chart.js" />
+    <Content Include="Content\assets\plugins\chart.js\Chart.min.css" />
+    <Content Include="Content\assets\plugins\chart.js\Chart.min.js" />
     <Content Include="Content\assets\plugins\easing\easing.js" />
     <Content Include="Content\assets\plugins\font-awesome-4.7.0\css\font-awesome.css" />
     <Content Include="Content\assets\plugins\font-awesome-4.7.0\css\font-awesome.min.css" />
@@ -3314,6 +3321,7 @@
     <Content Include="Areas\Admin\Views\Order\PrintOrder.cshtml" />
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\Comment\CommentByProductID.cshtml" />
+    <Content Include="Areas\Admin\Views\Statistical\Index.cshtml" />
     <None Include="packages.config" />
     <Content Include="Views\Product\Search.cshtml" />
     <Content Include="Views\Order\test.cshtml" />

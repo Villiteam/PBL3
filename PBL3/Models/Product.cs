@@ -35,13 +35,12 @@ namespace PBL3.Models
         public string Description { get; set; }
         public bool isHome { get; set; }
         public bool isSale { get; set; }
-        public bool isHot { get; set; }
         public bool Status { get; set; }
         public Nullable<int> ViewCount { get; set; }
         public Nullable<int> CatID { get; set; }
         public System.DateTime CreateDate { get; set; }
         public string Size { get; set; }
-        public string Color { get; set; }
+        public Nullable<double> OriginalPrice { get; set; }
     
         public virtual Category Category { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

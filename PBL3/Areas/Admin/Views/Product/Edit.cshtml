@@ -150,29 +150,38 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <div class="form-group">
                                                 <lable class="control-label text-bold">Số lượng</lable>
                                                 <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.Product.Quantity, new { htmlAttributes = new { @class = "form-control", type = "number", @Value = "1" } })
+                                                    @Html.EditorFor(model => model.Product.Quantity, new { htmlAttributes = new { @class = "form-control", type = "number", @readonly = "true" } })
                                                     @Html.ValidationMessageFor(model => model.Product.Quantity, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <lable class="control-label text-bold">Giá nhập</lable>
+                                                <div class="col-md-10">
+                                                    @Html.EditorFor(model => model.Product.OriginalPrice, new { htmlAttributes = new { @class = "form-control", type = "number" } })
+                                                    @Html.ValidationMessageFor(model => model.Product.OriginalPrice, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
                                             <div class="form-group">
                                                 <lable class="control-label text-bold">Giá</lable>
                                                 <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.Product.Price, new { htmlAttributes = new { @class = "form-control", type = "number", @Value = "100000" } })
+                                                    @Html.EditorFor(model => model.Product.Price, new { htmlAttributes = new { @class = "form-control", type = "number" } })
                                                     @Html.ValidationMessageFor(model => model.Product.Price, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <div class="form-group">
                                                 <lable class="control-label text-bold">Giá khuyến mãi</lable>
                                                 <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.Product.PromotionPrice, new { htmlAttributes = new { @class = "form-control", type = "number", @Value = "100000" } })
+                                                    @Html.EditorFor(model => model.Product.PromotionPrice, new { htmlAttributes = new { @class = "form-control", type = "number" } })
                                                     @Html.ValidationMessageFor(model => model.Product.PromotionPrice, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -180,7 +189,7 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-3">
+                                        <div class="col-4">
                                             <div class="form-group">
                                                 <lable class="control-label text-bold">Hiển thị</lable>
                                                 <div class="col-md-10">
@@ -191,7 +200,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-4">
                                             <div class="form-group">
                                                 <lable class="control-label text-bold">Trang chủ</lable>
                                                 <div class="col-md-10">
@@ -202,19 +211,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-3">
-                                            <div class="form-group">
-                                                <lable class="control-label text-bold">Nổi bật</lable>
-                                                <div class="col-md-10">
-                                                    <div class="checkbox">
-                                                        @Html.EditorFor(model => model.Product.isHot)
-                                                        @Html.ValidationMessageFor(model => model.Product.isHot, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-3">
+                                   
+                                        <div class="col-4">
                                             <div class="form-group">
                                                 <lable class="control-label text-bold">Khuyến mãi</lable>
                                                 <div class="col-md-10">
