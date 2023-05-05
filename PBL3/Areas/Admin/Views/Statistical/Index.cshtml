@@ -44,13 +44,27 @@
             <div class="row mb-3">
                 <div class="col-md-2"></div>
                 <div class="col-md-3">
-                    <div class="input-group">
-                        <input class="form-control" type="date" id="fromdate" value="2023-04-20" placeholder="Từ ngày">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="mb-0 pt-2">Từ ngày: </label>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input class="form-control" type="date" id="fromdate" value="2023-04-20">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="input-group">
-                        <input class="form-control" type="date"  id="todate" value="" placeholder="Đến ngày">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="mb-0 pt-2">Đến ngày: </label>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input class="form-control" type="date" id="todate" value="" >
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -176,7 +190,7 @@
              * -------
              * Here we will create a few charts using ChartJS
              */
-        
+
 
             var arrDoanhThu = [];
             var arrLoiNhuan = [];

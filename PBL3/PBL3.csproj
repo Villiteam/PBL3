@@ -153,11 +153,13 @@
     <Compile Include="Areas\Admin\Controllers\OrderController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductImageController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProfileController.cs" />
     <Compile Include="Areas\Admin\Controllers\StatisticalController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Common\CommonConstants.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
+    <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -176,7 +178,7 @@
     <Compile Include="Models\Comment.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Feedback.cs">
+    <Compile Include="Models\Contact.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Model1.Context.cs">
@@ -3311,6 +3313,11 @@
     <Content Include="Content\bootstrap-grid.rtl.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="Areas\Admin\Views\Order\PrintOrder.cshtml" />
+    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Admin\Views\Comment\CommentByProductID.cshtml" />
+    <Content Include="Areas\Admin\Views\Statistical\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Profile\Index.cshtml" />
     <EntityDeploy Include="Models\Model1.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model1.Designer.cs</LastGenOutput>
@@ -3318,16 +3325,13 @@
     <Content Include="Models\Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>
     </Content>
-    <Content Include="Areas\Admin\Views\Order\PrintOrder.cshtml" />
-    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Admin\Views\Comment\CommentByProductID.cshtml" />
-    <Content Include="Areas\Admin\Views\Statistical\Index.cshtml" />
     <None Include="packages.config" />
     <Content Include="Views\Product\Search.cshtml" />
     <Content Include="Views\Order\test.cshtml" />
     <Content Include="Views\Comment\CommentByOrderDetailID.cshtml" />
     <Content Include="Views\Comment\Index.cshtml" />
     <Content Include="Views\Comment\Edit.cshtml" />
+    <Content Include="Views\Contact\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
