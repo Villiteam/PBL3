@@ -17,7 +17,6 @@ namespace PBL3.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Product()
         {
-            this.Feedbacks = new HashSet<Feedback>();
             this.OrderDetails = new HashSet<OrderDetail>();
             this.ProductImages = new HashSet<ProductImage>();
             this.Sizes = new HashSet<Size>();
@@ -27,6 +26,7 @@ namespace PBL3.Models
         public int ProductID { get; set; }
         public string ProductName { get; set; }
         public string Title { get; set; }
+        public Nullable<double> OriginalPrice { get; set; }
         public double Price { get; set; }
         public Nullable<double> PromotionPrice { get; set; }
         public string ListImages { get; set; }
@@ -40,11 +40,8 @@ namespace PBL3.Models
         public Nullable<int> CatID { get; set; }
         public System.DateTime CreateDate { get; set; }
         public string Size { get; set; }
-        public Nullable<double> OriginalPrice { get; set; }
     
         public virtual Category Category { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Feedback> Feedbacks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

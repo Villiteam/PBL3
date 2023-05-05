@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="pbl3Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="pbl3Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="CatID" />
@@ -25,15 +25,14 @@
           <Property Name="Rating" Type="int" Nullable="false" />
           <Property Name="Comment" Type="nvarchar" MaxLength="300" Nullable="false" />
         </EntityType>
-        <EntityType Name="Feedback">
+        <EntityType Name="Contact">
           <Key>
-            <PropertyRef Name="FeedbackID" />
+            <PropertyRef Name="ContactID" />
           </Key>
-          <Property Name="FeedbackID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Ratting" Type="float" Nullable="false" />
-          <Property Name="Comment" Type="text" Nullable="false" />
-          <Property Name="UserID" Type="int" Nullable="false" />
-          <Property Name="ProductID" Type="int" Nullable="false" />
+          <Property Name="ContactID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="Message" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="OrderDetails">
           <Key>
@@ -192,30 +191,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Feedback_Products">
-          <End Role="Products" Type="Self.Products" Multiplicity="1" />
-          <End Role="Feedback" Type="Self.Feedback" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ProductID" />
-            </Principal>
-            <Dependent Role="Feedback">
-              <PropertyRef Name="ProductID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Feedback_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="Feedback" Type="Self.Feedback" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="Feedback">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_OrderDetails_Orders">
           <End Role="Orders" Type="Self.Orders" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -345,7 +320,7 @@
         <EntityContainer Name="pbl3ModelStoreContainer">
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Comment" EntityType="Self.Comment" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Feedback" EntityType="Self.Feedback" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Contact" EntityType="Self.Contact" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderDetails" EntityType="Self.OrderDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductImage" EntityType="Self.ProductImage" Schema="dbo" store:Type="Tables" />
@@ -367,14 +342,6 @@
           <AssociationSet Name="FK_Comment_Users" Association="Self.FK_Comment_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Comment" EntitySet="Comment" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Feedback_Products" Association="Self.FK_Feedback_Products">
-            <End Role="Products" EntitySet="Products" />
-            <End Role="Feedback" EntitySet="Feedback" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Feedback_Users" Association="Self.FK_Feedback_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Feedback" EntitySet="Feedback" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetails_Orders" Association="Self.FK_OrderDetails_Orders">
             <End Role="Orders" EntitySet="Orders" />
@@ -417,7 +384,8 @@
             <End Role="Warehouse" EntitySet="Warehouse" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="pbl3Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -446,17 +414,14 @@
           <NavigationProperty Name="OrderDetail" Relationship="Self.FK_Comment_OrderDetails" FromRole="Comment" ToRole="OrderDetails" />
           <NavigationProperty Name="User" Relationship="Self.FK_Comment_Users" FromRole="Comment" ToRole="Users" />
         </EntityType>
-        <EntityType Name="Feedback">
+        <EntityType Name="Contact">
           <Key>
-            <PropertyRef Name="FeedbackID" />
+            <PropertyRef Name="ContactID" />
           </Key>
-          <Property Name="FeedbackID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Ratting" Type="Double" Nullable="false" />
-          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="ProductID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Product" Relationship="Self.FK_Feedback_Products" FromRole="Feedback" ToRole="Products" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Feedback_Users" FromRole="Feedback" ToRole="Users" />
+          <Property Name="ContactID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Message" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="OrderDetail">
           <Key>
@@ -510,6 +475,7 @@
           <Property Name="ProductID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ProductName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OriginalPrice" Type="Double" />
           <Property Name="Price" Type="Double" Nullable="false" />
           <Property Name="PromotionPrice" Type="Double" />
           <Property Name="ListImages" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -524,12 +490,10 @@
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Size" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Category" Relationship="Self.FK_Products_Category" FromRole="Products" ToRole="Category" />
-          <NavigationProperty Name="Feedbacks" Relationship="Self.FK_Feedback_Products" FromRole="Products" ToRole="Feedback" />
           <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetails_Products" FromRole="Products" ToRole="OrderDetails" />
           <NavigationProperty Name="ProductImages" Relationship="Self.FK_ProductImage_Products1" FromRole="Products" ToRole="ProductImage" />
           <NavigationProperty Name="Sizes" Relationship="Self.FK_Size_Products" FromRole="Products" ToRole="Size" />
           <NavigationProperty Name="Warehouses" Relationship="Self.FK_Warehouse_Products" FromRole="Products" ToRole="Warehouse" />
-          <Property Name="OriginalPrice" Type="Double" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -576,7 +540,6 @@
           <Property Name="Avatar" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CreditCard" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Comments" Relationship="Self.FK_Comment_Users" FromRole="Users" ToRole="Comment" />
-          <NavigationProperty Name="Feedbacks" Relationship="Self.FK_Feedback_Users" FromRole="Users" ToRole="Feedback" />
           <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_Users1" FromRole="Users" ToRole="Orders" />
           <NavigationProperty Name="Role1" Relationship="Self.FK_Users_Roles" FromRole="Users" ToRole="Roles" />
         </EntityType>
@@ -646,30 +609,6 @@
               <PropertyRef Name="UserID" />
             </Principal>
             <Dependent Role="Comment">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Feedback_Products">
-          <End Role="Products" Type="Self.Product" Multiplicity="1" />
-          <End Role="Feedback" Type="Self.Feedback" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ProductID" />
-            </Principal>
-            <Dependent Role="Feedback">
-              <PropertyRef Name="ProductID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Feedback_Users">
-          <End Role="Users" Type="Self.User" Multiplicity="1" />
-          <End Role="Feedback" Type="Self.Feedback" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="Feedback">
               <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
@@ -791,7 +730,7 @@
         <EntityContainer Name="pbl3Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Categories" EntityType="Self.Category" />
           <EntitySet Name="Comments" EntityType="Self.Comment" />
-          <EntitySet Name="Feedbacks" EntityType="Self.Feedback" />
+          <EntitySet Name="Contacts" EntityType="Self.Contact" />
           <EntitySet Name="OrderDetails" EntityType="Self.OrderDetail" />
           <EntitySet Name="Orders" EntityType="Self.Order" />
           <EntitySet Name="ProductImages" EntityType="Self.ProductImage" />
@@ -817,14 +756,6 @@
           <AssociationSet Name="FK_Comment_Users" Association="Self.FK_Comment_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Comment" EntitySet="Comments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Feedback_Products" Association="Self.FK_Feedback_Products">
-            <End Role="Products" EntitySet="Products" />
-            <End Role="Feedback" EntitySet="Feedbacks" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Feedback_Users" Association="Self.FK_Feedback_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Feedback" EntitySet="Feedbacks" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetails_Orders" Association="Self.FK_OrderDetails_Orders">
             <End Role="Orders" EntitySet="Orders" />
@@ -891,14 +822,13 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Feedbacks">
-            <EntityTypeMapping TypeName="pbl3Model.Feedback">
-              <MappingFragment StoreEntitySet="Feedback">
-                <ScalarProperty Name="FeedbackID" ColumnName="FeedbackID" />
-                <ScalarProperty Name="Ratting" ColumnName="Ratting" />
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <EntitySetMapping Name="Contacts">
+            <EntityTypeMapping TypeName="pbl3Model.Contact">
+              <MappingFragment StoreEntitySet="Contact">
+                <ScalarProperty Name="ContactID" ColumnName="ContactID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -945,10 +875,10 @@
           <EntitySetMapping Name="Products">
             <EntityTypeMapping TypeName="pbl3Model.Product">
               <MappingFragment StoreEntitySet="Products">
-                <ScalarProperty Name="OriginalPrice" ColumnName="OriginalPrice" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
                 <ScalarProperty Name="ProductName" ColumnName="ProductName" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="OriginalPrice" ColumnName="OriginalPrice" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="PromotionPrice" ColumnName="PromotionPrice" />
                 <ScalarProperty Name="ListImages" ColumnName="ListImages" />

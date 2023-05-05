@@ -27,7 +27,7 @@ namespace PBL3.Models
     
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
-        public virtual DbSet<Feedback> Feedbacks { get; set; }
+        public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<ProductImage> ProductImages { get; set; }
