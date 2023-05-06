@@ -147,5 +147,18 @@ namespace PBL3.Controllers
         {
             return View();
         }
+        public ActionResult Delete(int id)
+        {
+            var order = db.Orders.Find(id);
+            if (order != null)
+            {
+                if(order.Status == false && order.Delivered == false)
+                {
+                    db.Orders.Remove(order);
+                    db.SaveChanges();
+                }
+            }
+            return RedirectToAction("Index");
+        }
     }
 }

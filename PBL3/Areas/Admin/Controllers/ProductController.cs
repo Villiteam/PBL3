@@ -16,41 +16,39 @@ namespace PBL3.Areas.Admin.Controllers
     {
         // GET: Admin/Product
         private pbl3Entities db = new pbl3Entities();
-        public ActionResult Index(int? page, string sort,string keyword,int? cate)
+        public ActionResult Index(int? page, string sort, string keyword, int? cate)
         {
-            var pageSize = 5;
+            var pageSize = 7;
             if (page == null)
             {
                 page = 1;
             }
             ViewBag.Page = (page - 1) * pageSize + 1;
             var pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
-           
 
-            IPagedList<Product> list = null;
+            var list = db.Products.AsQueryable();
+
             // Lọc tên theo keyword
             ViewBag.Keyword = keyword;
+
             if (!string.IsNullOrEmpty(keyword))
             {
-                list = db.Products.Where(m => m.ProductName.Contains(keyword)).OrderBy(m => m.ProductName).ToPagedList(pageIndex, pageSize);
-            }
-            else
-            {
-                list = db.Products.OrderBy(m => m.ProductName).ToPagedList(pageIndex, pageSize);
+                list = list.Where(m => m.ProductName.Contains(keyword));
             }
 
             // Lọc theo danh mục  
             ViewBag.Cate = cate;
+
             if (cate != null)
             {
-                list = list.Where(m => m.CatID == cate).OrderBy(m => m.CatID).ToPagedList(pageIndex, pageSize);
+                list = list.Where(m => m.CatID == cate);
             }
 
             //Sort
             ViewBag.SortByDate = String.IsNullOrEmpty(sort) ? "date" : "";
             ViewBag.SortByName = (sort == "name_desc") ? "name" : "name_desc";
             ViewBag.SortByQuantity = (sort == "quantity_desc") ? "quantity" : "quantity_desc";
-            ViewBag.SortByPrice  = (sort == "price_desc") ? "price" : "price_desc";
+            ViewBag.SortByPrice = (sort == "price_desc") ? "price" : "price_desc";
             ViewBag.SortByPromotionPrice = (sort == "pprice_desc") ? "pprice" : "pprice_desc";
             ViewBag.SortByHome = (sort == "home_desc") ? "home" : "home_desc";
             ViewBag.SortBySale = (sort == "sale_desc") ? "sale" : "sale_desc";
@@ -59,57 +57,59 @@ namespace PBL3.Areas.Admin.Controllers
             switch (sort)
             {
                 case "date":
-                    list = list.OrderBy(m => m.CreateDate).ToPagedList(pageIndex, pageSize);
+                    list = list.OrderBy(m => m.CreateDate);
                     break;
                 case "name":
-                    list = list.OrderBy(m => m.ProductName).ToPagedList(pageIndex, pageSize);
+                    list = list.OrderBy(m => m.ProductName);
                     break;
                 case "name_desc":
-                    list = list.OrderByDescending(m => m.ProductName).ToPagedList(pageIndex, pageSize);
+                    list = list.OrderByDescending(m => m.ProductName);
                     break;
                 case "quantity":
-                    list = list.OrderBy(m => m.Quantity).ToPagedList(pageIndex, pageSize);
+                    list = list.OrderBy(m => m.Quantity);
                     break;
                 case "quantity_desc":
-                    list = list.OrderByDescending(m => m.Quantity).ToPagedList(pageIndex, pageSize);
+                    list = list.OrderByDescending(m => m.Quantity);
                     break;
                 case "price":
-                    list = list.OrderBy(m => m.Price).ToPagedList(pageIndex, pageSize);
+                    list = list.OrderBy(m => m.Price);
                     break;
                 case "price_desc":
-                    list = list.OrderByDescending(m => m.Price).ToPagedList(pageIndex, pageSize);
+                    list = list.OrderByDescending(m => m.Price);
                     break;
                 case "pprice":
-                    list = list.OrderBy(m => m.PromotionPrice).ToPagedList(pageIndex, pageSize);
+                    list = list.OrderBy(m => m.PromotionPrice);
                     break;
                 case "pprice_desc":
-                    list = list.OrderByDescending(m => m.PromotionPrice).ToPagedList(pageIndex, pageSize);
+                    list = list.OrderByDescending(m => m.PromotionPrice);
                     break;
                 case "home":
-                    list = list.OrderBy(m => m.isHome).ToPagedList(pageIndex, pageSize);
+                    list = list.OrderBy(m => m.isHome);
                     break;
                 case "home_desc":
-                    list = list.OrderByDescending(m => m.isHome).ToPagedList(pageIndex, pageSize);
+                    list = list.OrderByDescending(m => m.isHome);
                     break;
                 case "sale":
-                    list = list.OrderBy(m => m.isSale).ToPagedList(pageIndex, pageSize);
+                    list = list.OrderBy(m => m.isSale);
                     break;
                 case "sale_desc":
-                    list = list.OrderByDescending(m => m.isSale).ToPagedList(pageIndex, pageSize);
+                    list = list.OrderByDescending(m => m.isSale);
                     break;
                 case "status":
-                    list = list.OrderBy(m => m.Status).ToPagedList(pageIndex, pageSize);
+                    list = list.OrderBy(m => m.Status);
                     break;
                 case "status_desc":
-                    list = list.OrderByDescending(m => m.Status).ToPagedList(pageIndex, pageSize);
+                    list = list.OrderByDescending(m => m.Status);
                     break;
                 default:
-                    list = list.OrderByDescending(m => m.CreateDate).ToPagedList(pageIndex, pageSize);
+                    list = list.OrderByDescending(m => m.CreateDate);
                     break;
             }
 
 
-            return View(list);
+
+            var pagedResult = list.ToPagedList(pageIndex, pageSize);
+            return View(pagedResult);
         }
 
         public ActionResult Add()
@@ -195,7 +195,8 @@ namespace PBL3.Areas.Admin.Controllers
                     db.Sizes.Add(size);
                     db.SaveChanges();
                 }
-
+                TempData["type"] = "success";
+                TempData["successMessage"] = "Thêm mới thành công!";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
@@ -263,9 +264,9 @@ namespace PBL3.Areas.Admin.Controllers
             }
             else
             {
-                for(int i = 0; i< slNew; i++)
+                for (int i = 0; i < slNew; i++)
                 {
-                    if(i< slOld)
+                    if (i < slOld)
                     {
                         int id = sizeOld[i].SizeID;
                         var item = db.Sizes.Find(id);
@@ -287,6 +288,8 @@ namespace PBL3.Areas.Admin.Controllers
                     }
                 }
             }
+            TempData["type"] = "success";
+            TempData["successMessage"] = "Cập nhật thành công!";
             return RedirectToAction("Index");
         }
         public ActionResult Delete(int id)
@@ -294,6 +297,8 @@ namespace PBL3.Areas.Admin.Controllers
             var del = db.Products.Find(id);
             db.Products.Remove(del);
             db.SaveChanges();
+            TempData["type"] = "success";
+            TempData["successMessage"] = "Xóa thành công!";
             return RedirectToAction("Index");
         }
         [HttpPost]

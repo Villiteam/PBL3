@@ -5,6 +5,11 @@
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .border-left-3px-green {
+        border-left: 8px solid #28a745 !important;
+    }
+</style>
 
 @section naviheader{
     <!-- Left navbar links -->
@@ -130,19 +135,19 @@
                             </th>
                             <th>
                                 <a href="@Url.Action("Index", new {sort = ViewBag.SortByHome , keyword = ViewBag.Keyword, cate = ViewBag.Cate})" style="color: #343a40;">
-                                   Trang chủ
+                                    Trang chủ
                                     <i class="fas fa-sort"></i>
                                 </a>
                             </th>
                             <th>
                                 <a href="@Url.Action("Index", new {sort = ViewBag.SortBySale , keyword = ViewBag.Keyword, cate = ViewBag.Cate})" style="color: #343a40;">
-                                    Khuyến mãi 
+                                    Khuyến mãi
                                     <i class="fas fa-sort"></i>
                                 </a>
                             </th>
                             <th>
                                 <a href="@Url.Action("Index", new {sort = ViewBag.SortByStatus , keyword = ViewBag.Keyword, cate = ViewBag.Cate})" style="color: #343a40;">
-                                    Hiển thị 
+                                    Hiển thị
                                     <i class="fas fa-sort"></i>
                                 </a>
                             </th>
@@ -219,7 +224,7 @@
                 </div>
 
             </form>
-              
+
         </div>
         <!-- /.card-body -->
         <div class="card-footer">
@@ -239,6 +244,23 @@
 @section DoanJs{
 
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script>
+      const successMessage = '@TempData["successMessage"]';
+        if (successMessage) {
+            Swal.fire({
+                position: 'top-end',
+                toast: true,
+                icon: 'success',
+                title: successMessage,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'border-left-3px-green'
+                }
+            })
+      }
+    </script>
     <script>
 
         $(document).ready(function () {

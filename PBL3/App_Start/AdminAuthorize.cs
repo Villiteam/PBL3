@@ -10,7 +10,7 @@ namespace PBL3.App_Start
 {
     public class AdminAuthorize : AuthorizeAttribute
     {
-        public int idRole { get; set; }
+        public string[] Role { get; set; }
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             //1.Check session: đã đăng nhập -> cho thực hiện Filter
@@ -18,14 +18,9 @@ namespace PBL3.App_Start
             User nvSession = (User)HttpContext.Current.Session["user"];
             if (nvSession != null)
             {
-                if (nvSession.Role == idRole)
+                if (nvSession.Role == 2)
                 {
-                    return;
-                }
-                else
-                {
-                    //ko co quyen chay ve userhome
-
+                    //là khách hàng thì chay ve userhome
                     var returnUrl = filterContext.RequestContext.HttpContext.Request.RawUrl;
                     filterContext.Result = new RedirectToRouteResult
                      (
@@ -37,6 +32,27 @@ namespace PBL3.App_Start
                             //  area = "Admin",
                             returnUrl = returnUrl.ToString()
                         }));
+                }
+                else
+                {
+                    if (Role.Contains(nvSession.Role1.RoleName))
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        var returnUrl = filterContext.RequestContext.HttpContext.Request.RawUrl;
+                        filterContext.Result = new RedirectToRouteResult
+                         (
+                            new RouteValueDictionary
+                            (new
+                            {
+                                controller = "AdminHome",
+                                action = "Error",
+                                //  area = "Admin",
+                                returnUrl = returnUrl.ToString()
+                            }));
+                    }
                 }
                 return;
             }

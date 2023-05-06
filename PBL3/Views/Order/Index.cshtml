@@ -62,7 +62,7 @@
                                                         <td>@formattedDate</td>
                                                         <td>
                                                             @Html.ActionLink("Chi tiết", "Detail", new { id = item.OrderID }, new { @class = "btn btn-sm btn-success" })
-                                                            @Html.ActionLink("Hủy đơn", "Delete", new { id = item.OrderID }, new { @class = "btn btn-sm btn-danger delete-link", onclick = "return confirm('Bạn có chắc muốn xóa?');" })
+                                                            @*@Html.ActionLink("Hủy đơn", "Delete", new { id = item.OrderID }, new { @class = "btn btn-sm btn-danger delete-link", onclick = "return confirm('Bạn có chắc muốn xóa?');" })*@
                                                         </td>
                                                     </tr>
                                                     i++;
