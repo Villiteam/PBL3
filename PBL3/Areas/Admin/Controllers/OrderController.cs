@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Razor.Tokenizer.Symbols;
 using System.Web.Services.Description;
+using System.Web.UI.WebControls;
 using static System.Data.Entity.Infrastructure.Design.Executor;
 
 namespace PBL3.Areas.Admin.Controllers
@@ -19,7 +20,7 @@ namespace PBL3.Areas.Admin.Controllers
         private pbl3Entities db = new pbl3Entities();
         public ActionResult Index(int? page, string sort, string keyword, string phone,string fromdate, string todate)
         {
-            var pageSize = 5;
+            var pageSize = 10;
             if (page == null)
             {
                 page = 1;
@@ -138,5 +139,49 @@ namespace PBL3.Areas.Admin.Controllers
             var order = db.Orders.Find(id);
             return View(order);
         }
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+                var order = db.Orders
+                    .Include(o => o.OrderDetails.Select(d => d.Size))
+                    .FirstOrDefault(o => o.OrderID == id);
+
+                if (order != null && !order.Status && !order.Delivered)
+                {
+                    foreach (var detail in order.OrderDetails)
+                    {
+                        detail.Size.Quantity += detail.Quantity;
+                    }
+
+                    var productQuantities = order.OrderDetails
+                        .GroupBy(d => d.ProductID)
+                        .Select(g => new { ProductID = g.Key, Quantity = g.Sum(d => d.Quantity) });
+
+                    foreach (var pq in productQuantities)
+                    {
+                        var product = db.Products.Find(pq.ProductID);
+                        product.Quantity += pq.Quantity;
+                    }
+
+                    db.Orders.Remove(order);
+                    db.SaveChanges();
+
+                    TempData["error"] = "";
+                }
+                else
+                {
+                    TempData["error"] = "Không thể xóa đơn hàng đã giao!";
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "Đã xảy ra lỗi khi xóa đơn hàng: " + ex.Message;
+                return RedirectToAction("Index");
+            }
+        }
+
     }
 }

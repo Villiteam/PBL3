@@ -1,4 +1,5 @@
 ﻿using PagedList;
+using PBL3.App_Start;
 using PBL3.Models;
 using System;
 using System.Collections.Generic;
@@ -9,14 +10,14 @@ using System.Web.Mvc;
 
 namespace PBL3.Areas.Admin.Controllers
 {
+   // [AdminAuthorize(Role = new string[] { "Admin" })]
     public class UserController : Controller
     {
         // GET: Admin/User
         private pbl3Entities db = new pbl3Entities();
-        //  [AdminAuthorize(Role = new string[] { "Manager" })]
         public ActionResult Index(int? page, string sort, string keyword, int? role)
         {
-            var pageSize = 5;
+            var pageSize = 10;
             if (page == null)
             {
                 page = 1;
@@ -24,62 +25,64 @@ namespace PBL3.Areas.Admin.Controllers
             ViewBag.Page = (page - 1) * pageSize + 1;
             var pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
 
-            IPagedList<User> list = null;
+            var query = db.Users.AsQueryable();
+
             // Lọc tên theo keyword
             ViewBag.Keyword = keyword;
+            // Filter by keyword
             if (!string.IsNullOrEmpty(keyword))
             {
-                list = db.Users.Where(m => m.UserName.Contains(keyword)).OrderBy(m => m.UserName).ToPagedList(pageIndex, pageSize);
-            }
-            else
-            {
-                list = db.Users.OrderBy(m => m.UserName).ToPagedList(pageIndex, pageSize);
+                query = query.Where(m => m.UserName.Contains(keyword));
             }
 
-            // Lọc theo quyền 
+            // Lọc theo role
             ViewBag.Role = role;
             if (role != null)
             {
-                list = list.Where(m=> m.Role == role).OrderBy(m => m.UserName).ToPagedList(pageIndex, pageSize);
+                query = query.Where(m => m.Role == role);
             }
 
-            //Sort
+
+            // Sort ViewBag
             ViewBag.SortByDate = String.IsNullOrEmpty(sort) ? "date" : "";
             ViewBag.SortByName = (sort == "name_desc") ? "name" : "name_desc";
             ViewBag.SortByRole = (sort == "role_desc") ? "role" : "role_desc";
             ViewBag.SortByStatus = (sort == "status_desc") ? "status" : "status_desc";
-
+         
+            // Sort
             switch (sort)
             {
                 case "date":
-                    list = list.OrderBy(m => m.CreatedDate).ToPagedList(pageIndex, pageSize);
+                    query = query.OrderBy(m => m.CreatedDate);
                     break;
                 case "name":
-                    list = list.OrderBy(m => m.UserName).ToPagedList(pageIndex, pageSize);
+                    query = query.OrderBy(m => m.UserName);
                     break;
                 case "name_desc":
-                    list = list.OrderByDescending(m => m.UserName).ToPagedList(pageIndex, pageSize);
+                    query = query.OrderByDescending(m => m.UserName);
                     break;
                 case "role":
-                    list = list.OrderBy(m => m.Role).ToPagedList(pageIndex, pageSize);
+                    query = query.OrderBy(m => m.Role);
                     break;
                 case "role_desc":
-                    list = list.OrderByDescending(m => m.Role).ToPagedList(pageIndex, pageSize);
+                    query = query.OrderByDescending(m => m.Role);
                     break;
                 case "status":
-                    list = list.OrderBy(m => m.Status).ToPagedList(pageIndex, pageSize);
+                    query = query.OrderBy(m => m.Status);
                     break;
                 case "status_desc":
-                    list = list.OrderByDescending(m => m.Status).ToPagedList(pageIndex, pageSize);
+                    query = query.OrderByDescending(m => m.Status);
                     break;
                 default:
-                    list = list.OrderByDescending(m => m.CreatedDate).ToPagedList(pageIndex, pageSize);
+                    query = query.OrderByDescending(m => m.CreatedDate);
                     break;
             }
 
-           
+            var list = query.ToPagedList(pageIndex, pageSize);
+
             return View(list);
         }
+
         public ActionResult Add()
         {
             return View();

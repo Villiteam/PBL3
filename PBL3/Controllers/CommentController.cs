@@ -39,8 +39,8 @@ namespace PBL3.Controllers
         }
         public ActionResult CommentByOrderDetailID(int id)
         {
-            var item = db.Comments.Find(id);
-            if (item != null)
+            var item = db.Comments.Any(m => m.OrderDetailID == id); ;
+            if (item == true)
             {
                 //TempData["OrderDetailID"] = id;
                 return RedirectToAction("Index");

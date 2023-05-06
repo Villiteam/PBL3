@@ -3325,6 +3325,8 @@
     <Content Include="Models\Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>
     </Content>
+    <Content Include="Areas\Admin\Views\AdminHome\Error.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminHome\test.cshtml" />
     <None Include="packages.config" />
     <Content Include="Views\Product\Search.cshtml" />
     <Content Include="Views\Order\test.cshtml" />

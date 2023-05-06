@@ -51,9 +51,23 @@
                                             <td>@item.Order.PayType</td>
                                             @if (Model.Status == true && Model.Delivered == true)
                                             {
-                                                <td>
-                                                    <a href="~/Comment/CommentByOrderDetailID?id=@item.OderDetailID" class="btn btn-warning">Đánh giá</a>
-                                                </td>
+                                                using (PBL3.Models.pbl3Entities db = new PBL3.Models.pbl3Entities())
+                                                {
+                                                    var hasComment = db.Comments.Any(m => m.OrderDetailID == item.OderDetailID);
+                                                    if (!hasComment)
+                                                    {
+                                                        <td>
+                                                            <a href="~/Comment/CommentByOrderDetailID?id=@item.OderDetailID" class="btn btn-warning">Đánh giá</a>
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td>
+                                                            <a href="~/Comment" class="btn btn-warning">Đã đánh giá</a>
+                                                        </td>
+                                                    }
+                                                }
+
                                             }
                                         </tr>
                                         i++;

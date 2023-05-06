@@ -1,4 +1,5 @@
-﻿using PBL3.Models;
+﻿using PBL3.App_Start;
+using PBL3.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -13,6 +14,7 @@ namespace PBL3.Areas.Admin.Controllers
     {
         // GET: Admin/Statistical
         private pbl3Entities db = new pbl3Entities();
+       // [AdminAuthorize(Role = new string[] { "Manager" })]
         public ActionResult Index()
         {
             return View();

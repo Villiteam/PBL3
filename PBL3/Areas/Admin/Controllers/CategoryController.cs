@@ -38,6 +38,8 @@ namespace PBL3.Areas.Admin.Controllers
                     db.Categories.Add(model);
                     // luu lai thay doi
                     db.SaveChanges();
+                    TempData["type"] = "success";
+                    TempData["successMessage"] = "Thêm mới thành công!";
                     return RedirectToAction("Index");
                 }
                 return View(model);
@@ -64,6 +66,8 @@ namespace PBL3.Areas.Admin.Controllers
             up.Status = model.Status;
             up.ParentID = model.ParentID;
             db.SaveChanges();
+            TempData["type"] = "success";
+            TempData["successMessage"] = "Cập nhật thành công!";
             return RedirectToAction("Index");
 
         }
@@ -72,6 +76,8 @@ namespace PBL3.Areas.Admin.Controllers
             var del = db.Categories.Find(id);
             db.Categories.Remove(del);
             db.SaveChanges();
+            TempData["type"] = "success";
+            TempData["successMessage"] = "Xóa thành công!";
             return RedirectToAction("Index");
         }
     }

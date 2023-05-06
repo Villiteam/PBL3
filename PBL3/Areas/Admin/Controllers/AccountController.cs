@@ -64,7 +64,7 @@ namespace PBL3.Areas.Admin.Controllers
                 {
                     // tao session
                     Session["user"] = account;
-                    return Redirect("~/Home");
+                    return Redirect("~/Admin");
                     //return RedirectToAction("Index", "Home");
                 }
                 else
