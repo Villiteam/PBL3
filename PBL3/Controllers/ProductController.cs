@@ -20,7 +20,7 @@ namespace PBL3.Controllers
         {
             if(id != null)
             {
-                var ds = db.Products.Where(m => m.CatID == id).ToList();
+                var ds = db.Products.Where(m => m.CatID == id && m.Status == true).ToList();
                 ViewBag.CatID = id;
 
                 var cat = db.Categories.Find(id).CatName;
@@ -31,7 +31,7 @@ namespace PBL3.Controllers
             {
                 ViewBag.CatID = null;
                 ViewBag.CatName = null;
-                var ds = db.Products.ToList();
+                var ds = db.Products.Where(m => m.Status == true).ToList();
                 return View(ds);
             }
         }

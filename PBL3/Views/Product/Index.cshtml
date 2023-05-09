@@ -152,7 +152,14 @@
                                                     <img src="@item.ListImages" alt="@item.Title" />
                                                 </div>
                                                 <div class="favorite favorite_left"></div>
-                                                <div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-$20</span></div>
+                                                @if (item.Quantity == 0)
+                                                {
+                                                    <div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>  Hết</span></div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-$20</span></div>
+                                                }
                                                 <div class="product_info">
                                                     <h6 class="product_name"><a href="~/Product/Detail?id=@item.ProductID">@item.ProductName</a></h6>
                                                     @if (item.isSale == true)

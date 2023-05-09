@@ -15,7 +15,7 @@ namespace PBL3.Controllers
         private pbl3Entities db = new pbl3Entities();
         public ActionResult MenuArrivals()
         {
-            var item = db.Categories.ToList();
+            var item = db.Categories.Where(m => m.Status == true).ToList();
             return PartialView("_MenuArrivals", item);
         }
         public ActionResult MenuLeft(int? id)
@@ -24,7 +24,7 @@ namespace PBL3.Controllers
             {
                 ViewBag.CatID = id;
             }
-            var item = db.Categories.ToList();
+            var item = db.Categories.Where(m => m.Status == true).ToList();
             return PartialView("_MenuLeft", item);
         }
     }

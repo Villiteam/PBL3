@@ -123,6 +123,12 @@ namespace PBL3.Areas.Admin.Controllers
         {
             var model = productV.Product;
             var listSize = productV.Sizes;
+            var item = db.Products.SingleOrDefault(m => m.ProductName == model.ProductName);
+            if (item != null)
+            {
+                TempData["error"] = "Tên sản phẩm đã tồn tại!";
+                return View();
+            }
             if (listSize == null || listSize.Count() <= 0)
             {
                 TempData["error"] = "Sản phẩm chưa có kích cỡ!";
@@ -138,12 +144,7 @@ namespace PBL3.Areas.Admin.Controllers
                 }
                 sl += i.Quantity;
             }
-            var item = db.Products.SingleOrDefault(m => m.ProductName == model.ProductName);
-            if (item != null)
-            {
-                TempData["error"] = "Tên sản phẩm đã tồn tại!";
-                return View();
-            }
+      
             if (Images != null && Images.Count > 0)
             {
                 for (int i = 0; i < Images.Count; i++)
