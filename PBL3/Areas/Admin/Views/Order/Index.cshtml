@@ -207,6 +207,11 @@
 
 
     <script>
+        const today = new Date();
+        today.setDate(today.getDate() + 1);
+        const tomorrow = today.toISOString().slice(0, 10);
+        document.getElementById("todate").value = tomorrow;
+
         const fromday = new Date();
         fromday.setDate(fromday.getDate() - 1);
         document.getElementById("fromdate").max = fromday.toISOString().slice(0, 10);

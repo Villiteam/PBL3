@@ -14,6 +14,7 @@ namespace PBL3.Areas.Admin.Controllers
     public class UserController : Controller
     {
         // GET: Admin/User
+
         private pbl3Entities db = new pbl3Entities();
         public ActionResult Index(int? page, string sort, string keyword, int? role)
         {
