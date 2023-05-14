@@ -12,15 +12,11 @@ namespace PBL3.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Feedback
+    public partial class Contact
     {
-        public int FeedbackID { get; set; }
-        public double Ratting { get; set; }
-        public string Comment { get; set; }
-        public int UserID { get; set; }
-        public int ProductID { get; set; }
-    
-        public virtual Product Product { get; set; }
-        public virtual User User { get; set; }
+        public int ContactID { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Message { get; set; }
     }
 }

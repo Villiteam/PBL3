@@ -5,6 +5,12 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .border-left-3px-green {
+        border-left: 8px solid #28a745 !important;
+    }
+</style>
+
 @section naviheader{
     <!-- Left navbar links -->
     <li class="nav-item d-none d-sm-inline-block">
@@ -90,3 +96,23 @@
 
 </section>
 <!-- /.content -->
+
+@section DoanJs{
+    <script>
+      const successMessage = '@TempData["successMessage"]';
+        if (successMessage) {
+            Swal.fire({
+                position: 'top-end',
+                toast: true,
+                icon: 'success',
+                title: successMessage,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'border-left-3px-green'
+                }
+            })
+      }
+    </script>
+}

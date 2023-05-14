@@ -5,7 +5,11 @@
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-
+<style>
+    .border-left-3px-green {
+        border-left: 8px solid #28a745 !important;
+    }
+</style>
 @section naviheader{
     <!-- Left navbar links -->
     <li class="nav-item d-none d-sm-inline-block">
@@ -35,65 +39,141 @@
     <!-- Default box -->
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Danh sách tài khoản</h3>
-
+            <h2 class="card-title">Danh sách tài khoản</h2>
             <div class="card-tools">
                 <a href="~/Admin/User/Add" class="btn btn-primary">Thêm mới</a>
             </div>
         </div>
-        <div class="card-body">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>STT</th>
-                        <th>Tài khoản</th>
-                        <th>Mật khẩu</th>
-                        <th>Email</th>
-                        <th>Quyền truy cập</th>
-                        <th>Ngày tạo</th>
-                        <th>Trạng thái</th>
-                        <th>#</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model != null && Model.Any())
-                    {
-                        var i = ViewBag.Page;
-                        foreach (var item in Model)
+        <div class="card-body text-center">
+            <form action="/Admin/User/Index">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-inline">
+                            <div class="input-group">
+                                <input class="form-control" type="search" name="keyword" value="@ViewBag.Keyword" placeholder="Search">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-sidebar">
+                                        <i class="fas fa-search fa-fw"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <lable class="col-md-2 text-bold pt-2">Quyền:</lable>
+                            <div class="col-md-10">
+                                <select class="form-control" name="role">
+                                    @using (PBL3.Models.pbl3Entities db = new PBL3.Models.pbl3Entities())
+                                    {
+
+                                        if (ViewBag.Role == null)
+                                        {
+                                            <option value="" selected>All</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="">All</option>
+                                        }
+                                        foreach (var loai in db.Roles.ToList())
+                                        {
+                                            if (loai.RoleID == ViewBag.Role)
+                                            {
+                                                <option value="@loai.RoleID" selected>@loai.RoleName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@loai.RoleID">@loai.RoleName</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByName , keyword = ViewBag.Keyword, role = ViewBag.Role})" style="color: #343a40;">
+                                    Tài khoản
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>Mật khẩu</th>
+                            <th>Email</th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByRole , keyword = ViewBag.Keyword, role = ViewBag.Role})" style="color: #343a40;">
+                                    Quyền truy cập
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByDate , keyword = ViewBag.Keyword, role = ViewBag.Role})" style="color: #343a40;">
+                                    Ngày tạo
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByStatus, keyword = ViewBag.Keyword , role = ViewBag.Role})" style="color: #343a40;">
+                                    Hoạt động
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            var i = ViewBag.Page;
+                            foreach (var item in Model)
+                            {
+                                var strCheck = item.Status ? "<i class='fa fa-check text-success'></i>" : " <i class='fas fa-times text-danger'></i>";
+                                <tr>
+                                    <td>@i</td>
+                                    <td>@item.UserName</td>
+                                    <td>********</td>
+                                    <td>@item.Email</td>
+                                    @{
+                                        PBL3.Models.pbl3Entities db = new PBL3.Models.pbl3Entities();
+                                        var role = db.Roles.Find(item.Role);
+                                    }
+                                    <td>@role.RoleName</td>
+                                    @{
+                                        DateTime date = DateTime.Parse(item.CreatedDate.ToString());
+                                        string formattedDate = date.ToString("dd MMMM yyyy HH:mm:ss");
+                                    }
+                                    <td>@formattedDate</td>
+                                    <td>
+                                        <a href="#" data-id="@item.UserID" data-status="@item.Status" class="btnStatus"> @Html.Raw(strCheck)</a>
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Sửa", "Edit", new { id = item.UserID }, new { @class = "btn btn-sm btn-primary" })
+                                        <button type="button" class="btn btn-sm btn-danger delete-link" data-id="@item.UserID">Xóa</button>
+                                    </td>
+                                </tr>
+                                i++;
+                            }
+                        }
+                        else
                         {
                             <tr>
-                                <td>@i</td>
-                                <td>@item.UserName</td>
-                                <td>********</td>
-                                <td>@item.Email</td>
-                                @{
-                                    PBL3.Models.pbl3Entities db = new PBL3.Models.pbl3Entities();
-                                    var role = db.Roles.Find(item.Role);
-                                }
-                                <td>@role.RoleName</td>
-                                <td>@item.CreatedDate </td>
-                                <td>@item.Status</td>
-                                <td>
-                                    @Html.ActionLink("Sửa", "Edit", new { id = item.UserID }, new { @class = "btn btn-sm btn-primary" })
-                                    @Html.ActionLink("Xóa", "Delete", new { id = item.UserID }, new { @class = "btn btn-sm btn-danger delete-link", onclick = "return confirm('Bạn có chắc muốn xóa?');" })
-                                </td>
+                                <td colspan="4">Không có bản ghi nào</td>
                             </tr>
-                            i++;
                         }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="4">Không có bản ghi nào</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <div class="row">
-                <div class="col-md-3"></div>
-                <div class="col-md-6 " style="text-align: center">  @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))</div>
-                <div class="col-md-3"></div>
-            </div>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6 " style="text-align: center">@Html.PagedListPager(Model, page => Url.Action("Index", new { page}))</div>
+                    <div class="col-md-3"></div>
+                </div>
+            </form>
 
         </div>
         <!-- /.card-body -->
@@ -106,3 +186,80 @@
 
 </section>
 <!-- /.content -->
+
+<div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc muốn xóa người dùng này?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-btn">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section DoanJS{
+    <script>
+      const successMessage = '@TempData["successMessage"]';
+        if (successMessage) {
+            Swal.fire({
+                position: 'top-end',
+                toast: true,
+                icon: 'success',
+                title: successMessage,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'border-left-3px-green'
+                }
+            })
+      }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.delete-link').click(function () {
+                var userId = $(this).data('id');
+                $('#confirm-delete-modal').modal('show');
+                $('#confirm-delete-btn').click(function () {
+                    window.location.href = '/Admin/User/Delete/' + userId;
+                });
+            });
+
+            $('body').on('click', '.btnStatus', function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var id = btn.data("id");
+                $.ajax({
+                    url: '/Admin/User/Status',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        if (rs.success) {
+                            if (rs.isActive) {
+                                btn.html("<i class='fa fa-check text-success'></i>");
+                            } else {
+                                btn.html("<i class='fas fa-times text-danger'></i>");
+                            }
+                        }
+
+                    }
+                });
+
+            });
+
+        });
+    </script>
+
+
+}
+

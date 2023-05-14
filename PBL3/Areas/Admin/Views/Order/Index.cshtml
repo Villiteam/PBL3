@@ -1,0 +1,264 @@
+﻿@model PagedList.PagedList<PBL3.Models.Order>
+@using PagedList.Mvc;
+@using PagedList;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section naviheader{
+    <!-- Left navbar links -->
+    <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">Quản lý đơn hàng</a>
+    </li>
+
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Quản lý đơn hàng</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Quản lý đơn hàng</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Danh sách đơn hàng</h3>
+        </div>
+        <div class="card-body text-center">
+            <form action="/Admin/Order/Index">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <input class="form-control" type="search" name="keyword" value="@ViewBag.Keyword" placeholder="Search">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-sidebar">
+                                    <i class="fas fa-search fa-fw"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="row">
+                            <lable class="col-md-5 text-bold pt-2">Số điện thoại:</lable>
+                            <div class="col-md-7">
+                                <div class="input-group">
+                                    <input class="form-control" type="text" name="phone" value="@ViewBag.Phone" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <input class="form-control" type="date" id="fromdate" name="fromdate" value="@((ViewBag.FromDate != null) ? ViewBag.FromDate : "2023-04-20")" placeholder="Từ ngày">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <input class="form-control" type="date" id="todate" name="todate" value="@((ViewBag.ToDate != null) ? ViewBag.ToDate : DateTime.Now.ToString("yyyy-MM-dd"))" placeholder="Đến ngày">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByName , keyword = ViewBag.Keyword, phone = ViewBag.Phone})" style="color: #343a40;">
+                                    Người đặt hàng
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>Địa chỉ nhận hàng</th>
+                            <th>Số điện thoại</th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByTotal , keyword = ViewBag.Keyword, phone = ViewBag.Phone})" style="color: #343a40;">
+                                    Thành tiền
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByDate , keyword = ViewBag.Keyword, phone = ViewBag.Phone})" style="color: #343a40;">
+                                    Ngày tạo
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByStatus , keyword = ViewBag.Keyword, phone = ViewBag.Phone})" style="color: #343a40;">
+                                    Xác nhận
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByDelivered , keyword = ViewBag.Keyword, phone = ViewBag.Phone})" style="color: #343a40;">
+                                    Đã giao
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            var i = ViewBag.Page;
+                            foreach (var item in Model)
+                            {
+                                var strCheck = item.Status ? "<i class='fa fa-check text-success'></i>" : " <i class='fas fa-times text-danger'></i>";
+                                var strCheckDelivered = item.Delivered ? "<i class='fa fa-check text-success'></i>" : " <i class='fas fa-times text-danger'></i>";
+                                <tr>
+                                    <td>@i</td>
+                                    <td>@item.User.UserName</td>
+                                    <td>@item.OrderAddress</td>
+                                    <td>@item.OrderPhone</td>
+                                    <td>@item.Total.Value.ToString("N0")</td>
+                                    @{
+                                        DateTime date = DateTime.Parse(item.OrderDate.ToString());
+                                        string formattedDate = date.ToString("dd/MM/yyyy HH:mm:ss");
+                                    }
+                                    <td>@formattedDate</td>
+                                    <td>
+                                        <a href="#" data-id="@item.OrderID" data-status="@item.Status" class="btnStatus"> @Html.Raw(strCheck)</a>
+                                    </td>
+                                    <td>
+                                        <a href="#" data-id="@item.OrderID" data-status="@item.Delivered" class="btnDelivered"> @Html.Raw(strCheckDelivered)</a>
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Chi tiết", "Detail", new { id = item.OrderID }, new { @class = "btn btn-sm btn-success" })
+                                        @Html.ActionLink("Hủy đơn", "Delete", new { id = item.OrderID }, new { @class = "btn btn-sm btn-danger delete-link", onclick = "return confirm('Bạn có chắc muốn xóa?');" })
+                                    </td>
+                                </tr>
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4">Không có bản ghi nào</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6 " style="text-align: center">  @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))</div>
+                    <div class="col-md-3"></div>
+                </div>
+
+            </form>
+
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+
+        </div>
+        <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+
+</section>
+<!-- /.content -->
+
+<div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header  bg-danger">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Không thể xóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>@TempData["error"]</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section DoanJS {
+    <script>
+    $(document).ready(function () {
+        var error = '@TempData["error"]';
+        if (error && error !== '') {
+            $('#confirm-delete-modal').modal('show');
+        }
+    });
+    </script>
+
+
+    <script>
+        const today = new Date();
+        today.setDate(today.getDate() + 1);
+        const tomorrow = today.toISOString().slice(0, 10);
+        document.getElementById("todate").value = tomorrow;
+
+        const fromday = new Date();
+        fromday.setDate(fromday.getDate() - 1);
+        document.getElementById("fromdate").max = fromday.toISOString().slice(0, 10);
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('body').on('click', '.btnStatus', function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var id = btn.data("id");
+                $.ajax({
+                    url: '/Admin/Order/Status',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        if (rs.success) {
+                            if (rs.isActive) {
+                                btn.html("<i class='fa fa-check text-success'></i>");
+                            } else {
+                                btn.html("<i class='fas fa-times text-danger'></i>");
+                            }
+                        }
+
+                    }
+                });
+            });
+            $('body').on('click', '.btnDelivered', function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var id = btn.data("id");
+                $.ajax({
+                    url: '/Admin/Order/Delivered',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (rs) {
+                        if (rs.success) {
+                            if (rs.isActive) {
+                                btn.html("<i class='fa fa-check text-success'></i>");
+                            } else {
+                                btn.html("<i class='fas fa-times text-danger'></i>");
+                            }
+                        }
+
+                    }
+                });
+            });
+        });
+    </script>
+}

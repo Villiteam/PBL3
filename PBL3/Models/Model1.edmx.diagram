@@ -4,34 +4,33 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="5316da216dfa430c9523f04188034d54" Name="Diagram1">
-        <EntityTypeShape EntityType="pbl3Model.Category" Width="1.5" PointX="1.5" PointY="13.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.Comment" Width="1.5" PointX="3" PointY="8.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.Feedback" Width="1.5" PointX="6" PointY="8.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.OrderDetail" Width="1.5" PointX="3" PointY="4.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.Order" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.ProductImage" Width="1.5" PointX="3" PointY="16.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.Product" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.Role" Width="1.5" PointX="1.5" PointY="26.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.User" Width="1.5" PointX="1.5" PointY="21.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.Voucher" Width="1.5" PointX="1.5" PointY="29.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="pbl3Model.Warehouse" Width="1.5" PointX="3" PointY="19.125" IsExpanded="true" />
+      <Diagram DiagramId="8444bfc7b7644abe90b9bdd69fd18585" Name="Diagram1">
+        <EntityTypeShape EntityType="pbl3Model.Category" Width="1.5" PointX="1.5" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.Comment" Width="1.5" PointX="7.5" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.Contact" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.OrderDetail" Width="1.5" PointX="5.25" PointY="6.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.Order" Width="1.5" PointX="3" PointY="17.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.ProductImage" Width="1.5" PointX="3" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.Product" Width="1.5" PointX="0.75" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.Role" Width="1.5" PointX="1.5" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.Size" Width="1.5" PointX="3" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.sysdiagram" Width="1.5" PointX="3.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.User" Width="1.5" PointX="0.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.Voucher" Width="1.5" PointX="0.75" PointY="25.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="pbl3Model.Warehouse" Width="1.5" PointX="3" PointY="12.625" IsExpanded="true" />
         <AssociationConnector Association="pbl3Model.FK_Category_Category" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_Products_Category" ManuallyRouted="false" />
-        <AssociationConnector Association="pbl3Model.FK_Comment_Products" ManuallyRouted="false" />
+        <AssociationConnector Association="pbl3Model.FK_Comment_OrderDetails" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_Comment_Users" ManuallyRouted="false" />
-        <AssociationConnector Association="pbl3Model.FK_Feedback_Products" ManuallyRouted="false" />
-        <AssociationConnector Association="pbl3Model.FK_Feedback_Users" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_OrderDetails_Orders" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_OrderDetails_Products" ManuallyRouted="false" />
+        <AssociationConnector Association="pbl3Model.FK_OrderDetails_Size" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_Orders_Users1" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_Orders_Voucher" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_ProductImage_Products1" ManuallyRouted="false" />
+        <AssociationConnector Association="pbl3Model.FK_Size_Products" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_Warehouse_Products" ManuallyRouted="false" />
         <AssociationConnector Association="pbl3Model.FK_Users_Roles" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="pbl3Model.Product1" Width="1.5" PointX="3.375" PointY="0.75" />
-        <EntityTypeShape EntityType="pbl3Model.sysdiagram" Width="1.5" PointX="5.375" PointY="0.75" />
-        <EntityTypeShape EntityType="pbl3Model.UserAccount" Width="1.5" PointX="5.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

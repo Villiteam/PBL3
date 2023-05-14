@@ -19,20 +19,20 @@
             <PropertyRef Name="CommentID" />
           </Key>
           <Property Name="CommentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ProductID" Type="int" Nullable="false" />
+          <Property Name="OrderDetailID" Type="int" Nullable="false" />
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="UserID" Type="int" Nullable="false" />
-          <Property Name="Comment" Type="text" Nullable="false" />
+          <Property Name="Rating" Type="int" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar" MaxLength="300" Nullable="false" />
         </EntityType>
-        <EntityType Name="Feedback">
+        <EntityType Name="Contact">
           <Key>
-            <PropertyRef Name="FeedbackID" />
+            <PropertyRef Name="ContactID" />
           </Key>
-          <Property Name="FeedbackID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Ratting" Type="float" Nullable="false" />
-          <Property Name="Comment" Type="text" Nullable="false" />
-          <Property Name="UserID" Type="int" Nullable="false" />
-          <Property Name="ProductID" Type="int" Nullable="false" />
+          <Property Name="ContactID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="Message" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="OrderDetails">
           <Key>
@@ -43,6 +43,7 @@
           <Property Name="ProductID" Type="int" Nullable="false" />
           <Property Name="Quantity" Type="int" Nullable="false" />
           <Property Name="Price" Type="float" Nullable="false" />
+          <Property Name="SizeID" Type="int" />
         </EntityType>
         <EntityType Name="Orders">
           <Key>
@@ -50,21 +51,16 @@
           </Key>
           <Property Name="OrderID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="OrderDate" Type="datetime" Nullable="false" />
-          <Property Name="Status" Type="bit" />
-          <Property Name="Delivered" Type="bit" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="OrderAddress" Type="nvarchar" MaxLength="250" />
+          <Property Name="OrderPhone" Type="nvarchar" MaxLength="12" />
+          <Property Name="Delivered" Type="bit" Nullable="false" />
           <Property Name="DeliveryDate" Type="datetime" Nullable="false" />
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="IsPay" Type="bit" Nullable="false" />
           <Property Name="PayType" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="VoucherID" Type="int" />
-        </EntityType>
-        <EntityType Name="Product">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="70" />
-          <Property Name="Cost" Type="float" />
+          <Property Name="Total" Type="float" />
         </EntityType>
         <EntityType Name="ProductImage">
           <Key>
@@ -82,21 +78,20 @@
           <Property Name="ProductID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProductName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="OriginalPrice" Type="float" />
           <Property Name="Price" Type="float" Nullable="false" />
           <Property Name="PromotionPrice" Type="float" />
           <Property Name="ListImages" Type="xml" />
           <Property Name="Video" Type="text" />
           <Property Name="Quantity" Type="int" Nullable="false" />
-          <Property Name="Description" Type="text" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="isHome" Type="bit" Nullable="false" />
           <Property Name="isSale" Type="bit" Nullable="false" />
-          <Property Name="isHot" Type="bit" Nullable="false" />
           <Property Name="Status" Type="bit" Nullable="false" />
           <Property Name="ViewCount" Type="int" />
-          <Property Name="CatID" Type="int" Nullable="false" />
+          <Property Name="CatID" Type="int" />
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="Size" Type="nvarchar" MaxLength="10" />
-          <Property Name="Color" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -104,6 +99,15 @@
           </Key>
           <Property Name="RoleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="RoleName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Size">
+          <Key>
+            <PropertyRef Name="SizeID" />
+          </Key>
+          <Property Name="SizeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductID" Type="int" Nullable="false" />
+          <Property Name="SizeName" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -114,14 +118,6 @@
           <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
-        </EntityType>
-        <EntityType Name="UserAccount">
-          <Key>
-            <PropertyRef Name="UserName" />
-          </Key>
-          <Property Name="UserName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Password" Type="varchar" MaxLength="30" />
-          <Property Name="Role" Type="tinyint" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -171,15 +167,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Comment_Products">
-          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+        <Association Name="FK_Comment_OrderDetails">
+          <End Role="OrderDetails" Type="Self.OrderDetails" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ProductID" />
+            <Principal Role="OrderDetails">
+              <PropertyRef Name="OderDetailID" />
             </Principal>
             <Dependent Role="Comment">
-              <PropertyRef Name="ProductID" />
+              <PropertyRef Name="OrderDetailID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -195,32 +193,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Feedback_Products">
-          <End Role="Products" Type="Self.Products" Multiplicity="1" />
-          <End Role="Feedback" Type="Self.Feedback" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ProductID" />
-            </Principal>
-            <Dependent Role="Feedback">
-              <PropertyRef Name="ProductID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Feedback_Users">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="Feedback" Type="Self.Feedback" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="Feedback">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_OrderDetails_Orders">
-          <End Role="Orders" Type="Self.Orders" Multiplicity="1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="OrderDetails" Type="Self.OrderDetails" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Orders">
@@ -240,6 +216,18 @@
             </Principal>
             <Dependent Role="OrderDetails">
               <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetails_Size">
+          <End Role="Size" Type="Self.Size" Multiplicity="0..1" />
+          <End Role="OrderDetails" Type="Self.OrderDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Size">
+              <PropertyRef Name="SizeID" />
+            </Principal>
+            <Dependent Role="OrderDetails">
+              <PropertyRef Name="SizeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -282,7 +270,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Products_Category">
-          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
           <End Role="Products" Type="Self.Products" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Category">
@@ -290,6 +278,20 @@
             </Principal>
             <Dependent Role="Products">
               <PropertyRef Name="CatID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Size_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Size" Type="Self.Size" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="Size">
+              <PropertyRef Name="ProductID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -320,15 +322,14 @@
         <EntityContainer Name="pbl3ModelStoreContainer">
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Comment" EntityType="Self.Comment" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Feedback" EntityType="Self.Feedback" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Contact" EntityType="Self.Contact" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderDetails" EntityType="Self.OrderDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductImage" EntityType="Self.ProductImage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Size" EntityType="Self.Size" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserAccount" EntityType="Self.UserAccount" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Voucher" EntityType="Self.Voucher" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Warehouse" EntityType="Self.Warehouse" Schema="dbo" store:Type="Tables" />
@@ -336,21 +337,13 @@
             <End Role="Category" EntitySet="Category" />
             <End Role="Category1" EntitySet="Category" />
           </AssociationSet>
-          <AssociationSet Name="FK_Comment_Products" Association="Self.FK_Comment_Products">
-            <End Role="Products" EntitySet="Products" />
+          <AssociationSet Name="FK_Comment_OrderDetails" Association="Self.FK_Comment_OrderDetails">
+            <End Role="OrderDetails" EntitySet="OrderDetails" />
             <End Role="Comment" EntitySet="Comment" />
           </AssociationSet>
           <AssociationSet Name="FK_Comment_Users" Association="Self.FK_Comment_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Comment" EntitySet="Comment" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Feedback_Products" Association="Self.FK_Feedback_Products">
-            <End Role="Products" EntitySet="Products" />
-            <End Role="Feedback" EntitySet="Feedback" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Feedback_Users" Association="Self.FK_Feedback_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Feedback" EntitySet="Feedback" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetails_Orders" Association="Self.FK_OrderDetails_Orders">
             <End Role="Orders" EntitySet="Orders" />
@@ -358,6 +351,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetails_Products" Association="Self.FK_OrderDetails_Products">
             <End Role="Products" EntitySet="Products" />
+            <End Role="OrderDetails" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetails_Size" Association="Self.FK_OrderDetails_Size">
+            <End Role="Size" EntitySet="Size" />
             <End Role="OrderDetails" EntitySet="OrderDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_Users1" Association="Self.FK_Orders_Users1">
@@ -375,6 +372,10 @@
           <AssociationSet Name="FK_Products_Category" Association="Self.FK_Products_Category">
             <End Role="Category" EntitySet="Category" />
             <End Role="Products" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Size_Products" Association="Self.FK_Size_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Size" EntitySet="Size" />
           </AssociationSet>
           <AssociationSet Name="FK_Users_Roles" Association="Self.FK_Users_Roles">
             <End Role="Roles" EntitySet="Roles" />
@@ -406,24 +407,22 @@
             <PropertyRef Name="CommentID" />
           </Key>
           <Property Name="CommentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProductID" Type="Int32" Nullable="false" />
+          <Property Name="OrderDetailID" Type="Int32" Nullable="false" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="Comment1" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Product" Relationship="Self.FK_Comment_Products" FromRole="Comment" ToRole="Products" />
+          <Property Name="Rating" Type="Int32" Nullable="false" />
+          <Property Name="Comment1" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="OrderDetail" Relationship="Self.FK_Comment_OrderDetails" FromRole="Comment" ToRole="OrderDetails" />
           <NavigationProperty Name="User" Relationship="Self.FK_Comment_Users" FromRole="Comment" ToRole="Users" />
         </EntityType>
-        <EntityType Name="Feedback">
+        <EntityType Name="Contact">
           <Key>
-            <PropertyRef Name="FeedbackID" />
+            <PropertyRef Name="ContactID" />
           </Key>
-          <Property Name="FeedbackID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Ratting" Type="Double" Nullable="false" />
-          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="ProductID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Product" Relationship="Self.FK_Feedback_Products" FromRole="Feedback" ToRole="Products" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Feedback_Users" FromRole="Feedback" ToRole="Users" />
+          <Property Name="ContactID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Message" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="OrderDetail">
           <Key>
@@ -434,8 +433,11 @@
           <Property Name="ProductID" Type="Int32" Nullable="false" />
           <Property Name="Quantity" Type="Int32" Nullable="false" />
           <Property Name="Price" Type="Double" Nullable="false" />
+          <Property Name="SizeID" Type="Int32" />
+          <NavigationProperty Name="Comments" Relationship="Self.FK_Comment_OrderDetails" FromRole="OrderDetails" ToRole="Comment" />
           <NavigationProperty Name="Order" Relationship="Self.FK_OrderDetails_Orders" FromRole="OrderDetails" ToRole="Orders" />
           <NavigationProperty Name="Product" Relationship="Self.FK_OrderDetails_Products" FromRole="OrderDetails" ToRole="Products" />
+          <NavigationProperty Name="Size" Relationship="Self.FK_OrderDetails_Size" FromRole="OrderDetails" ToRole="Size" />
         </EntityType>
         <EntityType Name="Order">
           <Key>
@@ -443,13 +445,16 @@
           </Key>
           <Property Name="OrderID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="OrderDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Status" Type="Boolean" />
-          <Property Name="Delivered" Type="Boolean" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="OrderAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="OrderPhone" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="Delivered" Type="Boolean" Nullable="false" />
           <Property Name="DeliveryDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UserID" Type="Int32" Nullable="false" />
           <Property Name="IsPay" Type="Boolean" Nullable="false" />
           <Property Name="PayType" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="VoucherID" Type="Int32" />
+          <Property Name="Total" Type="Double" />
           <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetails_Orders" FromRole="Orders" ToRole="OrderDetails" />
           <NavigationProperty Name="User" Relationship="Self.FK_Orders_Users1" FromRole="Orders" ToRole="Users" />
           <NavigationProperty Name="Voucher" Relationship="Self.FK_Orders_Voucher" FromRole="Orders" ToRole="Voucher" />
@@ -471,27 +476,25 @@
           <Property Name="ProductID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ProductName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OriginalPrice" Type="Double" />
           <Property Name="Price" Type="Double" Nullable="false" />
           <Property Name="PromotionPrice" Type="Double" />
           <Property Name="ListImages" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Video" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Quantity" Type="Int32" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="isHome" Type="Boolean" Nullable="false" />
           <Property Name="isSale" Type="Boolean" Nullable="false" />
-          <Property Name="isHot" Type="Boolean" Nullable="false" />
           <Property Name="Status" Type="Boolean" Nullable="false" />
           <Property Name="ViewCount" Type="Int32" />
-          <Property Name="CatID" Type="Int32" Nullable="false" />
+          <Property Name="CatID" Type="Int32" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Size" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Color" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Category" Relationship="Self.FK_Products_Category" FromRole="Products" ToRole="Category" />
-          <NavigationProperty Name="Comments" Relationship="Self.FK_Comment_Products" FromRole="Products" ToRole="Comment" />
-          <NavigationProperty Name="Feedbacks" Relationship="Self.FK_Feedback_Products" FromRole="Products" ToRole="Feedback" />
           <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetails_Products" FromRole="Products" ToRole="OrderDetails" />
           <NavigationProperty Name="ProductImages" Relationship="Self.FK_ProductImage_Products1" FromRole="Products" ToRole="ProductImage" />
+          <NavigationProperty Name="Sizes" Relationship="Self.FK_Size_Products" FromRole="Products" ToRole="Size" />
           <NavigationProperty Name="Warehouses" Relationship="Self.FK_Warehouse_Products" FromRole="Products" ToRole="Warehouse" />
-          <Property Name="isHome" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -500,6 +503,27 @@
           <Property Name="RoleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Users" Relationship="Self.FK_Users_Roles" FromRole="Roles" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Size">
+          <Key>
+            <PropertyRef Name="SizeID" />
+          </Key>
+          <Property Name="SizeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductID" Type="Int32" Nullable="false" />
+          <Property Name="SizeName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetails_Size" FromRole="Size" ToRole="OrderDetails" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_Size_Products" FromRole="Size" ToRole="Products" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -514,12 +538,11 @@
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Status" Type="Boolean" Nullable="false" />
           <Property Name="Role" Type="Int32" Nullable="false" />
+          <Property Name="Avatar" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CreditCard" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Comments" Relationship="Self.FK_Comment_Users" FromRole="Users" ToRole="Comment" />
-          <NavigationProperty Name="Feedbacks" Relationship="Self.FK_Feedback_Users" FromRole="Users" ToRole="Feedback" />
           <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_Users1" FromRole="Users" ToRole="Orders" />
           <NavigationProperty Name="Role1" Relationship="Self.FK_Users_Roles" FromRole="Users" ToRole="Roles" />
-          <Property Name="Avatar" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Voucher">
           <Key>
@@ -556,7 +579,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Products_Category">
-          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
           <End Role="Products" Type="Self.Product" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Category">
@@ -567,15 +590,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Comment_Products">
-          <End Role="Products" Type="Self.Product" Multiplicity="1" />
+        <Association Name="FK_Comment_OrderDetails">
+          <End Role="OrderDetails" Type="Self.OrderDetail" Multiplicity="1" />
           <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ProductID" />
+            <Principal Role="OrderDetails">
+              <PropertyRef Name="OderDetailID" />
             </Principal>
             <Dependent Role="Comment">
-              <PropertyRef Name="ProductID" />
+              <PropertyRef Name="OrderDetailID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -591,32 +614,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Feedback_Products">
-          <End Role="Products" Type="Self.Product" Multiplicity="1" />
-          <End Role="Feedback" Type="Self.Feedback" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ProductID" />
-            </Principal>
-            <Dependent Role="Feedback">
-              <PropertyRef Name="ProductID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Feedback_Users">
-          <End Role="Users" Type="Self.User" Multiplicity="1" />
-          <End Role="Feedback" Type="Self.Feedback" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="Feedback">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_OrderDetails_Orders">
-          <End Role="Orders" Type="Self.Order" Multiplicity="1" />
+          <End Role="Orders" Type="Self.Order" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="OrderDetails" Type="Self.OrderDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Orders">
@@ -636,6 +637,18 @@
             </Principal>
             <Dependent Role="OrderDetails">
               <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetails_Size">
+          <End Role="Size" Type="Self.Size" Multiplicity="0..1" />
+          <End Role="OrderDetails" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Size">
+              <PropertyRef Name="SizeID" />
+            </Principal>
+            <Dependent Role="OrderDetails">
+              <PropertyRef Name="SizeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -677,6 +690,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Size_Products">
+          <End Role="Products" Type="Self.Product" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Size" Type="Self.Size" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="Size">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Warehouse_Products">
           <End Role="Products" Type="Self.Product" Multiplicity="1" />
           <End Role="Warehouse" Type="Self.Warehouse" Multiplicity="*" />
@@ -704,12 +731,14 @@
         <EntityContainer Name="pbl3Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Categories" EntityType="Self.Category" />
           <EntitySet Name="Comments" EntityType="Self.Comment" />
-          <EntitySet Name="Feedbacks" EntityType="Self.Feedback" />
+          <EntitySet Name="Contacts" EntityType="Self.Contact" />
           <EntitySet Name="OrderDetails" EntityType="Self.OrderDetail" />
           <EntitySet Name="Orders" EntityType="Self.Order" />
           <EntitySet Name="ProductImages" EntityType="Self.ProductImage" />
           <EntitySet Name="Products" EntityType="Self.Product" />
           <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="Sizes" EntityType="Self.Size" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
           <EntitySet Name="Users" EntityType="Self.User" />
           <EntitySet Name="Vouchers" EntityType="Self.Voucher" />
           <EntitySet Name="Warehouses" EntityType="Self.Warehouse" />
@@ -721,21 +750,13 @@
             <End Role="Category" EntitySet="Categories" />
             <End Role="Products" EntitySet="Products" />
           </AssociationSet>
-          <AssociationSet Name="FK_Comment_Products" Association="Self.FK_Comment_Products">
-            <End Role="Products" EntitySet="Products" />
+          <AssociationSet Name="FK_Comment_OrderDetails" Association="Self.FK_Comment_OrderDetails">
+            <End Role="OrderDetails" EntitySet="OrderDetails" />
             <End Role="Comment" EntitySet="Comments" />
           </AssociationSet>
           <AssociationSet Name="FK_Comment_Users" Association="Self.FK_Comment_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Comment" EntitySet="Comments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Feedback_Products" Association="Self.FK_Feedback_Products">
-            <End Role="Products" EntitySet="Products" />
-            <End Role="Feedback" EntitySet="Feedbacks" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Feedback_Users" Association="Self.FK_Feedback_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Feedback" EntitySet="Feedbacks" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetails_Orders" Association="Self.FK_OrderDetails_Orders">
             <End Role="Orders" EntitySet="Orders" />
@@ -743,6 +764,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetails_Products" Association="Self.FK_OrderDetails_Products">
             <End Role="Products" EntitySet="Products" />
+            <End Role="OrderDetails" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetails_Size" Association="Self.FK_OrderDetails_Size">
+            <End Role="Size" EntitySet="Sizes" />
             <End Role="OrderDetails" EntitySet="OrderDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_Users1" Association="Self.FK_Orders_Users1">
@@ -757,6 +782,10 @@
             <End Role="Products" EntitySet="Products" />
             <End Role="ProductImage" EntitySet="ProductImages" />
           </AssociationSet>
+          <AssociationSet Name="FK_Size_Products" Association="Self.FK_Size_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Size" EntitySet="Sizes" />
+          </AssociationSet>
           <AssociationSet Name="FK_Warehouse_Products" Association="Self.FK_Warehouse_Products">
             <End Role="Products" EntitySet="Products" />
             <End Role="Warehouse" EntitySet="Warehouses" />
@@ -765,36 +794,7 @@
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
-          <EntitySet Name="Product1" EntityType="pbl3Model.Product1" />
-          <EntitySet Name="sysdiagrams" EntityType="pbl3Model.sysdiagram" />
-          <EntitySet Name="UserAccounts" EntityType="pbl3Model.UserAccount" />
         </EntityContainer>
-        <EntityType Name="Product1">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="70" FixedLength="false" Unicode="true" />
-          <Property Name="Cost" Type="Double" />
-        </EntityType>
-        <EntityType Name="sysdiagram">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="UserAccount">
-          <Key>
-            <PropertyRef Name="UserName" />
-          </Key>
-          <Property Name="UserName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Password" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="Role" Type="Byte" />
-        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -815,21 +815,21 @@
             <EntityTypeMapping TypeName="pbl3Model.Comment">
               <MappingFragment StoreEntitySet="Comment">
                 <ScalarProperty Name="CommentID" ColumnName="CommentID" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="OrderDetailID" ColumnName="OrderDetailID" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
                 <ScalarProperty Name="Comment1" ColumnName="Comment" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Feedbacks">
-            <EntityTypeMapping TypeName="pbl3Model.Feedback">
-              <MappingFragment StoreEntitySet="Feedback">
-                <ScalarProperty Name="FeedbackID" ColumnName="FeedbackID" />
-                <ScalarProperty Name="Ratting" ColumnName="Ratting" />
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <EntitySetMapping Name="Contacts">
+            <EntityTypeMapping TypeName="pbl3Model.Contact">
+              <MappingFragment StoreEntitySet="Contact">
+                <ScalarProperty Name="ContactID" ColumnName="ContactID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -841,6 +841,7 @@
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="SizeID" ColumnName="SizeID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -850,12 +851,15 @@
                 <ScalarProperty Name="OrderID" ColumnName="OrderID" />
                 <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="OrderAddress" ColumnName="OrderAddress" />
+                <ScalarProperty Name="OrderPhone" ColumnName="OrderPhone" />
                 <ScalarProperty Name="Delivered" ColumnName="Delivered" />
                 <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="IsPay" ColumnName="IsPay" />
                 <ScalarProperty Name="PayType" ColumnName="PayType" />
                 <ScalarProperty Name="VoucherID" ColumnName="VoucherID" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -872,24 +876,23 @@
           <EntitySetMapping Name="Products">
             <EntityTypeMapping TypeName="pbl3Model.Product">
               <MappingFragment StoreEntitySet="Products">
-                <ScalarProperty Name="isHome" ColumnName="isHome" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
                 <ScalarProperty Name="ProductName" ColumnName="ProductName" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="OriginalPrice" ColumnName="OriginalPrice" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="PromotionPrice" ColumnName="PromotionPrice" />
                 <ScalarProperty Name="ListImages" ColumnName="ListImages" />
                 <ScalarProperty Name="Video" ColumnName="Video" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="isHome" ColumnName="isHome" />
                 <ScalarProperty Name="isSale" ColumnName="isSale" />
-                <ScalarProperty Name="isHot" ColumnName="isHot" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="ViewCount" ColumnName="ViewCount" />
                 <ScalarProperty Name="CatID" ColumnName="CatID" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="Size" ColumnName="Size" />
-                <ScalarProperty Name="Color" ColumnName="Color" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -901,10 +904,30 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Sizes">
+            <EntityTypeMapping TypeName="pbl3Model.Size">
+              <MappingFragment StoreEntitySet="Size">
+                <ScalarProperty Name="SizeID" ColumnName="SizeID" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="SizeName" ColumnName="SizeName" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="pbl3Model.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="pbl3Model.User">
               <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
@@ -914,6 +937,7 @@
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
                 <ScalarProperty Name="CreditCard" ColumnName="CreditCard" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -937,35 +961,6 @@
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Product1">
-            <EntityTypeMapping TypeName="pbl3Model.Product1">
-              <MappingFragment StoreEntitySet="Product">
-                <ScalarProperty Name="Cost" ColumnName="Cost" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="pbl3Model.sysdiagram">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="definition" ColumnName="definition" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="name" ColumnName="name" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="UserAccounts">
-            <EntityTypeMapping TypeName="pbl3Model.UserAccount">
-              <MappingFragment StoreEntitySet="UserAccount">
-                <ScalarProperty Name="Role" ColumnName="Role" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

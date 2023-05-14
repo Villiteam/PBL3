@@ -1,0 +1,160 @@
+﻿@model PBL3.Models.Comment
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/LayoutUser.cshtml";
+}
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/single_styles.css">
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/single_responsive.css">
+
+<div class="container single_product_container pb-0">
+    <div class="row">
+        <div class="col-lg-12">
+            <section>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Đơn hàng</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover text-center">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Hình ảnh</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Kích cỡ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    var i = 1;
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>
+                                            <button type="button" class="btn">
+                                                <img class="imgproduct" data-id="" src="@Model.OrderDetail.Product.ListImages" width="60" />
+                                            </button>
+                                        </td>
+                                        <td><a href="~/Product/Detail?id=@Model.OrderDetail.Product.ProductID">@Model.OrderDetail.Product.ProductName</a></td>
+                                        <td>@Model.OrderDetail.Size.SizeName</td>
+                                    </tr>
+                                    i++;
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4">Không có bản ghi nào</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <section>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Đánh giá đơn hàng</h3>
+                    </div>
+                    <div class="card-body">
+                        @using (Html.BeginForm("Edit", "Comment", FormMethod.Post))
+                        {
+                            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                            <input type="hidden" name="id" value="@Model.CommentID">
+                            <!-- /.Form hóa đơn -->
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        <input type="hidden" id="selected_rating" name="rating" value="0" required="required">
+                                        <div class="row">
+                                            <div class="col-md-2"> <h3>Số sao:</h3> </div>
+                                            <div class="col-md-2 mt-2" style="font-size: 30px;"><label class="selected-rating mb-0">@Model.Rating</label><small> / 5</small></div>
+                                            <div class="col-md-8" style="font-size: 30px;">
+                                                <ul class="star_rating">
+                                                    <li>
+                                                        <button type="button" class="btnrating btn btn-lg" data-attr="1" id="rating-star-1">
+                                                            <i class="fa fa-star-o btnrating" aria-hidden="true"></i>
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="btnrating btn btn-lg" data-attr="2" id="rating-star-2">
+                                                            <i class="fa fa-star-o btnrating" aria-hidden="true"></i>
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="btnrating btn btn-lg" data-attr="3" id="rating-star-3">
+                                                            <i class="fa fa-star-o btnrating" aria-hidden="true"></i>
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="btnrating btn btn-lg" data-attr="4" id="rating-star-4">
+                                                            <i class="fa fa-star-o btnrating" aria-hidden="true"></i>
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="btnrating btn btn-lg" data-attr="5" id="rating-star-5">
+                                                            <i class="fa fa-star-o btnrating" aria-hidden="true"></i>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        <h3>Bình luận:</h3>
+                                        <input name="comment" class="form-control" value="@Model.Comment1"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-warning">Đánh giá</button>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section DoanJS{
+    <script>
+        jQuery(document).ready(function ($) {
+
+            $(".btnrating").on('click', (function (e) {
+
+                var previous_value = $("#selected_rating").val();
+
+                var selected_value = $(this).attr("data-attr");
+                $("#selected_rating").val(selected_value);
+
+                $(".selected-rating").empty();
+                $(".selected-rating").html(selected_value);
+
+                for (i = 1; i <= selected_value; ++i) {
+                    $("#rating-star-" + i + " i").toggleClass('fa-star-o');
+                    $("#rating-star-" + i + " i").toggleClass('fa-star');
+                }
+
+                for (ix = 1; ix <= previous_value; ++ix) {
+                    $("#rating-star-" + ix + " i").toggleClass('fa-star-o');
+                    $("#rating-star-" + ix + " i").toggleClass('fa-star');
+                }
+            }));
+        });
+    </script>
+}
+

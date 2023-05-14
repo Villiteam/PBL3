@@ -1,0 +1,150 @@
+﻿@model PBL3.Models.Order
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Content/clients/dist/css/adminlte.min.css">
+    <style>
+        .card-body p {
+            border: 3px solid #ccc;
+            padding: 5px;
+        }
+
+        table {
+            border: 2px solid #ccc;
+        }
+
+        td, th {
+            border: 2px solid #ccc;
+            border-color: #ccc !important;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="content-to-print">
+        <section class="content">
+            <!-- Default box -->
+            <div class="card">
+                <div class="card-header text-center">
+                    <h3>Hóa đơn thanh toán</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row ">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Mã đơn hàng</label>
+                                <p class="form-control ">@Model.OrderID</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Họ tên khách hàng</label>
+                                <p class="form-control">@Model.User.UserName</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Số điện thoại</label>
+                                <p class="form-control">@Model.OrderPhone</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Địa chỉ</label>
+                                <p class="form-control">@Model.OrderAddress </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Ngày tạo</label>
+                                @{
+                                    DateTime date = DateTime.Parse(Model.OrderDate.ToString());
+                                    string formattedDate = date.ToString("dd MMMM yyyy HH:mm:ss");
+                                }
+                                <p class="form-control">@formattedDate</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Tổng tiền</label>
+                                <p class="form-control">@Model.Total.Value.ToString("N0")</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="content">
+            <!-- Default box -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Danh sách sản phẩm</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table text-center">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Hình ảnh</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Kích cỡ</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                <th>Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                var i = 1;
+                                foreach (var item in Model.OrderDetails)
+                                {
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>
+                                            <button type="button" class="btn">
+                                                <img class="imgproduct" data-id="@item.ProductID" src="@item.Product.ListImages" width="60" />
+                                            </button>
+                                        </td>
+                                        <td><a href="~/Product/Detail?id=@item.Product.ProductID">@item.Product.ProductName</a></td>
+                                        <td>@item.Size.SizeName</td>
+                                        <td>@item.Price.ToString("N0")</td>
+                                        <td>@item.Quantity</td>
+                                        <td>@((item.Price * item.Quantity).ToString("N0"))</td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4">Không có bản ghi nào</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+
+                </div>
+                <!-- /.card-footer-->
+            </div>
+            <!-- /.card -->
+
+        </section>
+    </div>
+    <!-- jQuery -->
+    <script>
+        window.print();
+    </script>
+</body>
+</html>

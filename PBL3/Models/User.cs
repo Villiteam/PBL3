@@ -18,7 +18,6 @@ namespace PBL3.Models
         public User()
         {
             this.Comments = new HashSet<Comment>();
-            this.Feedbacks = new HashSet<Feedback>();
             this.Orders = new HashSet<Order>();
         }
     
@@ -31,13 +30,11 @@ namespace PBL3.Models
         public System.DateTime CreatedDate { get; set; }
         public bool Status { get; set; }
         public int Role { get; set; }
-        public string CreditCard { get; set; }
         public string Avatar { get; set; }
+        public string CreditCard { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Feedback> Feedbacks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
         public virtual Role Role1 { get; set; }

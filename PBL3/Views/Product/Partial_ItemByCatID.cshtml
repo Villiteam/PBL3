@@ -1,0 +1,43 @@
+﻿@model IEnumerable<PBL3.Models.Product>
+@if (Model != null && Model.Any())
+{
+
+    foreach (var item in Model)
+    {
+        <div class="product-item filter-@item.CatID">
+            <div class="product discount product_filter">
+                <div class="product_image">
+                    <img src="@item.ListImages" alt="@item.Title" />
+                </div>
+                <div class="favorite favorite_left"></div>
+                @if (item.Quantity == 0)
+                {
+                    <div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>  Hết</span></div>
+                }
+                else
+                {
+                    <div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-$20</span></div>
+                }
+                <div class="product_info">
+                    <h6 class="product_name"><a href="~/Product/Detail?id=@item.ProductID">@item.ProductName</a></h6>
+                    @if (item.isSale == true)
+                    {
+                        <div class="product_price">@item.PromotionPrice.Value.ToString("N0")<span>@item.Price.ToString("N0")</span></div>
+                    }
+                    else
+                    {
+                        <div class="product_price">@item.Price.ToString("N0")</div>
+                    }
+                </div>
+            </div>
+            @{
+                int size;
+                using (var db = new PBL3.Models.pbl3Entities())
+                {
+                    size = Convert.ToInt32(db.Sizes.Where(m => m.ProductID == item.ProductID).Select(m => m.SizeID).Take(1).FirstOrDefault());
+                }
+            }
+            <div class="red_button add_to_cart_button"><a href="/them-gio-hang?id=@item.ProductID&quantity=1&sizeID=@size">add to cart</a></div>
+        </div>
+    }
+}
