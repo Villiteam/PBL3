@@ -1,0 +1,161 @@
+﻿@*@model IEnumerable<PBL3.Models.Order>*@
+
+@model PagedList.PagedList<PBL3.Models.Comment>
+@using PagedList.Mvc;
+@using PagedList;
+@using PBL3.EF;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/LayoutUser.cshtml";
+}
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/single_styles.css">
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/single_responsive.css">
+
+<div class="container single_product_container">
+    <div class="row">
+        <div class="col-lg-12">
+            <section>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Danh sách các đánh giá</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="active tab-pane" id="activity">
+                                <div class="card-body">
+                                    <table class="table table-hover text-center">
+                                        <thead>
+                                            <tr>
+                                                <th>STT</th>
+                                                <th>Hình ảnh</th>
+                                                <th>Tên sản phẩm</th>
+                                                <th>Kích cỡ</th>
+                                                <th>Số sao</th>
+                                                <th>Bình luận</th>
+                                                <th>Ngày tạo</th>
+                                                <th>#</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model != null && Model.Any())
+                                            {
+                                                var i = 1;
+                                                foreach (var item in Model)
+                                                {
+                                                    <tr>
+                                                        <td>@i</td>
+                                                        <td>
+                                                            <button type="button" class="btn">
+                                                                <img class="imgproduct" data-id="" src="@item.OrderDetail.Product.ListImages" width="60" />
+                                                            </button>
+                                                        </td>
+                                                        <td><a href="~/Product/Detail?id=@item.OrderDetail.Product.ProductID">@item.OrderDetail.Product.ProductName</a></td>
+                                                        <td>@item.OrderDetail.Size.SizeName.ToUpper()</td>
+                                                        <td>
+                                                            <ul class="star_rating ml-0">
+                                                                @for (int rate = 1; rate <= 5; rate++)
+                                                                {
+                                                                    if (rate <= Convert.ToInt32(item.Rating))
+                                                                    {
+                                                                        <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+                                                                    }
+                                                                }
+                                                            </ul>
+                                                        </td>
+                                                        <td>@item.Comment1</td>
+                                                        @{
+                                                            DateTime date = DateTime.Parse(item.CreateDate.ToString());
+                                                            string formattedDate = date.ToString("dd MMMM yyyy HH:mm:ss");
+                                                        }
+                                                        <td>@formattedDate</td>
+                                                        <td>
+                                                            @Html.ActionLink("Sửa", "Edit", new { id = item.CommentID }, new { @class = "btn btn-sm btn-primary" })
+                                                        </td>
+                                                    </tr>
+                                                    i++;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td colspan="4">Không có bản ghi nào</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                    <div class="row">
+                                        <div class="col-md-3"></div>
+                                        @if (Model != null && Model.Count > 0)
+                                        {
+                                            <div class="col-md-6 text-center">
+                                                <div class="pager-container">
+                                                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new CustomPagedListRenderOptions
+                                                    {
+                                                        LiElementClasses = new[] { "page-item" },
+                                                        UlElementClasses = new[] { "pagination" },
+                                                        ContainerDivClasses = new[] { "pager-container" },
+                                                        CssClass = "pagination",
+                                                        PageClasses = new[] { "page-link" },
+                                                        LinkClasses = new[] { "page-link" },
+                                                        ActiveDisabledElementClasses = new[] { "active", "disabled" },
+                                                        NumericPagerItemContainerClasses = new[] { "pagination" },
+                                                        NumericPagerItemClasses = new[] { "page-item" }
+                                                    })
+                                                </div>
+                                                <style>
+                                                    .pager-container {
+                                                        color: #060606;
+                                                        padding: 3px;
+                                                        margin: 0px 0;
+                                                    }
+
+                                                    .pagination .page-item {
+                                                        width: 25px;
+                                                        margin-right: 15px;
+                                                        background-color: #e0d6d6;
+                                                        border-radius: 5px;
+                                                    }
+
+                                                    .pagination .page-link {
+                                                        color: #fff;
+                                                        background-color: #4CAF50;
+                                                        border-color: #4CAF50;
+                                                    }
+
+                                                        .pagination .page-link:hover,
+                                                        .pagination .page-link:focus {
+                                                            color: #fff;
+                                                            background-color: #3E8E41;
+                                                            border-color: #3E8E41;
+                                                        }
+                                                    /* Căn giữa */
+                                                    .pagination {
+                                                        justify-content: center;
+                                                    }
+                                                </style>
+                                            </div>
+                                        }
+                                        <div class="col-md-3"></div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <!-- /.tab-pane -->
+
+                        </div>
+                        <!-- /.tab-content -->
+                    </div><!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </section>
+        </div>
+    </div>
+</div>
+

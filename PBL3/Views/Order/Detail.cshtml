@@ -1,0 +1,100 @@
+﻿@model PBL3.Models.Order
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/LayoutUser.cshtml";
+}
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/single_styles.css">
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/single_responsive.css">
+
+
+<div class="container single_product_container">
+    <div class="row">
+        <div class="col-lg-12">
+            <section>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Chi tiết đơn hàng</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover text-center">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Hình ảnh</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Kích cỡ</th>
+                                    <th>Giá</th>
+                                    <th>Số lượng</th>
+                                    <th>Thành tiền</th>
+                                    <th>Phương thức thanh toán</th>
+                                    <th>#</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    var i = 1;
+                                    foreach (var item in Model.OrderDetails)
+                                    {
+                                        <tr>
+                                            <td>@i</td>
+                                            <td>
+                                                <button type="button" class="btn">
+                                                    <img class="imgproduct" data-id="@item.ProductID" src="@item.Product.ListImages" width="60" />
+                                                </button>
+                                            </td>
+                                            <td><a href="~/Product/Detail?id=@item.Product.ProductID">@item.Product.ProductName</a></td>
+                                            <td>@item.Size.SizeName</td>
+                                            <td>@item.Price.ToString("N0")</td>
+                                            <td>@item.Quantity</td>
+                                            <td>@((item.Price * item.Quantity).ToString("N0"))</td>
+                                            <td>@item.Order.PayType</td>
+                                            @if (Model.Status == true && Model.Delivered == true)
+                                            {
+                                                using (PBL3.Models.pbl3Entities db = new PBL3.Models.pbl3Entities())
+                                                {
+                                                    var hasComment = db.Comments.Any(m => m.OrderDetailID == item.OderDetailID);
+                                                    if (!hasComment)
+                                                    {
+                                                        <td>
+                                                            <a href="~/Comment/CommentByOrderDetailID?id=@item.OderDetailID" class="btn btn-warning">Đánh giá</a>
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td>
+                                                            <a href="~/Comment" class="btn btn-warning">Đã đánh giá</a>
+                                                        </td>
+                                                    }
+                                                }
+
+                                            }
+                                        </tr>
+                                        i++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4">Không có bản ghi nào</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row justify-content-end">
+                            <div class="col-auto">
+                                <form class="form-inline">
+                                    <label>Tổng thanh toán:  </label>
+                                    <input type="text" name="sum" class="form-control ml-3 text-right" value="@Model.Total.Value.ToString("N0") đ" readonly />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+

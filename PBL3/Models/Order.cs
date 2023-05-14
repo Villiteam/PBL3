@@ -22,13 +22,16 @@ namespace PBL3.Models
     
         public int OrderID { get; set; }
         public System.DateTime OrderDate { get; set; }
-        public Nullable<bool> Status { get; set; }
-        public Nullable<bool> Delivered { get; set; }
+        public bool Status { get; set; }
+        public string OrderAddress { get; set; }
+        public string OrderPhone { get; set; }
+        public bool Delivered { get; set; }
         public System.DateTime DeliveryDate { get; set; }
         public int UserID { get; set; }
         public bool IsPay { get; set; }
         public string PayType { get; set; }
         public Nullable<int> VoucherID { get; set; }
+        public Nullable<double> Total { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

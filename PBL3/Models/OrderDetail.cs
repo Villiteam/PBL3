@@ -14,13 +14,23 @@ namespace PBL3.Models
     
     public partial class OrderDetail
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public OrderDetail()
+        {
+            this.Comments = new HashSet<Comment>();
+        }
+    
         public int OderDetailID { get; set; }
         public int OrderID { get; set; }
         public int ProductID { get; set; }
         public int Quantity { get; set; }
         public double Price { get; set; }
+        public Nullable<int> SizeID { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Comment> Comments { get; set; }
         public virtual Order Order { get; set; }
         public virtual Product Product { get; set; }
+        public virtual Size Size { get; set; }
     }
 }

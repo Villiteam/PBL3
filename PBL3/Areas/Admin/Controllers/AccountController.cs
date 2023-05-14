@@ -60,11 +60,16 @@ namespace PBL3.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var account = db.Users.FirstOrDefault(m => m.UserName == model.UserName);
+                if (account != null && account.Status == false)
+                {
+                    TempData["error"] = "Tài khoản đã bị khóa!";
+                    return View();
+                }
                 if (account != null && Crypto.VerifyHashedPassword(account.Password, model.Password))
                 {
                     // tao session
                     Session["user"] = account;
-                    return Redirect("~/Home");
+                    return Redirect("~/Admin");
                     //return RedirectToAction("Index", "Home");
                 }
                 else

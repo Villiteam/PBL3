@@ -1,4 +1,4 @@
-﻿@model PBL3.Models.Product
+﻿@model PBL3.EF.ProductV
 
 @{
     ViewBag.Title = "Add";
@@ -11,8 +11,17 @@
     <li class="nav-item d-none d-sm-inline-block">
         <a href="#" class="nav-link">Quản lý sản phẩm</a>
     </li>
-
 }
+<style>
+    table {
+        border: 2px solid #ccc;
+    }
+
+    td, th {
+        border: 2px solid #ccc;
+        border-color: #ccc !important;
+    }
+</style>
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <div class="container-fluid">
@@ -40,7 +49,7 @@
                 @using (Html.BeginForm())
                 {
                     @Html.AntiForgeryToken()
-                    @Html.HiddenFor(model => model.ProductID)
+                    @Html.HiddenFor(model => model.Product.ProductID)
                     <div class="card-body">
                         <div style="margin-bottom: 30px">
                             <ul class="nav nav-pills ">
@@ -58,37 +67,37 @@
                                     <div class="form-group">
                                         <lable class="control-label text-bold">Tên sản phẩm</lable>
                                         <div class="col-md-10">
-                                            @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.Product.ProductName, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Product.ProductName, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <lable class="control-label text-bold">Tiêu đề</lable>
                                         <div class="col-md-10">
-                                            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.Product.Title, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Product.Title, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
 
                                     @*<div class="form-group">
-            <label for="exampleInputFile">Ảnh đại diện</label>
-            <div class="col-md-10">
-                <div class="input-group">
-                    <div class="custom-file">
-                        @Html.TextBoxFor(model => model.ListImages, new { @id = "txtImage", @class = "form-control" })
-                    </div>
-                    <div class="input-group-append">
-                        <input type="button" value="Tải ảnh" onclick="BrowseServer('txtImage');" />
-                    </div>
-                </div>
-            </div>
-        </div>*@
+                                            <label for="exampleInputFile">Ảnh đại diện</label>
+                                            <div class="col-md-10">
+                                                <div class="input-group">
+                                                    <div class="custom-file">
+                                                        @Html.TextBoxFor(model => model.ListImages, new { @id = "txtImage", @class = "form-control" })
+                                                    </div>
+                                                    <div class="input-group-append">
+                                                        <input type="button" value="Tải ảnh" onclick="BrowseServer('txtImage');" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>*@
 
                                     <div class="form-group">
                                         <lable class="control-label col-md-2 text-bold">Danh mục</lable>
                                         <div class="col-md-6">
-                                            @Html.ValidationMessageFor(model => model.CatID, "", new { @class = "text-danger" })
-                                            <select class="form-control" name="CatID">
+                                            @Html.ValidationMessageFor(model => model.Product.CatID, "", new { @class = "text-danger" })
+                                            <select class="form-control" name="Product.CatID">
                                                 @foreach (var loai in db.Categories.ToList())
                                                 {
                                                     <option value="@loai.CatID">@loai.CatName</option>
@@ -97,77 +106,119 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-4">
+                                        <div class="">
+                                            <section class="content">
+                                                <!-- Default box -->
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h4>Kích cỡ sản phẩm</h4>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <table class="table text-center justify-content-center">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Size</th>
+                                                                    <th>Quantity</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="tbSize">
+                                                                @{  var count = 0;}
+                                                                @if (Model.Sizes != null)
+                                                                {
+                                                                    foreach (var item in Model.Sizes)
+                                                                    {
+                                                                        <tr id="trow_@(count+1)">
+                                                                            <td><input type="text" name="Sizes[@count].SizeName" value="@item.SizeName" /></td>
+                                                                            <td><input type="number" name="Sizes[@count].Quantity" value="@item.Quantity" /></td>
+                                                                        </tr>
+                                                                        count++;
+                                                                    }
+                                                                }
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <input type="hidden" id="tSize" value="@count" />
+                                                        <button type="button" class="btn btn-primary " onclick="addRow()">Thêm</button>
+                                                        <button type="button" class="btn btn-danger btnXoaSize">Xóa</button>
+                                                    </div>
+                                                    <!-- /.card-footer-->
+                                                </div>
+                                                <!-- /.card -->
+                                            </section>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3">
                                             <div class="form-group">
                                                 <lable class="control-label text-bold">Số lượng</lable>
                                                 <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control", type = "number", @Value = "1" } })
-                                                    @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                                                    @Html.EditorFor(model => model.Product.Quantity, new { htmlAttributes = new { @class = "form-control", type = "number", @readonly = "true" } })
+                                                    @Html.ValidationMessageFor(model => model.Product.Quantity, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <lable class="control-label text-bold">Giá nhập</lable>
+                                                <div class="col-md-10">
+                                                    @Html.EditorFor(model => model.Product.OriginalPrice, new { htmlAttributes = new { @class = "form-control", type = "number" } })
+                                                    @Html.ValidationMessageFor(model => model.Product.OriginalPrice, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
                                             <div class="form-group">
                                                 <lable class="control-label text-bold">Giá</lable>
                                                 <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", type = "number", @Value = "100000" } })
-                                                    @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                                                    @Html.EditorFor(model => model.Product.Price, new { htmlAttributes = new { @class = "form-control", type = "number" } })
+                                                    @Html.ValidationMessageFor(model => model.Product.Price, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <div class="form-group">
                                                 <lable class="control-label text-bold">Giá khuyến mãi</lable>
                                                 <div class="col-md-10">
-                                                    @Html.EditorFor(model => model.PromotionPrice, new { htmlAttributes = new { @class = "form-control", type = "number", @Value = "100000" } })
-                                                    @Html.ValidationMessageFor(model => model.PromotionPrice, "", new { @class = "text-danger" })
+                                                    @Html.EditorFor(model => model.Product.PromotionPrice, new { htmlAttributes = new { @class = "form-control", type = "number" } })
+                                                    @Html.ValidationMessageFor(model => model.Product.PromotionPrice, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-3">
+                                        <div class="col-4">
                                             <div class="form-group">
                                                 <lable class="control-label text-bold">Hiển thị</lable>
                                                 <div class="col-md-10">
                                                     <div class="checkbox">
-                                                        @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @checked = "checked" } })
-                                                        @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                                                        @Html.EditorFor(model => model.Product.Status, new { htmlAttributes = new { @checked = "checked" } })
+                                                        @Html.ValidationMessageFor(model => model.Product.Status, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-3">
+                                        <div class="col-4">
                                             <div class="form-group">
                                                 <lable class="control-label text-bold">Trang chủ</lable>
                                                 <div class="col-md-10">
                                                     <div class="checkbox">
-                                                        @Html.EditorFor(model => model.isHome)
-                                                        @Html.ValidationMessageFor(model => model.isHome, "", new { @class = "text-danger" })
+                                                        @Html.EditorFor(model => model.Product.isHome)
+                                                        @Html.ValidationMessageFor(model => model.Product.isHome, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-3">
-                                            <div class="form-group">
-                                                <lable class="control-label text-bold">Nổi bật</lable>
-                                                <div class="col-md-10">
-                                                    <div class="checkbox">
-                                                        @Html.EditorFor(model => model.isHot)
-                                                        @Html.ValidationMessageFor(model => model.isHot, "", new { @class = "text-danger" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-3">
+                                   
+                                        <div class="col-4">
                                             <div class="form-group">
                                                 <lable class="control-label text-bold">Khuyến mãi</lable>
                                                 <div class="col-md-10">
                                                     <div class="checkbox">
-                                                        @Html.EditorFor(model => model.isSale)
-                                                        @Html.ValidationMessageFor(model => model.isSale, "", new { @class = "text-danger" })
+                                                        @Html.EditorFor(model => model.Product.isSale)
+                                                        @Html.ValidationMessageFor(model => model.Product.isSale, "", new { @class = "text-danger" })
                                                     </div>
                                                 </div>
                                             </div>
@@ -176,8 +227,9 @@
                                     <div class="form-group">
                                         <lable class="control-label text-bold">Mô tả</lable>
                                         <div class="col-md-10">
-                                            <textarea class="form-control" name="Description" id="idMoTa">@Model.Description</textarea>
-                                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                                            @Html.TextAreaFor(model => model.Product.Description, new { @id = "idMoTa" })
+                                            @*<textarea class="form-control" name="Description" id="idMoTa"></textarea>*@
+                                            @Html.ValidationMessageFor(model => model.Product.Description, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
@@ -201,6 +253,32 @@
 
 @section DoanJs{
     <script>
+        var rowCount = $('#tSize').val() - 1;
+        function addRow() {
+            var current = $('#tSize').val();
+            var currentID = parseInt(current) + 1;
+            var newRow1 = `<tr id = "trow_${currentID}">
+                                                <td><input type="text" name="Sizes[${rowCount + 1}].SizeName" /></td>
+                                                <td><input type="number" name="Sizes[${rowCount + 1}].Quantity" /></td>
+                                            </tr>`;
+            $('#tbSize').append(newRow1);
+            $('#tSize').val(currentID);
+            rowCount++;
+        }
+        $(document).ready(function () {
+            $('body').on('click', '.btnXoaSize', function () {
+                var _id = $('#tSize').val();
+                if ($('#trow_' + _id).length) {
+                    $('#trow_' + _id).remove();
+                    var current = $('#tSize').val();
+                    var currentID = parseInt(current) - 1;
+                    $('#tSize').val(currentID);
+                    rowCount--;
+                }
+            });
+        });
+    </script>
+    <script>
         CKEDITOR.replace('idMoTa');
         $(document).ready(function () {
             $('body').on('click', '.btnXoaAnh', function () {
@@ -220,40 +298,7 @@
         });
 
         /*CkFinder*/
-        function BrowseServer(field) {
-            var finder = new CKFinder();
-            finder.selectActionFunction = function (fileUrl) {
-                addImageProduct(fileUrl);
-            };
-            finder.popup();
-        }
 
-        function addImageProduct(url) {
-            /*alert(url);*/
-            var current = $('#tCurrentID').val();
-            var currentID = parseInt(current) + 1;
-            var str = "";
-
-            if (currentID == 1) {
-                str += `<tr id = "trow_${currentID}">
-                                                                    <td>${currentID}</td>
-                                                                    <td><img width="80" src="${url}" /><input type = "hidden" value = "${url}" name = "Images"/></td>
-                                                                    <td><input type="radio" value = "${currentID}" name="rDefault" checked ="checked" /></td>
-                                                                    <td><a href="#" data-id = "${currentID}" class="btn btn-sm btn-danger btnXoaAnh">Xóa</a></td>
-                                                            </tr>`;
-            } else {
-                str += `<tr id = "trow_${currentID}">
-                                                                    <td>${currentID}</td>
-                                                                    <td><img width="80" src="${url}" /><input type = "hidden" value = "${url}" name = "Images"/></td>
-                                                                    <td><input type="radio" value = "${currentID}" name="rDefault" /></td>
-                                                                    <td><a href="#" data-id = "${currentID}" class="btn btn-sm btn-danger btnXoaAnh">Xóa</a></td>
-                                                            </tr>`;
-            }
-
-
-            $('#tbHtml').append(str);
-            $('#tCurrentID').val(currentID);
-        }
     </script>
 
 }

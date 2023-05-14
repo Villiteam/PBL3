@@ -1,0 +1,225 @@
+﻿@model List<PBL3.EF.CartItem>
+@{
+    ViewBag.Title = "Payment";
+    Layout = "~/Views/Shared/LayoutUser.cshtml";
+    double sum = 0;
+}
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/single_styles.css">
+<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/single_responsive.css">
+
+<div class="container single_product_container ">
+    <div class="row">
+        <div class="col-lg-12">
+            <section>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Thanh toán</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover text-center">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Hình ảnh</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Kích cỡ</th>
+                                    <th>Số lượng</th>
+                                    <th>Đơn giá</th>
+                                    <th>Thành tiền</th>
+                                    <th>#</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Any())
+                                {
+                                    var i = 1;
+
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@i</td>
+                                            <td>
+                                                <img class="imgproduct" data-id="@item.Product.ProductID" src="@item.Product.ListImages" width="60" />
+                                            </td>
+                                            <td>@item.Product.ProductName</td>
+                                            <td class="col-2">
+                                                @{
+                                                    var size = new PBL3.Models.Size();
+                                                    using (var db = new PBL3.Models.pbl3Entities())
+                                                    {
+                                                        size = db.Sizes.Find(item.SizeID);
+                                                    }
+                                                }
+                                                <input type="text" class=" text-right" data-sizeID="@item.SizeID" style="margin-top:0; width: 70px; height: 25px; font-size: 14px;" value="@size.SizeName" />
+                                            </td>
+                                            <td class="col-2">
+                                                <input type="number" class="txtQuantity" data-id="@item.Product.ProductID" style="margin-top:0; text-align: center;" value="@item.Quantity" />
+                                            </td>
+                                            @if (item.Product.isSale == true)
+                                            {
+                                                <td>
+                                                    <div class="product_price">@item.Product.PromotionPrice.Value.ToString("N0")</div>
+                                                </td>
+                                                <td style="display: none;">
+                                                    @(sum +=  item.Product.PromotionPrice.Value * item.Quantity);
+                                                </td>
+                                                <td>@((item.Product.PromotionPrice.Value * item.Quantity).ToString("N0"))</td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    <div class="product_price">@item.Product.Price.ToString("N0")</div>
+                                                </td>
+                                                <td style="display: none;">
+                                                    @(sum +=  item.Product.Price * item.Quantity);
+                                                </td>
+                                                <td>@((item.Product.Price * item.Quantity).ToString("N0"))</td>
+                                            }
+
+
+                                            <td>
+                                                @*@Html.ActionLink("Xóa", "Delete", new { id = item.Product.ProductID }, new { @class = "btn btn-sm btn-danger delete-link", onclick = "return confirm('Bạn có chắc muốn xóa?');" })*@
+                                                <a href="#" class="btnDelete btn btn-sm btn-danger delete-link" data-id="@item.Product.ProductID">Xóa</a>
+                                            </td>
+                                        </tr>
+                                        i++;
+                                    }
+
+                                }
+                                else
+                                {
+                                    <tr class="text-left">
+                                        <td colspan="4">Không có bản ghi nào</td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <div class="row justify-content-end">
+                            <div class="col-auto">
+                                <form class="form-inline">
+                                    <label>Tổng thanh toán:  </label>
+                                    <input type="text" class="form-control ml-3 text-right" value="@sum.ToString("N0") đ" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-footer-->
+                </div>
+                <!-- /.card -->
+            </section>
+        </div>
+
+    </div>
+
+</div>
+<!-- /.content -->
+
+
+<div class="container single_product_container mt-0">
+    <div class="row">
+        <div class="col-lg-12">
+            <section>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Hóa đơn thanh toán</h3>
+                    </div>
+                    <div class="card-body">
+                        @using (Html.BeginForm("Payment", "Order", FormMethod.Post))
+                        {
+                            <!-- /.Form hóa đơn -->
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        <lable>Địa chỉ nhận hàng: </lable>
+                                        <input name="address" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        <lable>Số điện thoại: </lable>
+                                        <input name="phone" class="form-control" type="number" pattern="[0-9]*" />
+                                        @*maxlength="11" minlength="10"*@
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        <lable>IsPay: </lable>
+                                        <div class="check-box"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        <lable>Phương thức thanh toán: </lable>
+                                        <input name="PayType" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        <lable>Mã khuyến mãi: </lable>
+                                        <input name="" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <lable>Tổng tiền: </lable>
+                                        <input readonly name="total" class="form-control text-right" value="@sum" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button readonly type="submit" class="btn btn-success">Thanh toán</button>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+
+                    </div>
+                    <!-- /.card-footer-->
+                </div>
+                <!-- /.card -->
+            </section>
+        </div>
+
+    </div>
+
+</div>
+<!-- /.content -->
+<div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content ">
+            <div class="modal-header bg-danger">
+                <h5 class="modal-title " id="confirmDeleteModalLabel">Thông báo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>@ViewBag.Error</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section DoanJS{
+    <script src="~/Content/assets/js/cart.js"></script>
+    @if (ViewBag.ShowModal != null && ViewBag.ShowModal)
+    {
+        <script>
+            $(document).ready(function () {
+                $('#confirm-delete-modal').modal('show');
+            });
+        </script>
+    }
+
+}
