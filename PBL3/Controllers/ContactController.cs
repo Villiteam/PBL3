@@ -23,6 +23,7 @@ namespace PBL3.Controllers
             contact.Name = name;
             contact.Email = email;
             contact.Message = message;
+            contact.CreatedDate = DateTime.Now;
             db.Contacts.Add(contact);
             db.SaveChanges();
 

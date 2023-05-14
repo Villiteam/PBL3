@@ -71,6 +71,7 @@ namespace PBL3.Controllers
                 }
             }
             Session[CartSession] = sessionCart;
+            TempData["success"] = "Cập nhật thành công";
             return Json(new
             {
                 status = true

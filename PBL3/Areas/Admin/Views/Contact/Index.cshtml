@@ -1,0 +1,199 @@
+﻿@model PagedList.PagedList<PBL3.Models.Contact>
+@using PagedList.Mvc;
+@using PagedList;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .border-left-3px-green {
+        border-left: 8px solid #28a745 !important;
+    }
+</style>
+@section naviheader{
+    <!-- Left navbar links -->
+    <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">Phản hồi</a>
+    </li>
+
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Phản hồi</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Phản hồi</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Danh sách phản hồi</h2>
+            <div class="card-tools">
+                @*<a href="~/Admin/User/Add" class="btn btn-primary">Thêm mới</a>*@
+            </div>
+        </div>
+        <div class="card-body text-center">
+            <form action="/Admin/Contact/Index">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-inline">
+                            <div class="input-group">
+                                <input class="form-control" type="search" name="keyword" value="@ViewBag.Keyword" placeholder="Search">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-sidebar">
+                                        <i class="fas fa-search fa-fw"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                           
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByName , keyword = ViewBag.Keyword})" style="color: #343a40;">
+                                    Tài khoản
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByEmail , keyword = ViewBag.Keyword})" style="color: #343a40;">
+                                    Email
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+                            <th>Lời nhắn</th>
+                            <th>
+                                <a href="@Url.Action("Index", new {sort = ViewBag.SortByDate , keyword = ViewBag.Keyword})" style="color: #343a40;">
+                                    Ngày tạo
+                                    <i class="fas fa-sort"></i>
+                                </a>
+                            </th>
+
+                            <th>#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            var i = ViewBag.Page;
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@i</td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.Message</td>
+                                    @{
+                                        DateTime date = DateTime.Parse(item.CreatedDate.ToString());
+                                        string formattedDate = date.ToString("dd MMMM yyyy HH:mm:ss");
+                                    }
+                                    <td>@formattedDate</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-danger delete-link" data-id="@item.ContactID">Xóa</button>
+                                    </td>
+                                </tr>
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4">Không có bản ghi nào</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6 " style="text-align: center">@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))</div>
+                    <div class="col-md-3"></div>
+                </div>
+            </form>
+
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+
+        </div>
+        <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+
+</section>
+<!-- /.content -->
+
+<div class="modal fade" id="confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc muốn xóa phản hồi này?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-btn">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section DoanJS{
+    <script>
+      const successMessage = '@TempData["successMessage"]';
+        if (successMessage) {
+            Swal.fire({
+                position: 'top-end',
+                toast: true,
+                icon: 'success',
+                title: successMessage,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'border-left-3px-green'
+                }
+            })
+      }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.delete-link').click(function () {
+                var userId = $(this).data('id');
+                $('#confirm-delete-modal').modal('show');
+                $('#confirm-delete-btn').click(function () {
+                    window.location.href = '/Admin/Contact/Delete/' + userId;
+                });
+            });
+        });
+    </script>
+
+
+}
+

@@ -118,12 +118,16 @@ namespace PBL3.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateInput(false)]
-        //public ActionResult Add(Product model, List<string> Images, List<int> rDefault, List<int> SizeName)
         public ActionResult Add(ProductV productV, List<string> Images, List<int> rDefault)
         {
             var model = productV.Product;
             var listSize = productV.Sizes;
             var item = db.Products.SingleOrDefault(m => m.ProductName == model.ProductName);
+            if (model.ProductName == null || model.ProductName == "")
+            {
+                TempData["error"] = "Vui lòng nhập tên sản phẩm!";
+                return View();
+            }
             if (item != null)
             {
                 TempData["error"] = "Tên sản phẩm đã tồn tại!";
@@ -173,7 +177,7 @@ namespace PBL3.Areas.Admin.Controllers
             else
             {
                 ModelState.AddModelError("", "Vui lòng thêm hình ảnh đại diện!");
-                return View(model);
+                return View(productV);
             }
 
             try
@@ -203,7 +207,7 @@ namespace PBL3.Areas.Admin.Controllers
             catch (Exception ex)
             {
                 TempData["error"] = "Lưu dữ liệu thất bại. Vui lòng thử lại!";
-                return View(model);
+                return View(productV);
             }
         }
 
