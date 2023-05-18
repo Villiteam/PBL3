@@ -1,5 +1,6 @@
 ﻿using Antlr.Runtime.Tree;
 using PagedList;
+using PBL3.App_Start;
 using PBL3.EF;
 using PBL3.Models;
 using System;
@@ -12,6 +13,7 @@ using System.Web.Razor.Tokenizer.Symbols;
 
 namespace PBL3.Areas.Admin.Controllers
 {
+    [AdminAuthorize(Role = new string[] { "Admin", "Manager" })]
     public class ProductController : Controller
     {
         // GET: Admin/Product

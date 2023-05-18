@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace PBL3.Areas.Admin.Controllers
 {
-    [AdminAuthorize(Role = new string[] { "Manager" })]
+    [AdminAuthorize(Role = new string[] { "Admin", "Manager" })]
     public class CategoryController : Controller
     {
         // GET: Admin/Category

@@ -8,10 +8,10 @@ using System.Web.Mvc;
 
 namespace PBL3.Areas.Admin.Controllers
 {
+    [AdminAuthorize(Role = new string[] { "Admin", "Manager" })]
     public class AdminHomeController : Controller
     {
         // GET: Admin/AdminHome
-        [AdminAuthorize(Role = new string[] {"Admin", "Manager" })]
         public ActionResult Index()
         {
             return View();

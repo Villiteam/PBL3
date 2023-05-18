@@ -1,4 +1,5 @@
 ﻿using PagedList;
+using PBL3.App_Start;
 using PBL3.Models;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ using static System.Data.Entity.Infrastructure.Design.Executor;
 
 namespace PBL3.Areas.Admin.Controllers
 {
+    [AdminAuthorize(Role = new string[] { "Admin", "Manager" })]
     public class OrderController : Controller
     {
         // GET: Admin/Order
