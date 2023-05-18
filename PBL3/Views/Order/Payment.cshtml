@@ -147,14 +147,11 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-10">
-                                        <lable>IsPay: </lable>
-                                        <div class="check-box"></div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-10">
                                         <lable>Phương thức thanh toán: </lable>
-                                        <input name="PayType" class="form-control" />
+                                        <select class="form-control" name="PayType" id="payment">
+                                            <option value="cod">Thanh Toán Khi Nhận Hàng</option>
+                                            <option value="smartpay">Chuyển Khoản</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
