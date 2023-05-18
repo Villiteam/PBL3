@@ -141,10 +141,14 @@ namespace PBL3.Controllers
 
 
             Session[CartSession] = null;
-            return RedirectToAction("Success");
+            return RedirectToAction("Success", new { id = model.OrderID });
         }
-        public ActionResult Success()
+        public ActionResult Success(int id)
         {
+            if (db.Orders.Single(data => data.OrderID == id).PayType == "smartpay")
+            {
+                return View(new {});
+            } else 
             return View();
         }
         public ActionResult Delete(int id)
