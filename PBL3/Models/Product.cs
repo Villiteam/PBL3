@@ -30,7 +30,6 @@ namespace PBL3.Models
         public double Price { get; set; }
         public Nullable<double> PromotionPrice { get; set; }
         public string ListImages { get; set; }
-        public string Video { get; set; }
         public int Quantity { get; set; }
         public string Description { get; set; }
         public bool isHome { get; set; }

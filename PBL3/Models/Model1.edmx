@@ -482,7 +482,6 @@
           <Property Name="Price" Type="Double" Nullable="false" />
           <Property Name="PromotionPrice" Type="Double" />
           <Property Name="ListImages" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Video" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Quantity" Type="Int32" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="isHome" Type="Boolean" Nullable="false" />
@@ -886,7 +885,6 @@
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="PromotionPrice" ColumnName="PromotionPrice" />
                 <ScalarProperty Name="ListImages" ColumnName="ListImages" />
-                <ScalarProperty Name="Video" ColumnName="Video" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="isHome" ColumnName="isHome" />

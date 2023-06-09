@@ -7,11 +7,25 @@ using System.Web.Routing;
 using System.Web.Mvc;
 using PBL3.EF;
 using PagedList;
+using Newtonsoft.Json;
+using ZaloPay.Helper.Crypto;
+using ZaloPay.Helper;
+using System.Threading.Tasks;
+using System.Security.Cryptography;
+using Microsoft.Ajax.Utilities;
+using QRCoder;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace PBL3.Controllers
 {
     public class OrderController : Controller
     {
+        static string appid = "553";
+        static string key1 = "9phuAOYhan4urywHTh0ndEXiV3pKHr5Q";
+        static string key2 = "Iyz2habzyr7AG8SgvoBCbKwKi3UzlLi3";
+        static string createOrderUrl = "https://sandbox.zalopay.com.vn/v001/tpe/createorder";
         // GET: Order
         private pbl3Entities db = new pbl3Entities();
         private string CartSession = Common.CommonConstants.CartSession;
@@ -67,7 +81,7 @@ namespace PBL3.Controllers
             return View(list);
         }
         [HttpPost]
-        public ActionResult Payment(string address, string phone, string PayType,double total)
+        public async Task<ActionResult> Payment(string address, string phone, string PayType,double total)
         {
             var sessionCart = Session[Common.CommonConstants.CartSession];
             var list = new List<CartItem>();
@@ -111,7 +125,7 @@ namespace PBL3.Controllers
             // Lưu chi tiết đơn hàng
             var cart = (List<CartItem>)Session[CartSession];
             foreach (var item in cart)
-            {
+            {   
                 var orderDetail = new OrderDetail();
                 orderDetail.OrderID = model.OrderID;
                 orderDetail.ProductID = item.Product.ProductID;
@@ -141,10 +155,53 @@ namespace PBL3.Controllers
 
 
             Session[CartSession] = null;
+            if (model.PayType == "zalopay")
+            {
+                var transid = Guid.NewGuid().ToString();
+                var embeddata = new { orderid = model.OrderID };
+                List<object> listitems = new List<object>();
+
+                foreach (var item in cart)
+                {
+                    listitems.Add(new { itemid = item.Product.ProductID, itemname = item.Product.ProductName, itemprice = item.Product.Price, itemquantity = item.Quantity });
+                }
+                    var param = new Dictionary<string, string>();
+
+                param.Add("appid", appid);
+                param.Add("key1", key1);
+                param.Add("key2", key2);
+                param.Add("appuser", "demo");
+                param.Add("apptime", Utils.GetTimeStamp().ToString());
+                param.Add("amount", total.ToString());
+                param.Add("apptransid", DateTime.Now.ToString("yyMMdd") + "_" + transid); // mã giao dich có định dạng yyMMdd_xxxx
+                param.Add("embeddata", JsonConvert.SerializeObject(embeddata));
+                param.Add("item", JsonConvert.SerializeObject(listitems.ToArray()));
+                param.Add("description", "ZaloPay demo");
+                param.Add("bankcode", "");
+
+                param.Add("redirecturl", "https://localhost:44339/Order/CheckZaloPay");
+
+                var data = appid + "|" + param["apptransid"] + "|" + param["appuser"] + "|" + param["amount"] + "|"
+                    + param["apptime"] + "|" + param["embeddata"] + "|" + param["item"];
+                param.Add("mac", HmacHelper.Compute(ZaloPayHMAC.HMACSHA256, key1, data));
+
+                var result = await HttpHelper.PostFormAsync(createOrderUrl, param);
+                return RedirectToAction("Success", new { id = model.OrderID, qrurl = result["orderurl"].ToString() });
+            }
             return RedirectToAction("Success", new { id = model.OrderID });
         }
-        public ActionResult Success(int id)
+        public ActionResult Success(int id, string qrurl)
         {
+            if (qrurl != null)
+            {
+                QRCodeGenerator QrGenerator = new QRCodeGenerator();
+                QRCodeData QrCodeInfo = QrGenerator.CreateQrCode(qrurl, QRCodeGenerator.ECCLevel.Q);
+                QRCode QrCode = new QRCode(QrCodeInfo);
+                Bitmap QrBitmap = QrCode.GetGraphic(60);
+                byte[] BitmapArray = QrBitmap.BitmapToByteArray();
+                string QrUri = string.Format("data:image/png;base64,{0}", Convert.ToBase64String(BitmapArray));
+                ViewBag.QrCodeUri = QrUri;
+            }
             if (db.Orders.Single(data => data.OrderID == id).PayType == "smartpay")
             {
                 return View(new {});
@@ -163,6 +220,17 @@ namespace PBL3.Controllers
                 }
             }
             return RedirectToAction("Index");
+        }
+    }
+    public static class BitmapExtension
+    {
+        public static byte[] BitmapToByteArray(this Bitmap bitmap)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat.Png);
+                return ms.ToArray();
+            }
         }
     }
 }

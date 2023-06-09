@@ -14,21 +14,24 @@
                     <div class="card-header">
                         <h3 class="card-title">Đặt hàng thành công</h3>
                     </div>
-                    @if (Model!=null) {
-                    <div class="card-body">
-                        <ul>
-                            <span>Thông tin chuyển khoản</span>
-                            <li>
-                                Ngân Hàng: Vietinbank
-                            </li>
-                            <li>
-                                STK: 102210066
-                            </li>
-                            <li>
-                                Nguyễn Tấn Lộc
-                            </li>
-                        </ul>
-                    </div>
+                    <img src="@ViewBag.QrCodeUri" class="img-thumbnail" />
+
+                    @if (Model != null)
+                    {
+                        <div class="card-body">
+                            <ul>
+                                <span>Thông tin chuyển khoản</span>
+                                <li>
+                                    Ngân Hàng: Vietinbank
+                                </li>
+                                <li>
+                                    STK: 102210066
+                                </li>
+                                <li>
+                                    Nguyễn Tấn Lộc
+                                </li>
+                            </ul>
+                        </div>
 
                     }
                 </div>
