@@ -106,8 +106,9 @@ namespace PBL3.Areas.Admin.Controllers
         public ActionResult ForgetPassword(string[] email)
         {
             MailHelper.SendMail(email[0]);
-            return RedirectToAction("Login");
+            return Redirect("https://mail.google.com");
         }
+
         public ActionResult ChangePassword(string token) {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
@@ -115,8 +116,37 @@ namespace PBL3.Areas.Admin.Controllers
             var key = Encoding.ASCII.GetBytes("47983A96F1AEEC8FFB1A5A4A19B7547983A96F1AEEC8FFB1A5A4A19B7512347983A96F1AEEC8FFB1A5A4A19B75");
 
             SecurityToken tokensecurity;
-            var tokendata = jwtTokenHandler.ValidateToken  (token, new TokenValidationParameters(), out tokensecurity);
+            var tokendata = jwtTokenHandler.ReadJwtToken(token);
+
+            var userIdClaim = tokendata.Claims.FirstOrDefault(c => c.Type == "userid");
+            var email = userIdClaim?.Value ?? string.Empty;
+            ViewBag.Email = email;
             return View();
+        }
+        [HttpPost]
+        public ActionResult ChangePassword(string email , string password , string confirm)
+        {
+            ViewBag.Email = email;
+            if (password == confirm)
+            {
+                var accounnt = db.Users.FirstOrDefault(u => u.Email == email); 
+                if(accounnt != null)
+                {
+                    var passwrHash = Crypto.HashPassword(password);
+                    accounnt.Password = passwrHash;
+                    db.SaveChanges();
+                }
+                else
+                {
+                    TempData["error"] = "Email không tồn tại!";
+                }
+            }
+            else
+            {
+                TempData["error"] = "Mật khẩu không trùng khớp!";
+                return View();
+            }
+            return Redirect("Login");
         }
     }
 }
