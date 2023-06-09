@@ -244,7 +244,10 @@ namespace PBL3.Controllers
             //    string QrUri = string.Format("data:image/png;base64,{0}", Convert.ToBase64String(BitmapArray));
             //    ViewBag.QrCodeUri = QrUri;
             //}
-            if (db.Orders.Single(data => data.OrderID == id).PayType == "smartpay")
+            var payType = db.Orders.Single(data => data.OrderID == id);
+            ViewBag.OrderID = id;
+            ViewBag.Total = payType.Total;
+            if (payType.PayType == "smartpay")
             {
                 return View(new {});
             } else 
