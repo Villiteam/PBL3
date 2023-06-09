@@ -1,8 +1,13 @@
-﻿using PBL3.EF;
+﻿using Microsoft.IdentityModel.Tokens;
+using PBL3.Common;
+using PBL3.EF;
 using PBL3.Models;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
@@ -94,6 +99,24 @@ namespace PBL3.Areas.Admin.Controllers
             // xoa cookies form authent
             FormsAuthentication.SignOut();
             return RedirectToAction("Login");
+        }
+
+        public ActionResult ForgetPassword() { return View(); }
+        [HttpPost]
+        public ActionResult ForgetPassword(string[] email)
+        {
+            MailHelper.SendMail(email[0]);
+            return RedirectToAction("Login");
+        }
+        public ActionResult ChangePassword(string token) {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+
+            // We get our secret from the appsettings
+            var key = Encoding.ASCII.GetBytes("47983A96F1AEEC8FFB1A5A4A19B7547983A96F1AEEC8FFB1A5A4A19B7512347983A96F1AEEC8FFB1A5A4A19B75");
+
+            SecurityToken tokensecurity;
+            var tokendata = jwtTokenHandler.ValidateToken  (token, new TokenValidationParameters(), out tokensecurity);
+            return View();
         }
     }
 }

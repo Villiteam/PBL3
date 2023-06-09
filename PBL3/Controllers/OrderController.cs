@@ -17,15 +17,15 @@ using QRCoder;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Windows.Input;
 
 namespace PBL3.Controllers
 {
     public class OrderController : Controller
     {
-        static string appid = "553";
-        static string key1 = "9phuAOYhan4urywHTh0ndEXiV3pKHr5Q";
-        static string key2 = "Iyz2habzyr7AG8SgvoBCbKwKi3UzlLi3";
-        static string createOrderUrl = "https://sandbox.zalopay.com.vn/v001/tpe/createorder";
+        static string app_id = "2553";
+        static string key1 = "PcY4iZIKFCIdgZvA6ueMcMHHUbRLYjPL";
+        static string create_order_url = "https://sb-openapi.zalopay.vn/v2/create";
         // GET: Order
         private pbl3Entities db = new pbl3Entities();
         private string CartSession = Common.CommonConstants.CartSession;
@@ -157,7 +157,9 @@ namespace PBL3.Controllers
             Session[CartSession] = null;
             if (model.PayType == "zalopay")
             {
-                var transid = Guid.NewGuid().ToString();
+                Random rnd = new Random();
+                var app_trans_id = rnd.Next(1000000); // Generate a random order's ID.
+
                 var embeddata = new { orderid = model.OrderID };
                 List<object> listitems = new List<object>();
 
@@ -167,41 +169,81 @@ namespace PBL3.Controllers
                 }
                     var param = new Dictionary<string, string>();
 
-                param.Add("appid", appid);
-                param.Add("key1", key1);
-                param.Add("key2", key2);
-                param.Add("appuser", "demo");
-                param.Add("apptime", Utils.GetTimeStamp().ToString());
+                param.Add("app_id", app_id);
+                param.Add("app_user", "user123");
+                param.Add("app_time", Utils.GetTimeStamp().ToString());
                 param.Add("amount", total.ToString());
-                param.Add("apptransid", DateTime.Now.ToString("yyMMdd") + "_" + transid); // mã giao dich có định dạng yyMMdd_xxxx
-                param.Add("embeddata", JsonConvert.SerializeObject(embeddata));
+                param.Add("app_trans_id", DateTime.Now.ToString("yyMMdd") + "_" + app_trans_id); // mã giao dich có định dạng yyMMdd_xxxx
+                param.Add("embed_data", JsonConvert.SerializeObject(embeddata));
                 param.Add("item", JsonConvert.SerializeObject(listitems.ToArray()));
                 param.Add("description", "ZaloPay demo");
-                param.Add("bankcode", "");
+                param.Add("bank_code", "zalopayapp");
 
                 param.Add("redirecturl", "https://localhost:44339/Order/CheckZaloPay");
 
-                var data = appid + "|" + param["apptransid"] + "|" + param["appuser"] + "|" + param["amount"] + "|"
-                    + param["apptime"] + "|" + param["embeddata"] + "|" + param["item"];
+                var data = app_id + "|" + param["app_trans_id"] + "|" + param["app_user"] + "|" + param["amount"] + "|"
+                + param["app_time"] + "|" + param["embed_data"] + "|" + param["item"];
                 param.Add("mac", HmacHelper.Compute(ZaloPayHMAC.HMACSHA256, key1, data));
 
-                var result = await HttpHelper.PostFormAsync(createOrderUrl, param);
-                return RedirectToAction("Success", new { id = model.OrderID, qrurl = result["orderurl"].ToString() });
+                var result = await HttpHelper.PostFormAsync(create_order_url, param);
+                return Redirect(result["order_url"].ToString());
+                //return RedirectToAction("Success", new { id = model.OrderID, qrurl = result["order_url"].ToString() });
             }
             return RedirectToAction("Success", new { id = model.OrderID });
         }
-        public ActionResult Success(int id, string qrurl)
+
+        [HttpPost]
+        public ActionResult CheckZaloPay(dynamic cbdata)
         {
-            if (qrurl != null)
+            var result = new Dictionary<string, object>();
+
+            try
             {
-                QRCodeGenerator QrGenerator = new QRCodeGenerator();
-                QRCodeData QrCodeInfo = QrGenerator.CreateQrCode(qrurl, QRCodeGenerator.ECCLevel.Q);
-                QRCode QrCode = new QRCode(QrCodeInfo);
-                Bitmap QrBitmap = QrCode.GetGraphic(60);
-                byte[] BitmapArray = QrBitmap.BitmapToByteArray();
-                string QrUri = string.Format("data:image/png;base64,{0}", Convert.ToBase64String(BitmapArray));
-                ViewBag.QrCodeUri = QrUri;
+                var dataStr = Convert.ToString(cbdata["data"]);
+                var reqMac = Convert.ToString(cbdata["mac"]);
+
+                var mac = HmacHelper.Compute(ZaloPayHMAC.HMACSHA256, key1, dataStr);
+
+                // kiểm tra callback hợp lệ (đến từ ZaloPay server)
+                if (!reqMac.Equals(mac))
+                {
+                    // callback không hợp lệ
+                    result["return_code"] = -1;
+                    result["return_message"] = "mac not equal";
+                }
+                else
+                {
+                    // thanh toán thành công
+                    // merchant cập nhật trạng thái cho đơn hàng
+                    var dataJson = JsonConvert.DeserializeObject<Dictionary<string, object>>(dataStr);
+                    Console.WriteLine("update order's status = success where app_trans_id = {0}", dataJson["app_trans_id"]);
+
+                    result["return_code"] = 1;
+                    result["return_message"] = "success";
+                }
             }
+            catch (Exception ex)
+            {
+                result["return_code"] = 0; // ZaloPay server sẽ callback lại (tối đa 3 lần)
+                result["return_message"] = ex.Message;
+            }
+
+            // thông báo kết quả cho ZaloPay server
+            return Json(result);
+        }
+
+        public ActionResult Success(int id)
+        {
+            //if (qrurl != null)
+            //{
+            //    QRCodeGenerator QrGenerator = new QRCodeGenerator();
+            //    QRCodeData QrCodeInfo = QrGenerator.CreateQrCode(qrurl, QRCodeGenerator.ECCLevel.Q);
+            //    QRCode QrCode = new QRCode(QrCodeInfo);
+            //    Bitmap QrBitmap = QrCode.GetGraphic(60);
+            //    byte[] BitmapArray = QrBitmap.BitmapToByteArray();
+            //    string QrUri = string.Format("data:image/png;base64,{0}", Convert.ToBase64String(BitmapArray));
+            //    ViewBag.QrCodeUri = QrUri;
+            //}
             if (db.Orders.Single(data => data.OrderID == id).PayType == "smartpay")
             {
                 return View(new {});
