@@ -11,7 +11,7 @@ namespace PBL3.Areas.Admin.Controllers
     public class AdminHomeController : Controller
     {
         // GET: Admin/AdminHome
-        [AdminAuthorize(Role = new string[] { "Admin", "Manager" })]
+        [AdminAuthorize(Role = new string[] { "Admin", "Manager", "Accountant" })]
 
         public ActionResult Index()
         {

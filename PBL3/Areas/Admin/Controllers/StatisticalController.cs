@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace PBL3.Areas.Admin.Controllers
 {
-    [AdminAuthorize(Role = new string[] { "Admin"})]
+    [AdminAuthorize(Role = new string[] { "Admin", "Accountant" })]
     public class StatisticalController : Controller
     {
         // GET: Admin/Statistical

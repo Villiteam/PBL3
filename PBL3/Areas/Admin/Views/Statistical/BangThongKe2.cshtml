@@ -18,12 +18,12 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Thống kê doanh thu</h1>
+                <h1>Thống kê doanh thu từng sản phẩm</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active">Thống kê doanh thu</li>
+                    <li class="breadcrumb-item active">Thống kê doanh thu từng sản phẩm</li>
                 </ol>
             </div>
         </div>
@@ -34,12 +34,9 @@
 <section class="content">
     <!-- Default box -->
     <div class="card">
-        @*<div class="card-header">
-                <h2 class="card-title">Thống kê doanh thu</h2>
-                <div class="card-tools">
-
-                </div>
-            </div>*@
+        <div class="card-header">
+            <button id="printButton" class="btn btn-warning">Print</button>
+        </div>
         <div class="card-body text-center">
             <div class="row mb-3">
                 <div class="col-md-2"></div>
@@ -111,6 +108,22 @@
         fromday.setDate(fromday.getDate() - 1);
         const yesterday = fromday.toISOString().slice(0, 10);
         document.getElementById("fromdate").max = yesterday;
+    </script>
+    <script>
+        document.getElementById('printButton').addEventListener('click', function () {
+            // Tạo một cửa sổ mới để in
+            var printWindow = window.open('', '_blank');
+
+            // Lấy nội dung HTML của phần <section class="content">
+            var content = document.querySelector('section.content').outerHTML;
+
+            // Gán nội dung HTML vào cửa sổ in
+            printWindow.document.write('<html><head><title>Thông kê doanh thu chi tiết </title><style>table { border: 2px solid #ccc; } td, th { border: 2px solid #ccc; border-color: #ccc !important; }</style></head><body> <h1>Thống kê doanh thu từng sản phẩm </h1>' + content + '</body></html>');
+
+            // In và đóng cửa sổ in
+            printWindow.print();
+            printWindow.close();
+        });
     </script>
     <script>
         $(function () {

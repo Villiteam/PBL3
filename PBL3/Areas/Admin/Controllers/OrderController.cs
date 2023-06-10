@@ -15,7 +15,7 @@ using static System.Data.Entity.Infrastructure.Design.Executor;
 
 namespace PBL3.Areas.Admin.Controllers
 {
-    [AdminAuthorize(Role = new string[] { "Admin", "Manager" })]
+    [AdminAuthorize(Role = new string[] { "Admin", "Accountant" })]
     public class OrderController : Controller
     {
         // GET: Admin/Order
