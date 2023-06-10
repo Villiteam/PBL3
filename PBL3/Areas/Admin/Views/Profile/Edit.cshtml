@@ -1,0 +1,145 @@
+﻿@model PBL3.Models.User
+
+@{
+    ViewBag.Title = "Cập nhật tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    PBL3.Models.pbl3Entities db = new PBL3.Models.pbl3Entities();
+}
+
+
+@section naviheader{
+    <!-- Left navbar links -->
+    <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">Thông tin tài khoản</a>
+    </li>
+
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Thông tin tài khoản</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Thông tin tài khoản</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<!-- Main content -->
+<section class="content">
+    <!-- Default box -->
+    <div class="card card-primary">
+        <div class="card-header ">
+            <h3 class="card-title">Cập nhật tài khoản</h3>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.UserID)
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                            @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                            <label for="exampleInputFile">Ảnh đại diện</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        @Html.EditorFor(model => model.Avatar, new { htmlAttributes = new { @id = "txtImage", @class = "form-control" } })
+                                    </div>
+                                    <div class="input-group-append">
+                                        <input type="button" value="Tải ảnh" onclick="BrowseServer();" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="form-group">
+                        <lable class="control-label col-md-2 text-bold">Mật khẩu</lable>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", type = "password" } })
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-eye-slash toggle-password"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", type = "email" } })
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-12">
+                            <button class="btn btn-primary" type="submit">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div>
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        </div>
+    </div>
+
+</section>
+
+@section DoanJS{
+    <script>
+        $(document).ready(function () {
+            $(".toggle-password").click(function () {
+                var input = $($(this).closest(".input-group")).find("input");
+                if (input.attr("type") === "password") {
+                    input.attr("type", "text");
+                    $(this).removeClass("fa-eye-slash").addClass("fa-eye");
+                } else {
+                    input.attr("type", "password");
+                    $(this).removeClass("fa-eye").addClass("fa-eye-slash");
+                }
+            });
+        });
+        /*CkFinder*/
+        function BrowseServer(field) {
+            var finder = new CKFinder();
+            finder.selectActionFunction = GanUrl;
+            finder.popup();
+        }
+        function GanUrl(url) {
+            $("input[name=Avatar]").val(url);
+        }
+    </script>
+}

@@ -1,5 +1,4 @@
-﻿using PBL3.App_Start;
-using PBL3.Models;
+﻿using PBL3.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +6,11 @@ using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
 
-namespace PBL3.Areas.Admin.Controllers
+namespace PBL3.Controllers
 {
-   // [AdminAuthorize(Role = new string[] { "Admin", "Manager" })]
     public class ProfileController : Controller
     {
-        // GET: Admin/Profile
+        // GET: Profile
         private pbl3Entities db = new pbl3Entities();
         public ActionResult Index()
         {

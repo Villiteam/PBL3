@@ -114,7 +114,7 @@
                                 </ul>
                                 <ul class="navbar_user">
                                     <li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i></a></li>
+                                    <li><a href="~/Profile"><i class="fa fa-user" aria-hidden="true"></i></a></li>
                                     @{ Html.RenderAction("ViewCart", "Cart");}
                                 </ul>
                                 <div class="hamburger_container">
@@ -178,7 +178,7 @@
         </div>
 
         @RenderBody()
-    
+
 
 
         @*Newsletter*@
@@ -252,6 +252,8 @@
     <script src="~/Content/assets/plugins/easing/easing.js"></script>
     <script src="~/Content/assets/js/custom.js"></script>
     <script src="~/Content/assets/js/cart.js"></script>
+    <script src="~/Content/ckfinder/ckfinder.js"></script>
+    <script src="~/Content/ckeditor/ckeditor.js"></script>
     @RenderSection("DoanJs", false)
 </body>
 </html>
