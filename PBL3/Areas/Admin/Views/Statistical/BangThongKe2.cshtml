@@ -1,0 +1,208 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<style>
+    table {
+        border: 2px solid #ccc;
+    }
+
+    td, th {
+        border: 2px solid #ccc;
+        border-color: #ccc !important;
+    }
+</style>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Thống kê doanh thu</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Thống kê doanh thu</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <!-- Default box -->
+    <div class="card">
+        @*<div class="card-header">
+                <h2 class="card-title">Thống kê doanh thu</h2>
+                <div class="card-tools">
+
+                </div>
+            </div>*@
+        <div class="card-body text-center">
+            <div class="row mb-3">
+                <div class="col-md-2"></div>
+                <div class="col-md-3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="mb-0 pt-2">Từ ngày: </label>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input class="form-control" type="date" id="fromdate" value="2023-04-20">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="mb-0 pt-2">Đến ngày: </label>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input class="form-control" type="date" id="todate" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Mã sản phẩm </th>
+                                <th>Sản phẩm</th>
+                                <th>Doanh thu</th>
+                                <th>Lợi nhuận</th>
+                            </tr>
+                        </thead>
+                        <tbody id="load_data"></tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+        </section>
+    </div>
+</section>
+
+
+
+
+@section DoanJs{
+    <!-- ChartJS -->
+    <script src="~/Content/clients/plugins/chart.js/Chart.min.js"></script>
+    <script src="~/Content/clients/plugins/moment/moment.min.js"></script>
+    <script>
+        const today = new Date();
+        today.setDate(today.getDate() + 1);
+        const tomorrow = today.toISOString().slice(0, 10);
+        document.getElementById("todate").value = tomorrow;
+
+
+        const fromday = new Date();
+        fromday.setDate(fromday.getDate() - 1);
+        const yesterday = fromday.toISOString().slice(0, 10);
+        document.getElementById("fromdate").max = yesterday;
+    </script>
+    <script>
+        $(function () {
+            /* ChartJS
+             * -------
+             * Here we will create a few charts using ChartJS
+             */
+
+
+            var arrDoanhThu = [];
+            var arrLoiNhuan = [];
+            var arrDate = [];
+            var fromDate = $('#fromdate').val();
+            var toDate = $('#todate').val();
+
+            function loadData() {
+                arrDoanhThu = [];
+                arrLoiNhuan = [];
+                arrDate = [];
+                // Xóa biểu đồ cũ
+                $('#barChart').remove();
+                $('#lineChart').remove();
+                $('#bar').append(' <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>');
+                $('#line').append(' <canvas id="lineChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>');
+                $.ajax({
+                    url: '/Statistical/ThongKe2',
+                    type: 'GET',
+                    data: {
+                        fromDate: fromDate,
+                        toDate: toDate
+                    },
+                    success: function (rs) {
+                        $.each(rs.Data, function (i, item) {
+                            var strDate = moment(item.Date).format('DD/MM/yyyy');
+                            arrDate.push(strDate);
+                            arrDoanhThu.push(item.DoanhThu);
+                            arrLoiNhuan.push(item.LoiNhuan);
+                        });
+
+                        load_data(rs.Data);
+                    }
+                });
+            }
+
+
+            // Load dữ liệu mặc định
+            loadData();
+
+            // Lắng nghe sự kiện thay đổi giá trị của 2 input
+            $('#fromdate, #todate').change(function () {
+                fromDate = $('#fromdate').val();
+                toDate = $('#todate').val();
+                loadData();
+            });
+
+            var areaChartOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            display: false,
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            display: false,
+                        }
+                    }]
+                }
+            }
+
+
+        });
+
+        function load_data(data) {
+            var strHtml = "";
+            $.each(data, function (i, item) {
+                var strDate = moment(item.Date).format('DD/MM/yyyy');
+                strHtml += "<tr>";
+                strHtml += "<td>" + (i + 1) + "</td>";
+                strHtml += "<td>" + item.ProductID + "</td>";
+                strHtml += "<td>" + item.ProductName + "</td>";
+                strHtml += "<td>" + item.DoanhThu + "</td>";
+                strHtml += "<td>" + item.LoiNhuan + "</td>";
+                strHtml += "</tr>";
+            });
+            $('#load_data').html(strHtml);
+        }
+    </script>
+}
+
